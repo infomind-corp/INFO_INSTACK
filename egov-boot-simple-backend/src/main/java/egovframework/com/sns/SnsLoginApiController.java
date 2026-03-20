@@ -1,5 +1,6 @@
 package egovframework.com.sns;
 
+import infomind.instack.api.common.util.jwt.EgovJwtTokenUtil;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URLEncoder;
@@ -20,7 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.EgovProperties;
-import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.com.sns.SnsVO.NaverProfileVO;
 import egovframework.com.sns.SnsVO.NaverResponseVO;
 import egovframework.com.sns.SnsVO.NaverTokenVO;

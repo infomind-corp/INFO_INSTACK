@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="infomind.instack.api.auth.basic.dao.AuthDao">
+
+  <select id="selectByLoginId" parameterType="string"
+            resultType="infomind.instack.api.auth.basic.entity.AuthUser">
+        SELECT MEMBER_ID    AS memberId
+             , SITE_ID      AS siteId
+             , LOGIN_ID     AS loginId
+             , PASSWORD     AS password
+             , MEMBER_NAME  AS memberName
+             , AUTH_LEVEL   AS authLevel
+             , EMAIL        AS email
+             , USE_YN       AS useYn
+             , REG_DT       AS regDt
+             , MOD_DT       AS modDt
+             , REG_USER     AS regUser
+             , DEPT_ID      AS deptId
+          FROM MEMBER
+         WHERE LOGIN_ID = #{loginId}
+    </select>
+
+  <update id="mergeRefreshToken">
+    MERGE INTO MEMBER m
+    USING (SELECT #{memberId} AS memberId FROM DUAL) t
+    ON (m.MEMBER_ID = t.memberId)
+    WHEN MATCHED THEN
+      UPDATE SET REFRESH_TOKEN = #{refreshToken},
+                 MOD_DT = SYSDATE
+  </update>
+
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="infomind.instack.api.auth.basic.dao.RefreshTokenDao">
+
+    <select id="selectByMemberId" parameterType="string"
+            resultType="infomind.instack.api.auth.basic.entity.RefreshToken">
+        SELECT MEMBER_ID    AS memberId
+             , TOKEN        AS token
+             , EXPIRES_AT   AS expiresAt
+             , CREATED_AT   AS createdAt
+          FROM REFRESH_TOKEN
+         WHERE MEMBER_ID = #{memberId}
+    </select>
+
+    <insert id="upsert" parameterType="infomind.instack.api.auth.basic.entity.RefreshToken">
+        MERGE INTO REFRESH_TOKEN T
+        USING (SELECT #{memberId} AS MEMBER_ID FROM DUAL) S
+        ON (T.MEMBER_ID = S.MEMBER_ID)
+        WHEN MATCHED THEN
+            UPDATE SET TOKEN      = #{token}
+                     , EXPIRES_AT = #{expiresAt}
+        WHEN NOT MATCHED THEN
+            INSERT (MEMBER_ID, TOKEN, EXPIRES_AT)
+            VALUES (#{memberId}, #{token}, #{expiresAt})
+    </insert>
+
+    <delete id="deleteByMemberId" parameterType="string">
+        DELETE FROM REFRESH_TOKEN
+         WHERE MEMBER_ID = #{memberId}
+    </delete>
+
+</mapper>

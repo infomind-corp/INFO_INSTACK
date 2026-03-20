@@ -1,4 +1,4 @@
-package egovframework.com.jwt;
+package infomind.instack.api.common.util.jwt;
 
 import egovframework.com.cmm.LoginVO;
 import egovframework.let.utl.fcc.service.EgovStringUtil;

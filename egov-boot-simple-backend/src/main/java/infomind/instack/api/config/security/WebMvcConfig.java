@@ -1,4 +1,4 @@
-package egovframework.com.security;
+package infomind.instack.api.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package egovframework.com.jwt;
+package infomind.instack.api.common.util.jwt;
 
 public class InvalidJwtException extends RuntimeException {
     public InvalidJwtException(String message, Throwable cause) {

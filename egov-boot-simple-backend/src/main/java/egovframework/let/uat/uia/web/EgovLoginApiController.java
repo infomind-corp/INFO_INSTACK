@@ -1,5 +1,6 @@
 package egovframework.let.uat.uia.web;
 
+import infomind.instack.api.common.util.jwt.EgovJwtTokenUtil;
 import java.util.HashMap;
 
 import org.egovframe.rte.fdl.cmmn.trace.LeaveaTrace;
@@ -15,7 +16,6 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
-import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.let.uat.uia.service.EgovLoginService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

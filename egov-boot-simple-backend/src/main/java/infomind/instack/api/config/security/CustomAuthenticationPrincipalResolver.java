@@ -1,4 +1,4 @@
-package egovframework.com.security;
+package infomind.instack.api.config.security;
 
 import egovframework.com.cmm.LoginVO;
 import org.springframework.core.MethodParameter;

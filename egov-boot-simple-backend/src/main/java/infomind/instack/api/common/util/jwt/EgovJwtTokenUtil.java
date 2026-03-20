@@ -1,4 +1,4 @@
-package egovframework.com.jwt;
+package infomind.instack.api.common.util.jwt;
 
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;

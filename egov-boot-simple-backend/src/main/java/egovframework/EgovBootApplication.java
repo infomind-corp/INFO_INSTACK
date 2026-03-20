@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ServletComponentScan
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"egovframework", "infomind"})
 public class EgovBootApplication {
 	public static void main(String[] args) {
 		log.debug("##### EgovBootApplication Start #####");

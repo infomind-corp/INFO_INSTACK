@@ -1,5 +1,6 @@
 package egovframework.let.uss.umt.web;
 
+import infomind.instack.api.common.util.jwt.EgovJwtTokenUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,6 @@ import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.EgovCmmUseService;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.ResultVoHelper;
-import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
 import egovframework.let.uss.umt.service.EgovMberManageService;
 import egovframework.let.uss.umt.service.MberManageVO;

@@ -1,4 +1,4 @@
-package egovframework.com.security;
+package infomind.instack.api.config.security;
 
 import java.util.Arrays;
 
@@ -23,8 +23,8 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.multipart.support.MultipartFilter;
 
 import egovframework.com.cmm.filter.HTMLTagFilter;
-import egovframework.com.jwt.JwtAuthenticationEntryPoint;
-import egovframework.com.jwt.JwtAuthenticationFilter;
+import infomind.instack.api.common.util.jwt.JwtAuthenticationEntryPoint;
+import infomind.instack.api.common.util.jwt.JwtAuthenticationFilter;
 import jakarta.servlet.MultipartConfigElement;
 
 /**
@@ -78,6 +78,9 @@ public class SecurityConfig {
             "/swagger-ui.html",
             "/swagger-ui/**",
             "/webjars/**", // Swagger UI 정적 리소스
+
+            /* INSTACK */
+            "/api/auth/login"
 
     };
     private static final String[] ORIGINS_WHITELIST = {

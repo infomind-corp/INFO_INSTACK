@@ -1,5 +1,6 @@
 package egovframework.let.cop.bbs.controller;
 
+import infomind.instack.api.common.util.jwt.EgovJwtTokenUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,6 @@ import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.IntermediateResultVO;
 import egovframework.com.cmm.service.ResultVO;
 import egovframework.com.cmm.util.ResultVoHelper;
-import egovframework.com.jwt.EgovJwtTokenUtil;
 import egovframework.let.cop.bbs.domain.model.BoardVO;
 import egovframework.let.cop.bbs.dto.request.BbsSearchRequestDTO;
 import egovframework.let.cop.bbs.dto.request.BbsManageDeleteBoardRequestDTO;
