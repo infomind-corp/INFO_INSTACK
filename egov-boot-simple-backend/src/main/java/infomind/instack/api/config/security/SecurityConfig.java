@@ -2,6 +2,9 @@ package infomind.instack.api.config.security;
 
 import java.util.Arrays;
 
+import infomind.instack.api.common.filter.AuthenticationFilter;
+import infomind.instack.api.common.util.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +27,6 @@ import org.springframework.web.multipart.support.MultipartFilter;
 
 import egovframework.com.cmm.filter.HTMLTagFilter;
 import infomind.instack.api.common.util.jwt.JwtAuthenticationEntryPoint;
-import infomind.instack.api.common.util.jwt.JwtAuthenticationFilter;
 import jakarta.servlet.MultipartConfigElement;
 
 /**
@@ -39,6 +41,7 @@ import jakarta.servlet.MultipartConfigElement;
  */
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     // Http Methpd : Get 인증예외 List
@@ -87,9 +90,11 @@ public class SecurityConfig {
             "http://localhost:3000",
     };
 
+    private final JwtUtil jwtUtil;
     @Bean
-    public JwtAuthenticationFilter authenticationTokenFilterBean() throws Exception {
-        return new JwtAuthenticationFilter();
+    public AuthenticationFilter authenticationTokenFilterBean() throws Exception {
+        // return new JwtAuthenticationFilter();
+        return new AuthenticationFilter(jwtUtil);
     }
 
     @Bean

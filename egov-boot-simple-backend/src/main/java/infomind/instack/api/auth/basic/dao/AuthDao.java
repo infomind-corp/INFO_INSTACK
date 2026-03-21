@@ -1,6 +1,6 @@
 package infomind.instack.api.auth.basic.dao;
 
-import infomind.instack.api.auth.basic.entity.AuthUser;
+import infomind.instack.api.auth.basic.entity.AuthUserVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Optional;
@@ -8,7 +8,7 @@ import java.util.Optional;
 @Mapper
 public interface AuthDao {
 
-    Optional<AuthUser> selectByLoginId(String loginId);
+    Optional<AuthUserVO> selectAuthUserByLoginId(String loginId);
 
-    void mergeRefreshToken(String memberId, String refreshToken);
+    Optional<AuthUserVO> selectAuthUserByMemberId(String memberId);
 }

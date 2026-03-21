@@ -4,8 +4,8 @@
 
 <mapper namespace="infomind.instack.api.auth.basic.dao.AuthDao">
 
-  <select id="selectByLoginId" parameterType="string"
-            resultType="infomind.instack.api.auth.basic.entity.AuthUser">
+  <select id="selectAuthUserByLoginId" parameterType="string"
+            resultType="infomind.instack.api.auth.basic.entity.AuthUserVO">
         SELECT MEMBER_ID    AS memberId
              , SITE_ID      AS siteId
              , LOGIN_ID     AS loginId
@@ -20,15 +20,27 @@
              , DEPT_ID      AS deptId
           FROM MEMBER
          WHERE LOGIN_ID = #{loginId}
+            AND USE_YN = 'Y'
     </select>
 
-  <update id="mergeRefreshToken">
-    MERGE INTO MEMBER m
-    USING (SELECT #{memberId} AS memberId FROM DUAL) t
-    ON (m.MEMBER_ID = t.memberId)
-    WHEN MATCHED THEN
-      UPDATE SET REFRESH_TOKEN = #{refreshToken},
-                 MOD_DT = SYSDATE
-  </update>
+  <select id="selectAuthUserByMemberId"
+          resultType="infomind.instack.api.auth.basic.entity.AuthUserVO">
+
+      SELECT MEMBER_ID    AS memberId
+           , SITE_ID      AS siteId
+           , LOGIN_ID     AS loginId
+           , PASSWORD     AS password
+           , MEMBER_NAME  AS memberName
+           , AUTH_LEVEL   AS authLevel
+           , EMAIL        AS email
+           , USE_YN       AS useYn
+           , REG_DT       AS regDt
+           , MOD_DT       AS modDt
+           , REG_USER     AS regUser
+           , DEPT_ID      AS deptId
+        FROM MEMBER
+       WHERE MEMBER_ID = #{memberId}
+         AND USE_YN = 'Y'
+  </select>
 
 </mapper>

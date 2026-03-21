@@ -1,11 +1,11 @@
 package infomind.instack.api.common.util;
 
-import infomind.instack.api.auth.basic.entity.AuthUser;
+import infomind.instack.api.auth.basic.entity.AuthUserVO;
+import infomind.instack.api.common.util.jwt.InvalidJwtException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import java.util.HashMap;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -25,11 +25,12 @@ public class JwtUtil {
     @Value("${Globals.jwt.refreshExpiration:86400000}")
     private long refreshExpiration;
 
-    private final String AUTHORIZATION = "Authorization";
+    public static final String AUTHORIZATION = "Authorization";
 
-    public String generateAccessToken(AuthUser authUser) {
+    public String generateAccessToken(AuthUserVO authUserVO) {
         SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         return Jwts.builder()
+                .claims(authUserVO.toClaims())
                 .subject(AUTHORIZATION)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
@@ -37,31 +38,26 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String generateRefreshToken(AuthUser authUser) {
-//        private String memberId;
-//        private String siteId;
-//        private String loginId;
-//        private String password;
-//        private String memberName;
-//        private String authLevel;
-//        private String email;
-//        private String useYn;
-//        private Date regDt;
-//        private Date modDt;
-//        private String regUser;
-//        private String deptId;
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("memberId", authUser.getMemberId());
-        claims.put("name", authUser.getSiteId());
-        claims.put("loginId", authUser.getLoginId());
-
+    public String generateRefreshToken(AuthUserVO authUserVO) {
         SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         return Jwts.builder()
+                .claims(authUserVO.toClaims())
                 .subject(AUTHORIZATION)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + refreshExpiration))
                 .signWith(key)
                 .compact();
+    }
+
+    public String getMemberIdFromToken(String token) {
+      return getInfoFromToken("memberId", token);
+    }
+
+    public String getInfoFromToken(String type, String token) {
+      Claims claims = parseToken(token);
+      Object info = claims.get(type);
+
+      return info != null ? info.toString() : null;
     }
 
     public Claims parseToken(String token) {
@@ -73,10 +69,6 @@ public class JwtUtil {
                 .getPayload();
     }
 
-    public String getSubject(String token) {
-        return parseToken(token).getSubject();
-    }
-
     public boolean isValid(String token) {
         try {
             parseToken(token);
@@ -84,5 +76,27 @@ public class JwtUtil {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public AuthUserVO getAuthUserFromToken(String token) throws InvalidJwtException {
+        AuthUserVO authUserVO = new AuthUserVO();
+
+        try {
+            authUserVO.setMemberId(getMemberIdFromToken(token));
+            authUserVO.setSiteId(getInfoFromToken("siteId", token));
+            authUserVO.setDeptId(getInfoFromToken("deptId", token));
+            authUserVO.setLoginId(getInfoFromToken("loginId", token));
+            // authUser.setMemberName(getInfoFromToken("memberName", token));
+            // authUser.setAuthLevel(getInfoFromToken("authLevel", token));
+            // authUser.setEmail(getInfoFromToken("email", token));
+
+            if(authUserVO.getMemberId() == null) throw new InvalidJwtException("Missing id in token");
+        } catch (IllegalArgumentException e) {
+            throw new InvalidJwtException("Unable to verify JWT Token: " + e.getMessage());
+        } catch (JwtException e) {
+            throw new InvalidJwtException("Unable to verify JWT Token: " + e.getMessage());
+        }
+
+        return authUserVO;
     }
 }

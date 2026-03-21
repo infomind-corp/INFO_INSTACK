@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RefreshToken {
+public class RefreshTokenVO {
 
     private String memberId;
     private String token;

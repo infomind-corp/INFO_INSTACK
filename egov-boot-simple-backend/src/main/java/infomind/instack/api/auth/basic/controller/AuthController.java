@@ -1,6 +1,6 @@
 package infomind.instack.api.auth.basic.controller;
 
-import egovframework.com.cmm.LoginVO;
+import infomind.instack.api.auth.basic.entity.AuthUserVO;
 import infomind.instack.api.auth.basic.model.LoginRequest;
 import infomind.instack.api.auth.basic.model.LoginResponse;
 import infomind.instack.api.auth.basic.service.AuthService;
@@ -28,8 +28,8 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public ApiResponse<Void> logout(@AuthenticationPrincipal LoginVO loginVO) {
-        authService.logout(loginVO.getId());
+    public ApiResponse<Void> logout(@AuthenticationPrincipal AuthUserVO authUserVO) {
+        authService.logout(authUserVO.getMemberId());
         return ApiResponse.ok();
     }
 }

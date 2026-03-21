@@ -5,7 +5,7 @@
 <mapper namespace="infomind.instack.api.auth.basic.dao.RefreshTokenDao">
 
     <select id="selectByMemberId" parameterType="string"
-            resultType="infomind.instack.api.auth.basic.entity.RefreshToken">
+            resultType="infomind.instack.api.auth.basic.entity.RefreshTokenVO">
         SELECT MEMBER_ID    AS memberId
              , TOKEN        AS token
              , EXPIRES_AT   AS expiresAt
@@ -14,7 +14,7 @@
          WHERE MEMBER_ID = #{memberId}
     </select>
 
-    <insert id="upsert" parameterType="infomind.instack.api.auth.basic.entity.RefreshToken">
+    <insert id="merge" parameterType="infomind.instack.api.auth.basic.entity.RefreshTokenVO">
         MERGE INTO REFRESH_TOKEN T
         USING (SELECT #{memberId} AS MEMBER_ID FROM DUAL) S
         ON (T.MEMBER_ID = S.MEMBER_ID)
