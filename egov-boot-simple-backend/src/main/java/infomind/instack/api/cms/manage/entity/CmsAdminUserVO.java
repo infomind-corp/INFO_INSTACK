@@ -1,13 +1,13 @@
-package infomind.instack.api.auth.manage.model;
+package infomind.instack.api.cms.manage.entity;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class UpdateUserRequest {
+public class CmsAdminUserVO {
 
-    private String userSe;
+    private String admId;
     private String userNm;
     private String eml;
     private String mtelno;
@@ -15,8 +15,12 @@ public class UpdateUserRequest {
     private String telno;
     private String addr;
     private String daddr;
-    private String zip;
+    private String authExpYmd;
+    private String authGrntYmd;
+    private String authRvkSe;
+    private String admStsSe;
     private String deptCd;
     private String orgCd;
-    private String pwd;
+    private String ci;
+    private String di;
 }

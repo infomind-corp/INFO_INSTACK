@@ -1,6 +1,6 @@
-package infomind.instack.api.auth.manage.service;
+package infomind.instack.api.cms.manage.service;
 
-import infomind.instack.api.auth.manage.model.*;
+import infomind.instack.api.cms.manage.model.*;
 import infomind.instack.api.common.model.PageResponse;
 
 public interface ManageService {

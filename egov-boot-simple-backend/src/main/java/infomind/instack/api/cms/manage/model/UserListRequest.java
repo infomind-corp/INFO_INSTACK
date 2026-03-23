@@ -1,4 +1,4 @@
-package infomind.instack.api.auth.manage.model;
+package infomind.instack.api.cms.manage.model;
 
 import infomind.instack.api.common.model.PageRequest;
 import lombok.Getter;

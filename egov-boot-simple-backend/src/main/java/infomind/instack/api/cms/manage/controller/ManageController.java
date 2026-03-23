@@ -1,14 +1,14 @@
-package infomind.instack.api.auth.manage.controller;
+package infomind.instack.api.cms.manage.controller;
 
-import infomind.instack.api.auth.manage.model.*;
-import infomind.instack.api.auth.manage.service.ManageService;
+import infomind.instack.api.cms.manage.model.*;
+import infomind.instack.api.cms.manage.service.ManageService;
 import infomind.instack.api.common.model.ApiResponse;
 import infomind.instack.api.common.model.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth/manage")
+@RequestMapping("/api/cms/manage")
 @RequiredArgsConstructor
 public class ManageController {
 

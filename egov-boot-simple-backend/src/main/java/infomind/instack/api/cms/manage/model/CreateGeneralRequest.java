@@ -1,13 +1,13 @@
-package infomind.instack.api.auth.manage.entity;
+package infomind.instack.api.cms.manage.model;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class CmsUserVO {
+public class CreateGeneralRequest {
 
-    private String userId;
+    private String loginId;
     private String userNm;
     private String mtelno;
     private String telno;
@@ -16,10 +16,5 @@ public class CmsUserVO {
     private String addr;
     private String daddr;
     private String zip;
-    private String accExpYmd;
-    private String emlCertYn;
-    private String telnoCertYn;
-    private String userStsSe;
-    private String ci;
-    private String di;
+    private String pwd;
 }

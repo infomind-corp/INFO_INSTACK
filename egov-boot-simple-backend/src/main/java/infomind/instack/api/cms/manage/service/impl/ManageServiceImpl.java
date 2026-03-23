@@ -1,12 +1,12 @@
-package infomind.instack.api.auth.manage.service.impl;
+package infomind.instack.api.cms.manage.service.impl;
 
-import infomind.instack.api.auth.manage.dao.ManageDao;
-import infomind.instack.api.auth.manage.entity.CmsAdminUserVO;
-import infomind.instack.api.auth.manage.entity.CmsPasswordVO;
-import infomind.instack.api.auth.manage.entity.CmsTaskUserVO;
-import infomind.instack.api.auth.manage.entity.CmsUserVO;
-import infomind.instack.api.auth.manage.model.*;
-import infomind.instack.api.auth.manage.service.ManageService;
+import infomind.instack.api.cms.manage.dao.ManageDao;
+import infomind.instack.api.cms.manage.entity.CmsAdminUserVO;
+import infomind.instack.api.cms.manage.entity.CmsPasswordVO;
+import infomind.instack.api.cms.manage.entity.CmsTaskUserVO;
+import infomind.instack.api.cms.manage.entity.CmsUserVO;
+import infomind.instack.api.cms.manage.model.*;
+import infomind.instack.api.cms.manage.service.ManageService;
 import infomind.instack.api.common.exception.BizException;
 import infomind.instack.api.common.model.PageResponse;
 import lombok.RequiredArgsConstructor;

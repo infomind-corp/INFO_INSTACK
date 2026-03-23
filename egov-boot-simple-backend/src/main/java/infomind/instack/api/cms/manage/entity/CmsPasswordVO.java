@@ -1,4 +1,4 @@
-package infomind.instack.api.auth.manage.entity;
+package infomind.instack.api.cms.manage.entity;
 
 import lombok.Getter;
 import lombok.Setter;

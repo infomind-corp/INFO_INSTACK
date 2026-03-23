@@ -1,11 +1,11 @@
-package infomind.instack.api.auth.manage.dao;
+package infomind.instack.api.cms.manage.dao;
 
-import infomind.instack.api.auth.manage.entity.CmsAdminUserVO;
-import infomind.instack.api.auth.manage.entity.CmsPasswordVO;
-import infomind.instack.api.auth.manage.entity.CmsTaskUserVO;
-import infomind.instack.api.auth.manage.entity.CmsUserVO;
-import infomind.instack.api.auth.manage.model.UserListRequest;
-import infomind.instack.api.auth.manage.model.UserListResponse;
+import infomind.instack.api.cms.manage.entity.CmsAdminUserVO;
+import infomind.instack.api.cms.manage.entity.CmsPasswordVO;
+import infomind.instack.api.cms.manage.entity.CmsTaskUserVO;
+import infomind.instack.api.cms.manage.entity.CmsUserVO;
+import infomind.instack.api.cms.manage.model.UserListRequest;
+import infomind.instack.api.cms.manage.model.UserListResponse;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
