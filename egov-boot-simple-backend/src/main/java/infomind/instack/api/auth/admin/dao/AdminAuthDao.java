@@ -9,9 +9,9 @@ import java.util.Optional;
 @Mapper
 public interface AdminAuthDao {
 
-    Optional<AuthUserVO> selectAdminUserByAdmId(String admId);
+    Optional<AuthUserVO> selectAdminUserByUserId(String userId);
 
-    Optional<String> selectPasswordByAdmId(String admId);
+    Optional<String> selectPasswordByUserId(String userId);
 
     Optional<CmsRefreshTokenVO> selectRefreshTokenByUserId(String userId);
 

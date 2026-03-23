@@ -84,7 +84,9 @@ public class SecurityConfig {
 
             /* INSTACK */
             "/api/auth/admin/login",
+            "/api/auth/admin/refresh",
             "/api/auth/admin/logout",
+            "/api/cms/user/**"      // 생성 TEST
 
     };
     private static final String[] ORIGINS_WHITELIST = {

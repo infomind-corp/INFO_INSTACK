@@ -11,8 +11,6 @@ import java.util.Date;
 @Getter
 @Setter
 public class CmsRefreshTokenVO {
-
-    private String tkId;
     private String userId;
     private String tk;
     private Date tkExpDt;

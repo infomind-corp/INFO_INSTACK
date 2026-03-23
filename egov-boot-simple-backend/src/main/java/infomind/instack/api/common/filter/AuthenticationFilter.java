@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -40,32 +41,54 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             throws IOException, ServletException {
 
         // step 1. request header에서 토큰을 가져온다.
-        String jwtToken = EgovStringUtil.isNullToString(req.getHeader(JwtUtil.AUTHORIZATION));
+        String bearerToken = EgovStringUtil.isNullToString(req.getHeader(JwtUtil.AUTHORIZATION));
 
+        if (StringUtils.hasText(bearerToken)) {
+            String jwtToken = extractToken(bearerToken);
 
-        // step 2. 토큰에 내용이 있는지 확인해서 id값을 가져옴
-        // Exception 핸들링 추가처리 (토큰 유효성, 토큰 변조 여부, 토큰 만료여부)
-        // 내부적으로 parse하는 과정에서 해당 여부들이 검증됨
-        try {
-            AuthUserVO authUserVO = jwtUtil.getAuthUserFromToken(jwtToken);
-            logger.debug("===>>> id = " + authUserVO.getId());
-            logger.debug("jwtToken validated");
-            logger.debug("===>>> loginVO.getUserSe() = "+ authUserVO.getUserSe());
+            // step 2. 토큰에 내용이 있는지 확인해서 id값을 가져옴
+            // Exception 핸들링 추가처리 (토큰 유효성, 토큰 변조 여부, 토큰 만료여부)
+            // 내부적으로 parse하는 과정에서 해당 여부들이 검증됨
+            try {
+                AuthUserVO authUserVO = jwtUtil.getAuthUserFromToken(jwtToken);
+                logger.debug("===>>> id = " + authUserVO.getId());
+                logger.debug("jwtToken validated");
+                logger.debug("===>>> loginVO.getUserSe() = "+ authUserVO.getUserSe());
 
-            String role = authUserVO.getUserSe();
+                String role = authUserVO.getUserSe();
 
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    authUserVO, null, Arrays.asList(new SimpleGrantedAuthority(role))
-            );
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        authUserVO, null, Arrays.asList(new SimpleGrantedAuthority(role))
+                );
 
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            logger.debug("authentication ===>>> " + authentication);
-        } catch (InvalidJwtException e) {
-            logger.debug(e.getMessage());
+                logger.debug("authentication ===>>> " + authentication);
+            } catch (InvalidJwtException e) {
+                logger.debug(e.getMessage());
+            }
         }
 
         chain.doFilter(req, res);
+    }
+
+    private String extractToken(String bearerToken) {
+        // 공백 제거
+        bearerToken = bearerToken.trim();
+
+        // "Bearer " 확인 (대소문자 구분 없음)
+        if (!bearerToken.toLowerCase().startsWith("bearer ")) {
+            throw new IllegalArgumentException("Authorization 헤더는 'Bearer '로 시작해야 합니다.");
+        }
+
+        // "Bearer " 제거 (7글자)
+        String token = bearerToken.substring(7).trim();
+
+        if (token.isEmpty()) {
+            throw new IllegalArgumentException("Bearer 뒤에 토큰이 없습니다.");
+        }
+
+        return token;
     }
 }

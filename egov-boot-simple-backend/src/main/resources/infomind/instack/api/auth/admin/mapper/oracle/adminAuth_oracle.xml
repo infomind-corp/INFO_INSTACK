@@ -4,7 +4,7 @@
 
 <mapper namespace="infomind.instack.api.auth.admin.dao.AdminAuthDao">
 
-    <select id="selectAdminUserByAdmId" parameterType="string"
+    <select id="selectAdminUserByUserId" parameterType="string"
             resultType="infomind.instack.api.auth.basic.entity.AuthUserVO">
         SELECT A.USER_ID    AS id
              , A.USER_NM    AS userNm
@@ -18,13 +18,13 @@
              , A.DI         AS di
              , 'ROLE_ADMIN' AS userSe
           FROM CMS_USER_ADMIN A
-         WHERE A.USER_ID = #{admId}
+         WHERE A.USER_ID = #{userId}
     </select>
 
-    <select id="selectPasswordByAdmId" parameterType="string" resultType="string">
+    <select id="selectPasswordByUserId" parameterType="string" resultType="string">
         SELECT PWD
           FROM CMS_PWD
-         WHERE USER_ID = #{admId}
+         WHERE USER_ID = #{UserId}
            AND USER_SE = 'A'
            AND USE_YN  = 'Y'
     </select>
@@ -60,7 +60,7 @@
           , UPD_IP
           , UPD_PGM
         ) VALUES (
-            #{tkId}
+            (SELECT NVL(MAX(TK_ID), 0) + 1 FROM CMS_RF_TK)
           , #{userId}
           , #{tk}
           , #{tkExpDt}

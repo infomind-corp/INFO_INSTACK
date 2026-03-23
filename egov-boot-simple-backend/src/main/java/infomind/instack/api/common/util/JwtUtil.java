@@ -93,8 +93,6 @@ public class JwtUtil {
                     getStringClaim(claims, "telno"),
                     getStringClaim(claims, "addr"),
                     getStringClaim(claims, "daddr"),
-                    getStringClaim(claims, "deptCd"),
-                    getStringClaim(claims, "orgCd"),
                     getStringClaim(claims, "ci"),
                     getStringClaim(claims, "di"),
                     getStringClaim(claims, "userSe")

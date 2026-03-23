@@ -35,10 +35,10 @@ public class AdminAuthServiceImpl extends EgovAbstractServiceImpl implements Adm
 
     @Override
     public LoginResponse login(LoginRequest request) {
-        AuthUserVO authUserVO = adminAuthDao.selectAdminUserByAdmId(request.getLoginId())
+        AuthUserVO authUserVO = adminAuthDao.selectAdminUserByUserId(request.getLoginId())
                 .orElseThrow(() -> new BizException("아이디 또는 비밀번호가 올바르지 않습니다.", HttpStatus.UNAUTHORIZED));
 
-        String pwd = adminAuthDao.selectPasswordByAdmId(request.getLoginId())
+        String pwd = adminAuthDao.selectPasswordByUserId(request.getLoginId())
                 .orElseThrow(() -> new BizException("아이디 또는 비밀번호가 올바르지 않습니다.", HttpStatus.UNAUTHORIZED));
 
         if (!egovPasswordEncoder.checkPassword(request.getPassword(), pwd)) {
@@ -63,7 +63,7 @@ public class AdminAuthServiceImpl extends EgovAbstractServiceImpl implements Adm
             throw new BizException("만료된 Refresh Token입니다.", HttpStatus.UNAUTHORIZED);
         }
 
-        AuthUserVO authUserVO = adminAuthDao.selectAdminUserByAdmId(admId)
+        AuthUserVO authUserVO = adminAuthDao.selectAdminUserByUserId(admId)
                 .orElseThrow(() -> new BizException("사용자를 찾을 수 없습니다.", HttpStatus.UNAUTHORIZED));
 
         return makeLoginResponse(authUserVO);
@@ -81,7 +81,6 @@ public class AdminAuthServiceImpl extends EgovAbstractServiceImpl implements Adm
         adminAuthDao.deleteRefreshTokenByUserId(authUserVO.getId());
 
         CmsRefreshTokenVO refreshTokenVO = new CmsRefreshTokenVO();
-        refreshTokenVO.setTkId(UuidUtil.generateCompact());
         refreshTokenVO.setUserId(authUserVO.getId());
         refreshTokenVO.setTk(refreshToken);
         refreshTokenVO.setTkExpDt(new Date(System.currentTimeMillis() + refreshTokenExpireTime));
