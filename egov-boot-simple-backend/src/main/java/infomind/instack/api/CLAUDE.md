@@ -36,7 +36,8 @@ public class {domain}ServiceImpl extends EgovAbstractServiceImpl implements {dom
     @Override
     public {domain}Response {action}({action}Request {action}Request) {
         {domain}VO {domain}VO = new {domain}VO();
-        BeanUtils.copyProperties(request, {domain}VO);
+        // 동일하지 않은 경우 setter로 직접 매핑한다.
+        BeanUtils.copyProperties({action}Request, {domain}VO);      // request와 VO의 각 필드명이 동일한 경우 BeanUtils로 복사한다.
         {domain}VO {domain}VO = {domain}Dao.select{domain}By{domain}VO({domain}VO)
                 .orElseThrow(() -> new BizException("", {HTTP_STATUS}));
         BeanUtils.copyProperties({domain}VO, new {domain}Response());
