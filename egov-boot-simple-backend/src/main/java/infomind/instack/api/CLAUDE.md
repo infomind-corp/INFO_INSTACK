@@ -1,8 +1,51 @@
 ## Controller
 - ApiResponse 객체를 반환하여 API 응답을 표준화한다.
+```java
+@RestController
+@RequestMapping("/api/{subject}/{domain}")
+@RequiredArgsConstructor
+public class {domain}Controller {
+
+    private final {domain}Service {domain}Service;
+
+    // GET 요청은 반환값이 있는 경우 ApiResponse.ok({data}) 형태로 반환한다.
+    @GetMapping("/{action}")
+    public ApiResponse<{action}Response> {action}(@RequestBody {action}Request request) {
+        return ApiResponse.ok({domain}Service.{action}(request));
+    }
+    
+    // POST, PUT, DELETE 등은 반환값이 없는 경우 ApiResponse.ok() 형태로 반환한다.
+    @PostMapping("/{action}")
+    public ApiResponse<{action}Response> {action}(@RequestBody {action}Request request) {
+        {domain}Service.{action}(request)
+        return ApiResponse.ok();
+    }
+}
+```
 
 ## Service
 - 모든 Service 클래스는 EgovAbstractServiceImpl 상속해야 한다.
+
+```java
+@Service
+@RequiredArgsConstructor
+public class {domain}ServiceImpl extends EgovAbstractServiceImpl implements {domain}Service {
+
+    private final {domain}Dao {domain}Dao;
+
+    @Override
+    public {domain}Response {action}({action}Request {action}Request) {
+        {domain}VO {domain}VO = new {domain}VO();
+        BeanUtils.copyProperties(request, {domain}VO);
+        {domain}VO {domain}VO = {domain}Dao.select{domain}By{domain}VO({domain}VO)
+                .orElseThrow(() -> new BizException("", {HTTP_STATUS}));
+        BeanUtils.copyProperties({domain}VO, new {domain}Response());
+        
+                
+        return {domain}Response;
+    }
+}
+```
 
 ## Model
 - Request 는 Controller에 요청된 값과 매핑하는 객체로 사용한다.

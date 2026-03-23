@@ -22,7 +22,7 @@ public class JwtUtil {
     @Value("${Globals.jwt.expiration:3600000}")
     private long expiration;
 
-    @Value("${Globals.jwt.refreshExpiration:86400000}")
+    @Value("${Globals.jwt.refreshExpiration:7200000}")
     private long refreshExpiration;
 
     public static final String AUTHORIZATION = "Authorization";
@@ -49,15 +49,14 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String getMemberIdFromToken(String token) {
-      return getInfoFromToken("memberId", token);
+    public String getIdFromToken(String token) {
+        return getInfoFromToken("id", token);
     }
 
     public String getInfoFromToken(String type, String token) {
-      Claims claims = parseToken(token);
-      Object info = claims.get(type);
-
-      return info != null ? info.toString() : null;
+        Claims claims = parseToken(token);
+        Object info = claims.get(type);
+        return info != null ? info.toString() : null;
     }
 
     public Claims parseToken(String token) {
@@ -79,24 +78,36 @@ public class JwtUtil {
     }
 
     public AuthUserVO getAuthUserFromToken(String token) throws InvalidJwtException {
-        AuthUserVO authUserVO = new AuthUserVO();
-
         try {
-            authUserVO.setMemberId(getMemberIdFromToken(token));
-            authUserVO.setSiteId(getInfoFromToken("siteId", token));
-            authUserVO.setDeptId(getInfoFromToken("deptId", token));
-            authUserVO.setLoginId(getInfoFromToken("loginId", token));
-            // authUser.setMemberName(getInfoFromToken("memberName", token));
-            // authUser.setAuthLevel(getInfoFromToken("authLevel", token));
-            // authUser.setEmail(getInfoFromToken("email", token));
+            Claims claims = parseToken(token);
 
-            if(authUserVO.getMemberId() == null) throw new InvalidJwtException("Missing id in token");
+            String id = claims.get("id") != null ? claims.get("id").toString() : null;
+            if (id == null) throw new InvalidJwtException("Missing id in token");
+
+            return new AuthUserVO(
+                    id,
+                    getStringClaim(claims, "userNm"),
+                    getStringClaim(claims, "eml"),
+                    getStringClaim(claims, "mtelno"),
+                    getStringClaim(claims, "gndrSe"),
+                    getStringClaim(claims, "telno"),
+                    getStringClaim(claims, "addr"),
+                    getStringClaim(claims, "daddr"),
+                    getStringClaim(claims, "deptCd"),
+                    getStringClaim(claims, "orgCd"),
+                    getStringClaim(claims, "ci"),
+                    getStringClaim(claims, "di"),
+                    getStringClaim(claims, "userSe")
+            );
         } catch (IllegalArgumentException e) {
             throw new InvalidJwtException("Unable to verify JWT Token: " + e.getMessage());
         } catch (JwtException e) {
             throw new InvalidJwtException("Unable to verify JWT Token: " + e.getMessage());
         }
+    }
 
-        return authUserVO;
+    private String getStringClaim(Claims claims, String key) {
+        Object value = claims.get(key);
+        return value != null ? value.toString() : null;
     }
 }

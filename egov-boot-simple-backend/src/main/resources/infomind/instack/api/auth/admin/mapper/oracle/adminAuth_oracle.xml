@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="infomind.instack.api.auth.admin.dao.AdminAuthDao">
+
+    <select id="selectAdminUserByAdmId" parameterType="string"
+            resultType="infomind.instack.api.auth.basic.entity.AuthUserVO">
+        SELECT A.ADM_ID     AS id
+             , A.USER_NM    AS userNm
+             , A.EML        AS eml
+             , A.MTELNO     AS mtelno
+             , A.GNDR_SE    AS gndrSe
+             , A.TELNO      AS telno
+             , A.ADDR       AS addr
+             , A.DADDR      AS daddr
+             , A.DEPT_CD    AS deptCd
+             , A.ORG_CD     AS orgCd
+             , A.CI         AS ci
+             , A.DI         AS di
+             , 'ROLE_ADMIN' AS userSe
+          FROM CMS_ADMIN_USER A
+         WHERE A.ADM_ID = #{admId}
+    </select>
+
+    <select id="selectPasswordByAdmId" parameterType="string" resultType="string">
+        SELECT PWD
+          FROM CMS_PASSWORD
+         WHERE USER_ID = #{admId}
+           AND USER_SE = 'A'
+           AND USE_YN  = 'Y'
+    </select>
+
+    <select id="selectRefreshTokenByUserId" parameterType="string"
+            resultType="infomind.instack.api.auth.admin.entity.CmsRefreshTokenVO">
+        SELECT TK_ID    AS tkId
+             , USER_ID  AS userId
+             , TK       AS tk
+             , EXP_DT   AS expDt
+             , RVK_YN   AS rkvYn
+          FROM CMS_REFRESH_TOKEN
+         WHERE USER_ID = #{userId}
+           AND RVK_YN = 'N'
+    </select>
+
+    <insert id="insertRefreshToken"
+            parameterType="infomind.instack.api.auth.admin.entity.CmsRefreshTokenVO">
+        INSERT INTO CMS_REFRESH_TOKEN (
+            TK_ID
+          , USER_ID
+          , TK
+          , EXP_DT
+          , RVK_YN
+          , CRT_AT
+          , CRT_BY
+          , CRT_IP
+          , CRT_PGM
+          , UPD_AT
+          , UPD_BY
+          , UPD_IP
+          , UPD_PGM
+        ) VALUES (
+            #{tkId}
+          , #{userId}
+          , #{tk}
+          , #{expDt}
+          , #{rkvYn}
+          , SYSDATE
+          , #{userId}
+          , 'SYSTEM'
+          , 'AdminAuthService'
+          , SYSDATE
+          , #{userId}
+          , 'SYSTEM'
+          , 'AdminAuthService'
+        )
+    </insert>
+
+    <delete id="deleteRefreshTokenByUserId" parameterType="string">
+        DELETE FROM CMS_REFRESH_TOKEN
+         WHERE USER_ID = #{userId}
+    </delete>
+
+</mapper>

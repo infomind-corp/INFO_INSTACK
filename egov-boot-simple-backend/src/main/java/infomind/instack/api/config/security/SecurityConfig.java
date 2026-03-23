@@ -83,7 +83,8 @@ public class SecurityConfig {
             "/webjars/**", // Swagger UI 정적 리소스
 
             /* INSTACK */
-            "/api/auth/login"
+            "/api/auth/login",
+            "/api/auth/admin/login"
 
     };
     private static final String[] ORIGINS_WHITELIST = {

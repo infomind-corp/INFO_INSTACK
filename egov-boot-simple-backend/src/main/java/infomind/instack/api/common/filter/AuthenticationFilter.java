@@ -48,11 +48,11 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         // 내부적으로 parse하는 과정에서 해당 여부들이 검증됨
         try {
             AuthUserVO authUserVO = jwtUtil.getAuthUserFromToken(jwtToken);
-            logger.debug("===>>> id = " + authUserVO.getMemberId());
+            logger.debug("===>>> id = " + authUserVO.getId());
             logger.debug("jwtToken validated");
-            logger.debug("===>>> loginVO.getUserSe() = "+ authUserVO.getAuthLevel());
+            logger.debug("===>>> loginVO.getUserSe() = "+ authUserVO.getUserSe());
 
-            String role = isAdmin(authUserVO) ? "ROLE_ADMIN" : "ROLE_USER";
+            String role = authUserVO.getUserSe();
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     authUserVO, null, Arrays.asList(new SimpleGrantedAuthority(role))
@@ -67,9 +67,5 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         }
 
         chain.doFilter(req, res);
-    }
-
-    private boolean isAdmin(AuthUserVO authUserVO) {
-        return "ROLE_ADMIN".equals(authUserVO.getAuthLevel());
     }
 }
