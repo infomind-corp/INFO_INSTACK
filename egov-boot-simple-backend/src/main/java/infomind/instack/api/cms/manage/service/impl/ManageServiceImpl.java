@@ -32,7 +32,7 @@ public class ManageServiceImpl extends EgovAbstractServiceImpl implements Manage
     public void createAdmin(CreateAdminRequest request) {
         CmsAdminUserVO vo = new CmsAdminUserVO();
         BeanUtils.copyProperties(request, vo);
-        vo.setAdmId(request.getLoginId());
+        vo.setUserId(request.getLoginId());
         vo.setAdmStsSe("ACTIVE");
         manageDao.insertAdminUser(vo);
 
@@ -43,7 +43,7 @@ public class ManageServiceImpl extends EgovAbstractServiceImpl implements Manage
     public void createEmployee(CreateEmployeeRequest request) {
         CmsTaskUserVO vo = new CmsTaskUserVO();
         BeanUtils.copyProperties(request, vo);
-        vo.setTaskUserId(request.getLoginId());
+        vo.setUserId(request.getLoginId());
         vo.setUserStsSe("ACTIVE");
         manageDao.insertTaskUser(vo);
 

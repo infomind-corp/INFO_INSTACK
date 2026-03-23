@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class CmsTaskUserVO {
 
-    private String taskUserId;
+    private String userId;
     private String userNm;
     private String gndrSe;
     private String mtelno;
@@ -19,8 +19,6 @@ public class CmsTaskUserVO {
     private String authGrntYmd;
     private String authRvkSe;
     private String userStsSe;
-    private String deptCd;
-    private String orgCd;
     private String ci;
     private String di;
 }

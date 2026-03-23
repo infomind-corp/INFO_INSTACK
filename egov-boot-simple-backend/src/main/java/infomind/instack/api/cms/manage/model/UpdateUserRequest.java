@@ -16,7 +16,5 @@ public class UpdateUserRequest {
     private String addr;
     private String daddr;
     private String zip;
-    private String deptCd;
-    private String orgCd;
     private String pwd;
 }

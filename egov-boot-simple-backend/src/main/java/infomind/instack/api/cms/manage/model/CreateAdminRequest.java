@@ -15,7 +15,5 @@ public class CreateAdminRequest {
     private String telno;
     private String addr;
     private String daddr;
-    private String deptCd;
-    private String orgCd;
     private String pwd;
 }

@@ -8,23 +8,23 @@
             resultType="infomind.instack.api.cms.manage.model.UserListResponse">
         SELECT id, userNm, eml, mtelno, gndrSe, userSe, userStsSe
           FROM (
-                SELECT ADM_ID      AS id
+                SELECT USER_ID     AS id
                      , USER_NM     AS userNm
                      , EML         AS eml
                      , MTELNO      AS mtelno
                      , GNDR_SE     AS gndrSe
                      , 'A'         AS userSe
                      , ADM_STS_SE  AS userStsSe
-                  FROM CMS_ADMIN_USER
+                  FROM CMS_USER_ADMIN
                 UNION ALL
-                SELECT TASK_USER_ID AS id
-                     , USER_NM      AS userNm
-                     , EML          AS eml
-                     , MTELNO       AS mtelno
-                     , GNDR_SE      AS gndrSe
-                     , 'E'          AS userSe
-                     , USER_STS_SE  AS userStsSe
-                  FROM CMS_TASK_USER
+                SELECT USER_ID     AS id
+                     , USER_NM     AS userNm
+                     , EML         AS eml
+                     , MTELNO      AS mtelno
+                     , GNDR_SE     AS gndrSe
+                     , 'E'         AS userSe
+                     , USER_STS_SE AS userStsSe
+                  FROM CMS_USER_TASK
                 UNION ALL
                 SELECT USER_ID     AS id
                      , USER_NM     AS userNm
@@ -48,9 +48,9 @@
             resultType="int">
         SELECT COUNT(*)
           FROM (
-                SELECT 'A' AS userSe FROM CMS_ADMIN_USER
+                SELECT 'A' AS userSe FROM CMS_USER_ADMIN
                 UNION ALL
-                SELECT 'E' AS userSe FROM CMS_TASK_USER
+                SELECT 'E' AS userSe FROM CMS_USER_TASK
                 UNION ALL
                 SELECT 'G' AS userSe FROM CMS_USER
                )
@@ -62,8 +62,8 @@
     </select>
 
     <insert id="insertAdminUser" parameterType="infomind.instack.api.cms.manage.entity.CmsAdminUserVO">
-        INSERT INTO CMS_ADMIN_USER (
-            ADM_ID
+        INSERT INTO CMS_USER_ADMIN (
+            USER_ID
           , USER_NM
           , EML
           , MTELNO
@@ -72,8 +72,6 @@
           , ADDR
           , DADDR
           , ADM_STS_SE
-          , DEPT_CD
-          , ORG_CD
           , CRT_AT
           , CRT_BY
           , CRT_IP
@@ -83,7 +81,7 @@
           , UPD_IP
           , UPD_PGM
         ) VALUES (
-            #{admId}
+            #{userId}
           , #{userNm}
           , #{eml}
           , #{mtelno}
@@ -92,8 +90,6 @@
           , #{addr}
           , #{daddr}
           , #{admStsSe}
-          , #{deptCd}
-          , #{orgCd}
           , SYSDATE
           , 'SYSTEM'
           , 'SYSTEM'
@@ -106,8 +102,8 @@
     </insert>
 
     <insert id="insertTaskUser" parameterType="infomind.instack.api.cms.manage.entity.CmsTaskUserVO">
-        INSERT INTO CMS_TASK_USER (
-            TASK_USER_ID
+        INSERT INTO CMS_USER_TASK (
+            USER_ID
           , USER_NM
           , GNDR_SE
           , MTELNO
@@ -116,8 +112,6 @@
           , ADDR
           , DADDR
           , USER_STS_SE
-          , DEPT_CD
-          , ORG_CD
           , CRT_AT
           , CRT_BY
           , CRT_IP
@@ -127,7 +121,7 @@
           , UPD_IP
           , UPD_PGM
         ) VALUES (
-            #{taskUserId}
+            #{userId}
           , #{userNm}
           , #{gndrSe}
           , #{mtelno}
@@ -136,8 +130,6 @@
           , #{addr}
           , #{daddr}
           , #{userStsSe}
-          , #{deptCd}
-          , #{orgCd}
           , SYSDATE
           , 'SYSTEM'
           , 'SYSTEM'
@@ -196,7 +188,7 @@
     </insert>
 
     <insert id="insertPassword" parameterType="infomind.instack.api.cms.manage.entity.CmsPasswordVO">
-        INSERT INTO CMS_PASSWORD (
+        INSERT INTO CMS_PWD (
             USER_ID
           , USER_SE
           , PWD
@@ -226,7 +218,7 @@
     </insert>
 
     <update id="updateAdminUser">
-        UPDATE CMS_ADMIN_USER
+        UPDATE CMS_USER_ADMIN
            SET USER_NM  = #{vo.userNm}
              , EML      = #{vo.eml}
              , MTELNO   = #{vo.mtelno}
@@ -234,17 +226,15 @@
              , TELNO    = #{vo.telno}
              , ADDR     = #{vo.addr}
              , DADDR    = #{vo.daddr}
-             , DEPT_CD  = #{vo.deptCd}
-             , ORG_CD   = #{vo.orgCd}
              , UPD_AT   = SYSDATE
              , UPD_BY   = 'SYSTEM'
              , UPD_IP   = 'SYSTEM'
              , UPD_PGM  = 'ManageService'
-         WHERE ADM_ID   = #{id}
+         WHERE USER_ID  = #{id}
     </update>
 
     <update id="updateTaskUser">
-        UPDATE CMS_TASK_USER
+        UPDATE CMS_USER_TASK
            SET USER_NM  = #{vo.userNm}
              , EML      = #{vo.eml}
              , MTELNO   = #{vo.mtelno}
@@ -252,13 +242,11 @@
              , TELNO    = #{vo.telno}
              , ADDR     = #{vo.addr}
              , DADDR    = #{vo.daddr}
-             , DEPT_CD  = #{vo.deptCd}
-             , ORG_CD   = #{vo.orgCd}
              , UPD_AT   = SYSDATE
              , UPD_BY   = 'SYSTEM'
              , UPD_IP   = 'SYSTEM'
              , UPD_PGM  = 'ManageService'
-         WHERE TASK_USER_ID = #{id}
+         WHERE USER_ID  = #{id}
     </update>
 
     <update id="updateGeneralUser">
@@ -279,7 +267,7 @@
     </update>
 
     <update id="updatePassword" parameterType="infomind.instack.api.cms.manage.entity.CmsPasswordVO">
-        UPDATE CMS_PASSWORD
+        UPDATE CMS_PWD
            SET PWD     = #{pwd}
              , UPD_AT  = SYSDATE
              , UPD_BY  = 'SYSTEM'
@@ -290,13 +278,13 @@
     </update>
 
     <delete id="deleteAdminUser" parameterType="string">
-        DELETE FROM CMS_ADMIN_USER
-         WHERE ADM_ID = #{id}
+        DELETE FROM CMS_USER_ADMIN
+         WHERE USER_ID = #{id}
     </delete>
 
     <delete id="deleteTaskUser" parameterType="string">
-        DELETE FROM CMS_TASK_USER
-         WHERE TASK_USER_ID = #{id}
+        DELETE FROM CMS_USER_TASK
+         WHERE USER_ID = #{id}
     </delete>
 
     <delete id="deleteGeneralUser" parameterType="string">
@@ -305,7 +293,7 @@
     </delete>
 
     <delete id="deletePasswordByUserIdAndUserSe">
-        DELETE FROM CMS_PASSWORD
+        DELETE FROM CMS_PWD
          WHERE USER_ID = #{userId}
            AND USER_SE = #{userSe}
     </delete>
