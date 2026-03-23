@@ -37,7 +37,5 @@
 ## Code Convention
 .editorconfig 참조
 
-## Post Process
-- 아래 사항은 AI 작업이 완료된 후 진행한다.
-1. Branch가 Master라면 `ClaudeSession` Branch 생성 후에 Checkout 한다.
-2. AI작업결과물만 Commit한다.
+## Commit
+- Branch가 Master라면 `ClaudeSession` Branch 생성 후에 Checkout 한다.
