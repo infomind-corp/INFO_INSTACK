@@ -58,7 +58,7 @@ public class AdminAuthServiceImpl extends EgovAbstractServiceImpl implements Adm
         CmsRefreshTokenVO storedToken = adminAuthDao.selectRefreshTokenByUserId(admId)
                 .orElseThrow(() -> new BizException("유효하지 않은 Refresh Token입니다.", HttpStatus.UNAUTHORIZED));
 
-        if (storedToken.getExpDt().before(new Date())) {
+        if (storedToken.getTkExpDt().before(new Date())) {
             adminAuthDao.deleteRefreshTokenByUserId(admId);
             throw new BizException("만료된 Refresh Token입니다.", HttpStatus.UNAUTHORIZED);
         }
@@ -84,7 +84,7 @@ public class AdminAuthServiceImpl extends EgovAbstractServiceImpl implements Adm
         refreshTokenVO.setTkId(UuidUtil.generateCompact());
         refreshTokenVO.setUserId(authUserVO.getId());
         refreshTokenVO.setTk(refreshToken);
-        refreshTokenVO.setExpDt(new Date(System.currentTimeMillis() + refreshTokenExpireTime));
+        refreshTokenVO.setTkExpDt(new Date(System.currentTimeMillis() + refreshTokenExpireTime));
         refreshTokenVO.setRkvYn("N");
         adminAuthDao.insertRefreshToken(refreshTokenVO);
 

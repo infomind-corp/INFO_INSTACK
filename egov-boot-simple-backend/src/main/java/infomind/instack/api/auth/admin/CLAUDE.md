@@ -1,8 +1,8 @@
 # DATABASE
 ## 연관 테이블
-- CMS_REFRESH_TOKEN
-- CMS_ADMIN_USER
-- CMS_PASSWORD 
+- CMS_RF_TK
+- CMS_USER_ADMIN
+- CMS_PWD
 
 ## 필드
 - USER_SE : 'A'는 관리자, 'E'는 업무사용자, 'G'는 일반 사용자

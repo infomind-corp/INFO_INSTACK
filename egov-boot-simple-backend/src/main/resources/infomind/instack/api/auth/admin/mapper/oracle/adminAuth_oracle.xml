@@ -6,7 +6,7 @@
 
     <select id="selectAdminUserByAdmId" parameterType="string"
             resultType="infomind.instack.api.auth.basic.entity.AuthUserVO">
-        SELECT A.ADM_ID     AS id
+        SELECT A.USER_ID    AS id
              , A.USER_NM    AS userNm
              , A.EML        AS eml
              , A.MTELNO     AS mtelno
@@ -14,18 +14,16 @@
              , A.TELNO      AS telno
              , A.ADDR       AS addr
              , A.DADDR      AS daddr
-             , A.DEPT_CD    AS deptCd
-             , A.ORG_CD     AS orgCd
              , A.CI         AS ci
              , A.DI         AS di
              , 'ROLE_ADMIN' AS userSe
-          FROM CMS_ADMIN_USER A
-         WHERE A.ADM_ID = #{admId}
+          FROM CMS_USER_ADMIN A
+         WHERE A.USER_ID = #{admId}
     </select>
 
     <select id="selectPasswordByAdmId" parameterType="string" resultType="string">
         SELECT PWD
-          FROM CMS_PASSWORD
+          FROM CMS_PWD
          WHERE USER_ID = #{admId}
            AND USER_SE = 'A'
            AND USE_YN  = 'Y'
@@ -33,23 +31,25 @@
 
     <select id="selectRefreshTokenByUserId" parameterType="string"
             resultType="infomind.instack.api.auth.admin.entity.CmsRefreshTokenVO">
-        SELECT TK_ID    AS tkId
-             , USER_ID  AS userId
-             , TK       AS tk
-             , EXP_DT   AS expDt
-             , RVK_YN   AS rkvYn
-          FROM CMS_REFRESH_TOKEN
+        SELECT TK_ID      AS tkId
+             , USER_ID    AS userId
+             , TK         AS tk
+             , TK_EXP_DT  AS tkExpDt
+             , RVK_YN     AS rkvYn
+             , IP_ADDR    AS ipAddr
+             , USER_AGT   AS userAgt
+          FROM CMS_RF_TK
          WHERE USER_ID = #{userId}
            AND RVK_YN = 'N'
     </select>
 
     <insert id="insertRefreshToken"
             parameterType="infomind.instack.api.auth.admin.entity.CmsRefreshTokenVO">
-        INSERT INTO CMS_REFRESH_TOKEN (
+        INSERT INTO CMS_RF_TK (
             TK_ID
           , USER_ID
           , TK
-          , EXP_DT
+          , TK_EXP_DT
           , RVK_YN
           , CRT_AT
           , CRT_BY
@@ -63,7 +63,7 @@
             #{tkId}
           , #{userId}
           , #{tk}
-          , #{expDt}
+          , #{tkExpDt}
           , #{rkvYn}
           , SYSDATE
           , #{userId}
@@ -77,7 +77,7 @@
     </insert>
 
     <delete id="deleteRefreshTokenByUserId" parameterType="string">
-        DELETE FROM CMS_REFRESH_TOKEN
+        DELETE FROM CMS_RF_TK
          WHERE USER_ID = #{userId}
     </delete>
 
