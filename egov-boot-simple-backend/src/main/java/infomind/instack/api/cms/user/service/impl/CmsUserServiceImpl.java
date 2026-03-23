@@ -1,12 +1,12 @@
 package infomind.instack.api.cms.user.service.impl;
 
-import infomind.instack.api.cms.user.dao.ManageDao;
+import infomind.instack.api.cms.user.dao.CmsUserDao;
 import infomind.instack.api.cms.user.entity.CmsAdminUserVO;
 import infomind.instack.api.cms.user.entity.CmsPasswordVO;
 import infomind.instack.api.cms.user.entity.CmsTaskUserVO;
 import infomind.instack.api.cms.user.entity.CmsUserVO;
 import infomind.instack.api.cms.user.model.*;
-import infomind.instack.api.cms.user.service.ManageService;
+import infomind.instack.api.cms.user.service.CmsUserService;
 import infomind.instack.api.common.exception.BizException;
 import infomind.instack.api.common.model.PageResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,24 +18,24 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ManageServiceImpl extends EgovAbstractServiceImpl implements ManageService {
+public class CmsUserServiceImpl extends EgovAbstractServiceImpl implements CmsUserService {
 
-    private final ManageDao manageDao;
+    private final CmsUserDao cmsUserDao;
     private final EgovPasswordEncoder egovPasswordEncoder;
 
     @Override
     public PageResponse<UserListResponse> list(UserListRequest request) {
-        return new PageResponse<>(manageDao.selectUserList(request), manageDao.countUserList(request), request);
+        return new PageResponse<>(cmsUserDao.selectUserList(request), cmsUserDao.countUserList(request), request);
     }
 
     @Override
     public UserDetailResponse detail(String id, String userSe) {
         return switch (userSe) {
-            case "A" -> manageDao.selectAdminUserById(id)
+            case "A" -> cmsUserDao.selectAdminUserById(id)
                     .orElseThrow(() -> new BizException("사용자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
-            case "E" -> manageDao.selectTaskUserById(id)
+            case "E" -> cmsUserDao.selectTaskUserById(id)
                     .orElseThrow(() -> new BizException("사용자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
-            case "G" -> manageDao.selectGeneralUserById(id)
+            case "G" -> cmsUserDao.selectGeneralUserById(id)
                     .orElseThrow(() -> new BizException("사용자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
             default -> throw new BizException("유효하지 않은 userSe 값입니다.", HttpStatus.BAD_REQUEST);
         };
@@ -54,14 +54,14 @@ public class ManageServiceImpl extends EgovAbstractServiceImpl implements Manage
                 BeanUtils.copyProperties(request, vo);
                 vo.setUserId(request.getUserId());
                 vo.setAdmStsSe("ACTIVE");
-                manageDao.insertAdminUser(vo);
+                cmsUserDao.insertAdminUser(vo);
             }
             case "E" -> {
                 CmsTaskUserVO vo = new CmsTaskUserVO();
                 BeanUtils.copyProperties(request, vo);
                 vo.setUserId(request.getUserId());
                 vo.setUserStsSe("ACTIVE");
-                manageDao.insertTaskUser(vo);
+                cmsUserDao.insertTaskUser(vo);
             }
             case "G" -> {
                 CmsUserVO vo = new CmsUserVO();
@@ -70,7 +70,7 @@ public class ManageServiceImpl extends EgovAbstractServiceImpl implements Manage
                 vo.setUserStsSe("ACTIVE");
                 vo.setEmlCertYn("N");
                 vo.setTelnoCertYn("N");
-                manageDao.insertGeneralUser(vo);
+                cmsUserDao.insertGeneralUser(vo);
             }
             default -> throw new BizException("유효하지 않은 userSe 값입니다.", HttpStatus.BAD_REQUEST);
         }
@@ -89,17 +89,17 @@ public class ManageServiceImpl extends EgovAbstractServiceImpl implements Manage
             case "A" -> {
                 CmsAdminUserVO vo = new CmsAdminUserVO();
                 BeanUtils.copyProperties(request, vo);
-                manageDao.updateAdminUser(id, vo);
+                cmsUserDao.updateAdminUser(id, vo);
             }
             case "E" -> {
                 CmsTaskUserVO vo = new CmsTaskUserVO();
                 BeanUtils.copyProperties(request, vo);
-                manageDao.updateTaskUser(id, vo);
+                cmsUserDao.updateTaskUser(id, vo);
             }
             case "G" -> {
                 CmsUserVO vo = new CmsUserVO();
                 BeanUtils.copyProperties(request, vo);
-                manageDao.updateGeneralUser(id, vo);
+                cmsUserDao.updateGeneralUser(id, vo);
             }
             default -> throw new BizException("유효하지 않은 userSe 값입니다.", HttpStatus.BAD_REQUEST);
         }
@@ -109,7 +109,7 @@ public class ManageServiceImpl extends EgovAbstractServiceImpl implements Manage
             pwdVO.setUserId(id);
             pwdVO.setUserSe(userSe);
             pwdVO.setPwd(egovPasswordEncoder.encryptPassword(request.getPwd()));
-            manageDao.updatePassword(pwdVO);
+            cmsUserDao.updatePassword(pwdVO);
         }
     }
 
@@ -120,13 +120,13 @@ public class ManageServiceImpl extends EgovAbstractServiceImpl implements Manage
         }
 
         switch (userSe) {
-            case "A" -> manageDao.deleteAdminUser(id);
-            case "E" -> manageDao.deleteTaskUser(id);
-            case "G" -> manageDao.deleteGeneralUser(id);
+            case "A" -> cmsUserDao.deleteAdminUser(id);
+            case "E" -> cmsUserDao.deleteTaskUser(id);
+            case "G" -> cmsUserDao.deleteGeneralUser(id);
             default -> throw new BizException("유효하지 않은 userSe 값입니다.", HttpStatus.BAD_REQUEST);
         }
 
-        manageDao.deletePasswordByUserIdAndUserSe(id, userSe);
+        cmsUserDao.deletePasswordByUserIdAndUserSe(id, userSe);
     }
 
     private void insertPassword(String userId, String userSe, String rawPwd) {
@@ -135,6 +135,6 @@ public class ManageServiceImpl extends EgovAbstractServiceImpl implements Manage
         pwdVO.setUserSe(userSe);
         pwdVO.setPwd(egovPasswordEncoder.encryptPassword(rawPwd));
         pwdVO.setUseYn("Y");
-        manageDao.insertPassword(pwdVO);
+        cmsUserDao.insertPassword(pwdVO);
     }
 }

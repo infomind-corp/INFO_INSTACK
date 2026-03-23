@@ -3,7 +3,7 @@ package infomind.instack.api.cms.user.service;
 import infomind.instack.api.cms.user.model.*;
 import infomind.instack.api.common.model.PageResponse;
 
-public interface ManageService {
+public interface CmsUserService {
 
     PageResponse<UserListResponse> list(UserListRequest request);
 

@@ -1,22 +1,30 @@
-package infomind.instack.api.cms.manage.dao;
+package infomind.instack.api.cms.user.dao;
 
-import infomind.instack.api.cms.manage.entity.CmsAdminUserVO;
-import infomind.instack.api.cms.manage.entity.CmsPasswordVO;
-import infomind.instack.api.cms.manage.entity.CmsTaskUserVO;
-import infomind.instack.api.cms.manage.entity.CmsUserVO;
-import infomind.instack.api.cms.manage.model.UserListRequest;
-import infomind.instack.api.cms.manage.model.UserListResponse;
+import infomind.instack.api.cms.user.entity.CmsAdminUserVO;
+import infomind.instack.api.cms.user.entity.CmsPasswordVO;
+import infomind.instack.api.cms.user.entity.CmsTaskUserVO;
+import infomind.instack.api.cms.user.entity.CmsUserVO;
+import infomind.instack.api.cms.user.model.UserDetailResponse;
+import infomind.instack.api.cms.user.model.UserListRequest;
+import infomind.instack.api.cms.user.model.UserListResponse;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
-public interface ManageDao {
+public interface CmsUserDao {
 
     List<UserListResponse> selectUserList(UserListRequest request);
 
     int countUserList(UserListRequest request);
+
+    Optional<UserDetailResponse> selectAdminUserById(String id);
+
+    Optional<UserDetailResponse> selectTaskUserById(String id);
+
+    Optional<UserDetailResponse> selectGeneralUserById(String id);
 
     void insertAdminUser(CmsAdminUserVO vo);
 
