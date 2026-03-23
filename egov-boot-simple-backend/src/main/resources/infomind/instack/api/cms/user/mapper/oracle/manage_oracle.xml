@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="infomind.instack.api.cms.user.dao.ManageDao">
+
+    <select id="selectUserList" parameterType="infomind.instack.api.cms.user.model.UserListRequest"
+            resultType="infomind.instack.api.cms.user.model.UserListResponse">
+        SELECT id, userNm, eml, mtelno, gndrSe, userSe, userStsSe
+          FROM (
+                SELECT USER_ID     AS id
+                     , USER_NM     AS userNm
+                     , EML         AS eml
+                     , MTELNO      AS mtelno
+                     , GNDR_SE     AS gndrSe
+                     , 'A'         AS userSe
+                     , ADM_STS_SE  AS userStsSe
+                  FROM CMS_USER_ADMIN
+                UNION ALL
+                SELECT USER_ID     AS id
+                     , USER_NM     AS userNm
+                     , EML         AS eml
+                     , MTELNO      AS mtelno
+                     , GNDR_SE     AS gndrSe
+                     , 'E'         AS userSe
+                     , USER_STS_SE AS userStsSe
+                  FROM CMS_USER_TASK
+                UNION ALL
+                SELECT USER_ID     AS id
+                     , USER_NM     AS userNm
+                     , EML         AS eml
+                     , MTELNO      AS mtelno
+                     , GNDR_SE     AS gndrSe
+                     , 'G'         AS userSe
+                     , USER_STS_SE AS userStsSe
+                  FROM CMS_USER
+               )
+        <where>
+            <if test="userSe != null and userSe != ''">
+                AND userSe = #{userSe}
+            </if>
+        </where>
+         ORDER BY userSe, userNm
+         OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <select id="countUserList" parameterType="infomind.instack.api.cms.user.model.UserListRequest"
+            resultType="int">
+        SELECT COUNT(*)
+          FROM (
+                SELECT 'A' AS userSe FROM CMS_USER_ADMIN
+                UNION ALL
+                SELECT 'E' AS userSe FROM CMS_USER_TASK
+                UNION ALL
+                SELECT 'G' AS userSe FROM CMS_USER
+               )
+        <where>
+            <if test="userSe != null and userSe != ''">
+                AND userSe = #{userSe}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAdminUserById" parameterType="string"
+            resultType="infomind.instack.api.cms.user.model.UserDetailResponse">
+        SELECT USER_ID      AS id
+             , 'A'          AS userSe
+             , USER_NM      AS userNm
+             , EML          AS eml
+             , MTELNO       AS mtelno
+             , GNDR_SE      AS gndrSe
+             , TELNO        AS telno
+             , ADDR         AS addr
+             , DADDR        AS daddr
+             , ADM_STS_SE   AS stsSe
+             , AUTH_EXP_YMD AS authExpYmd
+             , AUTH_GRNT_YMD AS authGrntYmd
+             , AUTH_RVK_SE  AS authRvkSe
+             , CI           AS ci
+             , DI           AS di
+          FROM CMS_USER_ADMIN
+         WHERE USER_ID = #{id}
+    </select>
+
+    <select id="selectTaskUserById" parameterType="string"
+            resultType="infomind.instack.api.cms.user.model.UserDetailResponse">
+        SELECT USER_ID      AS id
+             , 'E'          AS userSe
+             , USER_NM      AS userNm
+             , EML          AS eml
+             , MTELNO       AS mtelno
+             , GNDR_SE      AS gndrSe
+             , TELNO        AS telno
+             , ADDR         AS addr
+             , DADDR        AS daddr
+             , USER_STS_SE  AS stsSe
+             , AUTH_EXP_YMD AS authExpYmd
+             , AUTH_GRNT_YMD AS authGrntYmd
+             , AUTH_RVK_SE  AS authRvkSe
+             , CI           AS ci
+             , DI           AS di
+          FROM CMS_USER_TASK
+         WHERE USER_ID = #{id}
+    </select>
+
+    <select id="selectGeneralUserById" parameterType="string"
+            resultType="infomind.instack.api.cms.user.model.UserDetailResponse">
+        SELECT USER_ID     AS id
+             , 'G'         AS userSe
+             , USER_NM     AS userNm
+             , EML         AS eml
+             , MTELNO      AS mtelno
+             , GNDR_SE     AS gndrSe
+             , TELNO       AS telno
+             , ADDR        AS addr
+             , DADDR       AS daddr
+             , ZIP         AS zip
+             , USER_STS_SE AS stsSe
+             , CI          AS ci
+             , DI          AS di
+          FROM CMS_USER
+         WHERE USER_ID = #{id}
+    </select>
+
+    <insert id="insertAdminUser" parameterType="infomind.instack.api.cms.user.entity.CmsAdminUserVO">
+        INSERT INTO CMS_USER_ADMIN (
+            USER_ID
+          , USER_NM
+          , EML
+          , MTELNO
+          , GNDR_SE
+          , TELNO
+          , ADDR
+          , DADDR
+          , ADM_STS_SE
+          , CRT_AT
+          , CRT_BY
+          , CRT_IP
+          , CRT_PGM
+          , UPD_AT
+          , UPD_BY
+          , UPD_IP
+          , UPD_PGM
+        ) VALUES (
+            #{userId}
+          , #{userNm}
+          , #{eml}
+          , #{mtelno}
+          , #{gndrSe}
+          , #{telno}
+          , #{addr}
+          , #{daddr}
+          , #{admStsSe}
+          , SYSDATE
+          , 'SYSTEM'
+          , 'SYSTEM'
+          , 'ManageService'
+          , SYSDATE
+          , 'SYSTEM'
+          , 'SYSTEM'
+          , 'ManageService'
+        )
+    </insert>
+
+    <insert id="insertTaskUser" parameterType="infomind.instack.api.cms.user.entity.CmsTaskUserVO">
+        INSERT INTO CMS_USER_TASK (
+            USER_ID
+          , USER_NM
+          , GNDR_SE
+          , MTELNO
+          , EML
+          , TELNO
+          , ADDR
+          , DADDR
+          , USER_STS_SE
+          , CRT_AT
+          , CRT_BY
+          , CRT_IP
+          , CRT_PGM
+          , UPD_AT
+          , UPD_BY
+          , UPD_IP
+          , UPD_PGM
+        ) VALUES (
+            #{userId}
+          , #{userNm}
+          , #{gndrSe}
+          , #{mtelno}
+          , #{eml}
+          , #{telno}
+          , #{addr}
+          , #{daddr}
+          , #{userStsSe}
+          , SYSDATE
+          , 'SYSTEM'
+          , 'SYSTEM'
+          , 'ManageService'
+          , SYSDATE
+          , 'SYSTEM'
+          , 'SYSTEM'
+          , 'ManageService'
+        )
+    </insert>
+
+    <insert id="insertGeneralUser" parameterType="infomind.instack.api.cms.user.entity.CmsUserVO">
+        INSERT INTO CMS_USER (
+            USER_ID
+          , USER_NM
+          , MTELNO
+          , TELNO
+          , GNDR_SE
+          , EML
+          , ADDR
+          , DADDR
+          , ZIP
+          , USER_STS_SE
+          , EML_CERT_YN
+          , TELNO_CERT_YN
+          , CRT_AT
+          , CRT_BY
+          , CRT_IP
+          , CRT_PGM
+          , UPD_AT
+          , UPD_BY
+          , UPD_IP
+          , UPD_PGM
+        ) VALUES (
+            #{userId}
+          , #{userNm}
+          , #{mtelno}
+          , #{telno}
+          , #{gndrSe}
+          , #{eml}
+          , #{addr}
+          , #{daddr}
+          , #{zip}
+          , #{userStsSe}
+          , #{emlCertYn}
+          , #{telnoCertYn}
+          , SYSDATE
+          , 'SYSTEM'
+          , 'SYSTEM'
+          , 'ManageService'
+          , SYSDATE
+          , 'SYSTEM'
+          , 'SYSTEM'
+          , 'ManageService'
+        )
+    </insert>
+
+    <insert id="insertPassword" parameterType="infomind.instack.api.cms.user.entity.CmsPasswordVO">
+        INSERT INTO CMS_PWD (
+            USER_ID
+          , USER_SE
+          , PWD
+          , USE_YN
+          , CRT_AT
+          , CRT_BY
+          , CRT_IP
+          , CRT_PGM
+          , UPD_AT
+          , UPD_BY
+          , UPD_IP
+          , UPD_PGM
+        ) VALUES (
+            #{userId}
+          , #{userSe}
+          , #{pwd}
+          , #{useYn}
+          , SYSDATE
+          , 'SYSTEM'
+          , 'SYSTEM'
+          , 'ManageService'
+          , SYSDATE
+          , 'SYSTEM'
+          , 'SYSTEM'
+          , 'ManageService'
+        )
+    </insert>
+
+    <update id="updateAdminUser">
+        UPDATE CMS_USER_ADMIN
+           SET USER_NM  = #{vo.userNm}
+             , EML      = #{vo.eml}
+             , MTELNO   = #{vo.mtelno}
+             , GNDR_SE  = #{vo.gndrSe}
+             , TELNO    = #{vo.telno}
+             , ADDR     = #{vo.addr}
+             , DADDR    = #{vo.daddr}
+             , UPD_AT   = SYSDATE
+             , UPD_BY   = 'SYSTEM'
+             , UPD_IP   = 'SYSTEM'
+             , UPD_PGM  = 'ManageService'
+         WHERE USER_ID  = #{id}
+    </update>
+
+    <update id="updateTaskUser">
+        UPDATE CMS_USER_TASK
+           SET USER_NM  = #{vo.userNm}
+             , EML      = #{vo.eml}
+             , MTELNO   = #{vo.mtelno}
+             , GNDR_SE  = #{vo.gndrSe}
+             , TELNO    = #{vo.telno}
+             , ADDR     = #{vo.addr}
+             , DADDR    = #{vo.daddr}
+             , UPD_AT   = SYSDATE
+             , UPD_BY   = 'SYSTEM'
+             , UPD_IP   = 'SYSTEM'
+             , UPD_PGM  = 'ManageService'
+         WHERE USER_ID  = #{id}
+    </update>
+
+    <update id="updateGeneralUser">
+        UPDATE CMS_USER
+           SET USER_NM  = #{vo.userNm}
+             , EML      = #{vo.eml}
+             , MTELNO   = #{vo.mtelno}
+             , GNDR_SE  = #{vo.gndrSe}
+             , TELNO    = #{vo.telno}
+             , ADDR     = #{vo.addr}
+             , DADDR    = #{vo.daddr}
+             , ZIP      = #{vo.zip}
+             , UPD_AT   = SYSDATE
+             , UPD_BY   = 'SYSTEM'
+             , UPD_IP   = 'SYSTEM'
+             , UPD_PGM  = 'ManageService'
+         WHERE USER_ID  = #{id}
+    </update>
+
+    <update id="updatePassword" parameterType="infomind.instack.api.cms.user.entity.CmsPasswordVO">
+        UPDATE CMS_PWD
+           SET PWD     = #{pwd}
+             , UPD_AT  = SYSDATE
+             , UPD_BY  = 'SYSTEM'
+             , UPD_IP  = 'SYSTEM'
+             , UPD_PGM = 'ManageService'
+         WHERE USER_ID = #{userId}
+           AND USER_SE = #{userSe}
+    </update>
+
+    <delete id="deleteAdminUser" parameterType="string">
+        DELETE FROM CMS_USER_ADMIN
+         WHERE USER_ID = #{id}
+    </delete>
+
+    <delete id="deleteTaskUser" parameterType="string">
+        DELETE FROM CMS_USER_TASK
+         WHERE USER_ID = #{id}
+    </delete>
+
+    <delete id="deleteGeneralUser" parameterType="string">
+        DELETE FROM CMS_USER
+         WHERE USER_ID = #{id}
+    </delete>
+
+    <delete id="deletePasswordByUserIdAndUserSe">
+        DELETE FROM CMS_PWD
+         WHERE USER_ID = #{userId}
+           AND USER_SE = #{userSe}
+    </delete>
+
+</mapper>
