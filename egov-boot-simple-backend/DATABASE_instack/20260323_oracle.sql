@@ -859,7 +859,6 @@ CREATE TABLE INS_APP.CMS_PUSH_TK (
                                      APP_VER VARCHAR2(100),
                                      PUSH_CH VARCHAR2(100),
                                      PUSH_TK VARCHAR(100) NOT NULL,
-                                     _ VARCHAR(100),
                                      USE_YN VARCHAR2(1),
                                      PUSH_AGR_YN VARCHAR2(1),
                                      LST_PUSH_USE_DT DATE,
@@ -898,7 +897,6 @@ COMMENT ON COLUMN INS_APP.CMS_PUSH_TK.PUSH_CH IS 'fcm | apns | web_push';
 
 COMMENT ON COLUMN INS_APP.CMS_PUSH_TK.PUSH_TK IS '푸시 토큰';
 
-COMMENT ON COLUMN INS_APP.CMS_PUSH_TK._ IS 'apns 암호화';
 
 COMMENT ON COLUMN INS_APP.CMS_PUSH_TK.USE_YN IS '사용 여부';
 
@@ -1512,8 +1510,6 @@ CREATE TABLE INS_APP.CMS_FILE (
                                   AFILE_SN NUMBER(15) NOT NULL,
                                   FILE_PATH VARCHAR2(400),
                                   FILE_NM VARCHAR2(300),
-                                  _FILE_NM VARCHAR(100),
-                                  FILE_ <지정 되지 않음>,
                                   FILE_DESC VARCHAR2(4000),
                                   FILE_SZ NUMBER(15,5),
                                   DEL_YN VARCHAR2(1),
@@ -1536,10 +1532,6 @@ COMMENT ON COLUMN INS_APP.CMS_FILE.AFILE_SN IS '첨부파일 일련번호';
 COMMENT ON COLUMN INS_APP.CMS_FILE.FILE_PATH IS '파일 경로';
 
 COMMENT ON COLUMN INS_APP.CMS_FILE.FILE_NM IS '파일 명';
-
-COMMENT ON COLUMN INS_APP.CMS_FILE._FILE_NM IS '암호화 파일 명';
-
-COMMENT ON COLUMN INS_APP.CMS_FILE.FILE_ IS '파일 확장자';
 
 COMMENT ON COLUMN INS_APP.CMS_FILE.FILE_DESC IS '파일 내용';
 
@@ -1902,19 +1894,8 @@ ALTER TABLE INS_APP.CMS_SITE_VST_HIST
 
 CREATE TABLE INS_APP.CMS_BNR_GRP (
                                      BNR_GRP_ID VARCHAR(100) NOT NULL,
-                                     SITE_CD VARCHAR2(20) NOT NULL,
-                                     BNR_GRP_NM <지정 되지 않음>,
-                                     BNR_GRP_DESC <지정 되지 않음>,
-                                     USE_YN <지정 되지 않음>,
-                                     SORT <지정 되지 않음>,
-                                     CRT_AT DATE NOT NULL,
-                                     CRT_BY VARCHAR(100) NOT NULL,
-                                     CRT_IP VARCHAR(40) NOT NULL,
-                                     CRT_PGM VARCHAR(100) NOT NULL,
-                                     UPD_AT DATE NOT NULL,
-                                     UPD_BY VARCHAR(100) NOT NULL,
-                                     UPD_IP VARCHAR(40) NOT NULL,
-                                     UPD_PGM VARCHAR(100) NOT NULL
+                                     SITE_CD VARCHAR2(20) NOT NULL
+
 );
 
 COMMENT ON TABLE INS_APP.CMS_BNR_GRP IS '[03.사이트]05.배너 그룹';
@@ -1923,29 +1904,6 @@ COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.BNR_GRP_ID IS '배너 그룹 아이디';
 
 COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.SITE_CD IS '사이트 코드';
 
-COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.BNR_GRP_NM IS '배너 그룹 명';
-
-COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.BNR_GRP_DESC IS '배너 그룹 내용';
-
-COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.USE_YN IS '사용여부';
-
-COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.SORT IS '정렬';
-
-COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.CRT_AT IS '등록일시';
-
-COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.CRT_BY IS '등록자';
-
-COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.CRT_IP IS '등록자IP';
-
-COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.CRT_PGM IS '등록프로그램';
-
-COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.UPD_AT IS '수정일시';
-
-COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.UPD_BY IS '수정자';
-
-COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.UPD_IP IS '수정자IP';
-
-COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.UPD_PGM IS '수정프로그램';
 
 CREATE UNIQUE INDEX INS_APP.PK_CMS_BNR_GRP
     ON INS_APP.CMS_BNR_GRP (
@@ -1969,7 +1927,6 @@ CREATE TABLE INS_APP.CMS_BNR (
                                  BNR_DESC VARCHAR(4000),
                                  BNR_FILE_NM VARCHAR(300),
                                  BNR_FILE_PATH VARCHAR(400),
-                                 ORD null(10),
                                  PUB_ST_DAY VARCHAR(8),
                                  PUB_ST_HR VARCHAR(4),
                                  PUB_END_DAY VARCHAR(8),
@@ -2005,8 +1962,6 @@ COMMENT ON COLUMN INS_APP.CMS_BNR.BNR_DESC IS '배너 내용';
 COMMENT ON COLUMN INS_APP.CMS_BNR.BNR_FILE_NM IS '배너 파일 명';
 
 COMMENT ON COLUMN INS_APP.CMS_BNR.BNR_FILE_PATH IS '배너 파일 경로';
-
-COMMENT ON COLUMN INS_APP.CMS_BNR.ORD IS '순서';
 
 COMMENT ON COLUMN INS_APP.CMS_BNR.PUB_ST_DAY IS '게시 시작 일';
 
@@ -2606,16 +2561,13 @@ CREATE TABLE INS_APP.CMS_PST_CMT (
                                      BRD_ID VARCHAR2(100) NOT NULL,
                                      BRD_SE VARCHAR2(20) NOT NULL,
                                      PST_SN NUMBER(15) NOT NULL,
-                                     CMT_SN null(15) NOT NULL,
                                      CMT_TTL VARCHAR(300),
-                                     LIKE_CNT null(10),
                                      CMT_DESC VARCHAR(4000),
                                      PWD_USE_YN VARCHAR(1),
                                      CMT_PWD VARCHAR(500),
                                      USE_YN VARCHAR(1),
                                      DEL_YN VARCHAR(1),
                                      CMT_DEL_SE VARCHAR(20),
-                                     ORD null(10),
                                      CRT_AT DATE NOT NULL,
                                      CRT_BY VARCHAR(100) NOT NULL,
                                      CRT_IP VARCHAR(40) NOT NULL,
@@ -2636,11 +2588,7 @@ COMMENT ON COLUMN INS_APP.CMS_PST_CMT.BRD_SE IS '게시판 구분';
 
 COMMENT ON COLUMN INS_APP.CMS_PST_CMT.PST_SN IS '게시글 순번';
 
-COMMENT ON COLUMN INS_APP.CMS_PST_CMT.CMT_SN IS '댓글 순번';
-
 COMMENT ON COLUMN INS_APP.CMS_PST_CMT.CMT_TTL IS '댓글 제목';
-
-COMMENT ON COLUMN INS_APP.CMS_PST_CMT.LIKE_CNT IS '좋아요 수';
 
 COMMENT ON COLUMN INS_APP.CMS_PST_CMT.CMT_DESC IS '댓글 내용';
 
@@ -2653,8 +2601,6 @@ COMMENT ON COLUMN INS_APP.CMS_PST_CMT.USE_YN IS '사용 여부';
 COMMENT ON COLUMN INS_APP.CMS_PST_CMT.DEL_YN IS '삭제 여부';
 
 COMMENT ON COLUMN INS_APP.CMS_PST_CMT.CMT_DEL_SE IS '관리자/본인삭제';
-
-COMMENT ON COLUMN INS_APP.CMS_PST_CMT.ORD IS '순서';
 
 COMMENT ON COLUMN INS_APP.CMS_PST_CMT.CRT_AT IS '등록일시';
 
@@ -2672,26 +2618,6 @@ COMMENT ON COLUMN INS_APP.CMS_PST_CMT.UPD_IP IS '수정자IP';
 
 COMMENT ON COLUMN INS_APP.CMS_PST_CMT.UPD_PGM IS '수정프로그램';
 
-CREATE UNIQUE INDEX INS_APP.PK_CMS_PST_CMT
-    ON INS_APP.CMS_PST_CMT (
-                            SITE_CD ASC,
-                            BRD_ID ASC,
-                            BRD_SE ASC,
-                            PST_SN ASC,
-                            CMT_SN ASC
-        );
-
-ALTER TABLE INS_APP.CMS_PST_CMT
-    ADD
-        CONSTRAINT PK_CMS_PST_CMT
-            PRIMARY KEY (
-                         SITE_CD,
-                         BRD_ID,
-                         BRD_SE,
-                         PST_SN,
-                         CMT_SN
-                );
-
 ALTER TABLE INS_APP.CMS_COM_DEPT
     ADD
         CONSTRAINT FK_CMS_COM_ORG_TO_CMS_COM_DEPT
@@ -2702,186 +2628,85 @@ ALTER TABLE INS_APP.CMS_COM_DEPT
                                                 ORG_CD
                     );
 
-ALTER TABLE INS_APP.CMS_COM_AUTH_MENU
-    ADD
-        CONSTRAINT FK_CMS_COM_AUTH_TO_CMS_COM_AUTH_MENU
-            FOREIGN KEY (
-                         AUTH_CD
-                )
-                REFERENCES INS_APP.CMS_COM_AUTH (
-                                                 AUTH_CD
-                    );
+-- Foreign Key Constraints - Optimized Version
+-- Identifier length: Maximum 30 characters (Oracle compatible)
 
 ALTER TABLE INS_APP.CMS_COM_AUTH_MENU
-    ADD
-        CONSTRAINT FK_CMS_COM_MENU_TO_CMS_COM_AUTH_MENU
-            FOREIGN KEY (
-                         MENU_CD
-                )
-                REFERENCES INS_APP.CMS_COM_MENU (
-                                                 MENU_CD
-                    );
+    ADD CONSTRAINT FK_CMS_AUTH_TO_AUTH_MENU
+        FOREIGN KEY (AUTH_CD)
+            REFERENCES INS_APP.CMS_COM_AUTH (AUTH_CD);
+
+ALTER TABLE INS_APP.CMS_COM_AUTH_MENU
+    ADD CONSTRAINT FK_CMS_MENU_TO_AUTH_MENU
+        FOREIGN KEY (MENU_CD)
+            REFERENCES INS_APP.CMS_COM_MENU (MENU_CD);
 
 ALTER TABLE INS_APP.CMS_FILE
-    ADD
-        CONSTRAINT FK_CMS_FILE_GRP_TO_CMS_FILE
-            FOREIGN KEY (
-                         AFILE_ID
-                )
-                REFERENCES INS_APP.CMS_FILE_GRP (
-                                                 AFILE_ID
-                    );
+    ADD CONSTRAINT FK_CMS_FILE_GRP_TO_FILE
+        FOREIGN KEY (AFILE_ID)
+            REFERENCES INS_APP.CMS_FILE_GRP (AFILE_ID);
 
 ALTER TABLE INS_APP.CMS_SITE_IP
-    ADD
-        CONSTRAINT FK_CMS_SITE_TO_CMS_SITE_IP
-            FOREIGN KEY (
-                         SITE_CD
-                )
-                REFERENCES INS_APP.CMS_SITE (
-                                             SITE_CD
-                    );
+    ADD CONSTRAINT FK_CMS_SITE_TO_SITE_IP
+        FOREIGN KEY (SITE_CD)
+            REFERENCES INS_APP.CMS_SITE (SITE_CD);
 
 ALTER TABLE INS_APP.CMS_SITE_MENU
-    ADD
-        CONSTRAINT FK_CMS_SITE_TO_CMS_SITE_MENU
-            FOREIGN KEY (
-                         SITE_CD
-                )
-                REFERENCES INS_APP.CMS_SITE (
-                                             SITE_CD
-                    );
+    ADD CONSTRAINT FK_CMS_SITE_TO_SITE_MENU
+        FOREIGN KEY (SITE_CD)
+            REFERENCES INS_APP.CMS_SITE (SITE_CD);
 
 ALTER TABLE INS_APP.CMS_SITE_VST_HIST
-    ADD
-        CONSTRAINT FK_CMS_SITE_MENU_TO_CMS_SITE_VST_HIST
-            FOREIGN KEY (
-                         SITE_CD,
-                         MENU_CD,
-                         LANG_SE
-                )
-                REFERENCES INS_APP.CMS_SITE_MENU (
-                                                  SITE_CD,
-                                                  MENU_CD,
-                                                  LANG_SE
-                    );
+    ADD CONSTRAINT FK_SITE_MENU_TO_VST_HIST
+        FOREIGN KEY (SITE_CD, MENU_CD, LANG_SE)
+            REFERENCES INS_APP.CMS_SITE_MENU (SITE_CD, MENU_CD, LANG_SE);
 
 ALTER TABLE INS_APP.CMS_BNR_GRP
-    ADD
-        CONSTRAINT FK_CMS_SITE_TO_CMS_BNR_GRP
-            FOREIGN KEY (
-                         SITE_CD
-                )
-                REFERENCES INS_APP.CMS_SITE (
-                                             SITE_CD
-                    );
+    ADD CONSTRAINT FK_CMS_SITE_TO_BNR_GRP
+        FOREIGN KEY (SITE_CD)
+            REFERENCES INS_APP.CMS_SITE (SITE_CD);
 
 ALTER TABLE INS_APP.CMS_BNR
-    ADD
-        CONSTRAINT FK_CMS_BNR_GRP_TO_CMS_BNR
-            FOREIGN KEY (
-                         BNR_GRP_ID,
-                         SITE_CD
-                )
-                REFERENCES INS_APP.CMS_BNR_GRP (
-                                                BNR_GRP_ID,
-                                                SITE_CD
-                    );
+    ADD CONSTRAINT FK_BNR_GRP_TO_BNR
+        FOREIGN KEY (BNR_GRP_ID, SITE_CD)
+            REFERENCES INS_APP.CMS_BNR_GRP (BNR_GRP_ID, SITE_CD);
 
 ALTER TABLE INS_APP.CMS_CTT
-    ADD
-        CONSTRAINT FK_CMS_SITE_TO_CMS_CTT
-            FOREIGN KEY (
-                         SITE_CD
-                )
-                REFERENCES INS_APP.CMS_SITE (
-                                             SITE_CD
-                    );
+    ADD CONSTRAINT FK_CMS_SITE_TO_CTT
+        FOREIGN KEY (SITE_CD)
+            REFERENCES INS_APP.CMS_SITE (SITE_CD);
 
 ALTER TABLE INS_APP.CMS_CTT_SEO
-    ADD
-        CONSTRAINT FK_CMS_CTT_TO_CMS_CTT_SEO
-            FOREIGN KEY (
-                         SITE_CD,
-                         CTT_ID
-                )
-                REFERENCES INS_APP.CMS_CTT (
-                                            SITE_CD,
-                                            CTT_ID
-                    );
+    ADD CONSTRAINT FK_CMS_CTT_TO_CTT_SEO
+        FOREIGN KEY (SITE_CD, CTT_ID)
+            REFERENCES INS_APP.CMS_CTT (SITE_CD, CTT_ID);
 
 ALTER TABLE INS_APP.CMS_POP
-    ADD
-        CONSTRAINT FK_CMS_POP_GRP_TO_CMS_POP
-            FOREIGN KEY (
-                         SITE_CD,
-                         POP_GRP_ID
-                )
-                REFERENCES INS_APP.CMS_POP_GRP (
-                                                SITE_CD,
-                                                POP_GRP_ID
-                    );
+    ADD CONSTRAINT FK_POP_GRP_TO_POP
+        FOREIGN KEY (SITE_CD, POP_GRP_ID)
+            REFERENCES INS_APP.CMS_POP_GRP (SITE_CD, POP_GRP_ID);
 
 ALTER TABLE INS_APP.CMS_POP_GRP
-    ADD
-        CONSTRAINT FK_CMS_SITE_TO_CMS_POP_GRP
-            FOREIGN KEY (
-                         SITE_CD
-                )
-                REFERENCES INS_APP.CMS_SITE (
-                                             SITE_CD
-                    );
+    ADD CONSTRAINT FK_CMS_SITE_TO_POP_GRP
+        FOREIGN KEY (SITE_CD)
+            REFERENCES INS_APP.CMS_SITE (SITE_CD);
 
 ALTER TABLE INS_APP.CMS_BRD
-    ADD
-        CONSTRAINT FK_CMS_SITE_TO_CMS_BRD
-            FOREIGN KEY (
-                         SITE_CD
-                )
-                REFERENCES INS_APP.CMS_SITE (
-                                             SITE_CD
-                    );
+    ADD CONSTRAINT FK_CMS_SITE_TO_BRD
+        FOREIGN KEY (SITE_CD)
+            REFERENCES INS_APP.CMS_SITE (SITE_CD);
 
 ALTER TABLE INS_APP.CMS_BRD_AUTH
-    ADD
-        CONSTRAINT FK_CMS_BRD_TO_CMS_BRD_AUTH
-            FOREIGN KEY (
-                         SITE_CD,
-                         BRD_ID,
-                         BRD_SE
-                )
-                REFERENCES INS_APP.CMS_BRD (
-                                            SITE_CD,
-                                            BRD_ID,
-                                            BRD_SE
-                    );
+    ADD CONSTRAINT FK_CMS_BRD_TO_BRD_AUTH
+        FOREIGN KEY (SITE_CD, BRD_ID, BRD_SE)
+            REFERENCES INS_APP.CMS_BRD (SITE_CD, BRD_ID, BRD_SE);
 
 ALTER TABLE INS_APP.CMS_PST
-    ADD
-        CONSTRAINT FK_CMS_BRD_TO_CMS_PST
-            FOREIGN KEY (
-                         SITE_CD,
-                         BRD_ID,
-                         BRD_SE
-                )
-                REFERENCES INS_APP.CMS_BRD (
-                                            SITE_CD,
-                                            BRD_ID,
-                                            BRD_SE
-                    );
+    ADD CONSTRAINT FK_CMS_BRD_TO_PST
+        FOREIGN KEY (SITE_CD, BRD_ID, BRD_SE)
+            REFERENCES INS_APP.CMS_BRD (SITE_CD, BRD_ID, BRD_SE);
 
 ALTER TABLE INS_APP.CMS_PST_CMT
-    ADD
-        CONSTRAINT FK_CMS_PST_TO_CMS_PST_CMT
-            FOREIGN KEY (
-                         SITE_CD,
-                         BRD_ID,
-                         BRD_SE,
-                         PST_SN
-                )
-                REFERENCES INS_APP.CMS_PST (
-                                            SITE_CD,
-                                            BRD_ID,
-                                            BRD_SE,
-                                            PST_SN
-                    );
+    ADD CONSTRAINT FK_CMS_PST_TO_PST_CMT
+        FOREIGN KEY (SITE_CD, BRD_ID, BRD_SE, PST_SN)
+            REFERENCES INS_APP.CMS_PST (SITE_CD, BRD_ID, BRD_SE, PST_SN);
