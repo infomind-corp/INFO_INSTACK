@@ -19,26 +19,26 @@ public class CmsUserController {
         return ApiResponse.ok(cmsUserService.list(request));
     }
 
-    @GetMapping("/{id}")
-    public ApiResponse<UserDetailResponse> detail(@PathVariable String id, @RequestParam String userSe) {
-        return ApiResponse.ok(cmsUserService.detail(id, userSe));
+    @GetMapping("/{userSe}/{userId}")
+    public ApiResponse<UserDetailResponse> detail(@PathVariable String userSe, @PathVariable String userId) {
+        return ApiResponse.ok(cmsUserService.detail(userId, userSe));
     }
 
-    @PostMapping
-    public ApiResponse<Void> create(@RequestBody CreateUserRequest request) {
-        cmsUserService.create(request);
+    @PostMapping("/{userSe}")
+    public ApiResponse<Void> create(@PathVariable String userSe, @RequestBody CreateUserRequest request) {
+        cmsUserService.create(userSe, request);
         return ApiResponse.ok();
     }
 
-    @PutMapping("/{id}")
-    public ApiResponse<Void> update(@PathVariable String id, @RequestBody UpdateUserRequest request) {
-        cmsUserService.update(id, request);
+    @PutMapping("/{userSe}/{userId}")
+    public ApiResponse<Void> update(@PathVariable String userSe, @PathVariable String userId, @RequestBody UpdateUserRequest request) {
+        cmsUserService.update(userSe, userId, request);
         return ApiResponse.ok();
     }
 
-    @DeleteMapping("/{id}")
-    public ApiResponse<Void> delete(@PathVariable String id, @RequestParam String userSe) {
-        cmsUserService.delete(id, userSe);
+    @DeleteMapping("/{userSe}/{userId}")
+    public ApiResponse<Void> delete(@PathVariable String userSe, @PathVariable String userId) {
+        cmsUserService.delete(userId, userSe);
         return ApiResponse.ok();
     }
 }

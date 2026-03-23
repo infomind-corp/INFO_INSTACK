@@ -7,11 +7,11 @@ public interface CmsUserService {
 
     PageResponse<UserListResponse> list(UserListRequest request);
 
-    UserDetailResponse detail(String id, String userSe);
+    UserDetailResponse detail(String userId, String userSe);
 
-    void create(CreateUserRequest request);
+    void create(String userSe, CreateUserRequest request);
 
-    void update(String id, UpdateUserRequest request);
+    void update(String userSe, String userId, UpdateUserRequest request);
 
-    void delete(String id, String userSe);
+    void delete(String userId, String userSe);
 }

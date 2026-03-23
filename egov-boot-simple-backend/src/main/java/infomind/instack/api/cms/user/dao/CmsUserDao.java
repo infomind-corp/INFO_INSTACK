@@ -20,11 +20,11 @@ public interface CmsUserDao {
 
     int countUserList(UserListRequest request);
 
-    Optional<UserDetailResponse> selectAdminUserById(String id);
+    Optional<UserDetailResponse> selectAdminUserById(String userId);
 
-    Optional<UserDetailResponse> selectTaskUserById(String id);
+    Optional<UserDetailResponse> selectTaskUserById(String userId);
 
-    Optional<UserDetailResponse> selectGeneralUserById(String id);
+    Optional<UserDetailResponse> selectGeneralUserById(String userId);
 
     void insertAdminUser(CmsAdminUserVO vo);
 
@@ -34,19 +34,19 @@ public interface CmsUserDao {
 
     void insertPassword(CmsPasswordVO vo);
 
-    void updateAdminUser(@Param("id") String id, @Param("vo") CmsAdminUserVO vo);
+    void updateAdminUser(String userId, @Param("vo") CmsAdminUserVO vo);
 
-    void updateTaskUser(@Param("id") String id, @Param("vo") CmsTaskUserVO vo);
+    void updateTaskUser(String userId, @Param("vo") CmsTaskUserVO vo);
 
-    void updateGeneralUser(@Param("id") String id, @Param("vo") CmsUserVO vo);
+    void updateGeneralUser(String userId, @Param("vo") CmsUserVO vo);
 
     void updatePassword(CmsPasswordVO vo);
 
-    void deleteAdminUser(String id);
+    void deleteAdminUser(String userId);
 
-    void deleteTaskUser(String id);
+    void deleteTaskUser(String userId);
 
-    void deleteGeneralUser(String id);
+    void deleteGeneralUser(String userId);
 
     void deletePasswordByUserIdAndUserSe(@Param("userId") String userId, @Param("userSe") String userSe);
 }

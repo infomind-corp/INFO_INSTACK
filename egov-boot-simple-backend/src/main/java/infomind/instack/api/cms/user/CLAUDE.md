@@ -9,13 +9,12 @@
 # Spec
 ## API : /api/cms/user
 - GET : /list : 사용자 목록 조회 (페이징)
-- GET : /{id} : 사용자 단건 조회
-- POST : /
-  - userSe : 필수
+- GET : /{userSe}/{userId} : 사용자 단건 조회
+- POST : /{userSe} : 사용자 생성
   - id : 필수
   - pwd : 필수
-- PUT : /{id} : 사용자 정보 업데이트
-- DELETE : /{id} : 사용자 삭제
+- PUT : /{userSe}/{userId} : 사용자 정보 업데이트
+- DELETE : /{userSe}/{userId} : 사용자 삭제
 
 ## Request
 - userSe : 사용자가 입력하는 값 ('A'는 관리자, 'E'는 업무사용자, 'G'는 일반 사용자)

@@ -29,25 +29,20 @@ public class CmsUserServiceImpl extends EgovAbstractServiceImpl implements CmsUs
     }
 
     @Override
-    public UserDetailResponse detail(String id, String userSe) {
+    public UserDetailResponse detail(String userId, String userSe) {
         return switch (userSe) {
-            case "A" -> cmsUserDao.selectAdminUserById(id)
+            case "A" -> cmsUserDao.selectAdminUserById(userId)
                     .orElseThrow(() -> new BizException("사용자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
-            case "E" -> cmsUserDao.selectTaskUserById(id)
+            case "E" -> cmsUserDao.selectTaskUserById(userId)
                     .orElseThrow(() -> new BizException("사용자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
-            case "G" -> cmsUserDao.selectGeneralUserById(id)
+            case "G" -> cmsUserDao.selectGeneralUserById(userId)
                     .orElseThrow(() -> new BizException("사용자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
             default -> throw new BizException("유효하지 않은 userSe 값입니다.", HttpStatus.BAD_REQUEST);
         };
     }
 
     @Override
-    public void create(CreateUserRequest request) {
-        String userSe = request.getUserSe();
-        if (userSe == null) {
-            throw new BizException("userSe는 필수입니다.", HttpStatus.BAD_REQUEST);
-        }
-
+    public void create(String userSe, CreateUserRequest request) {
         switch (userSe) {
             case "A" -> {
                 CmsAdminUserVO vo = new CmsAdminUserVO();
@@ -79,34 +74,29 @@ public class CmsUserServiceImpl extends EgovAbstractServiceImpl implements CmsUs
     }
 
     @Override
-    public void update(String id, UpdateUserRequest request) {
-        String userSe = request.getUserSe();
-        if (userSe == null) {
-            throw new BizException("userSe는 필수입니다.", HttpStatus.BAD_REQUEST);
-        }
-
+    public void update(String userSe, String userId, UpdateUserRequest request) {
         switch (userSe) {
             case "A" -> {
                 CmsAdminUserVO vo = new CmsAdminUserVO();
                 BeanUtils.copyProperties(request, vo);
-                cmsUserDao.updateAdminUser(id, vo);
+                cmsUserDao.updateAdminUser(userId, vo);
             }
             case "E" -> {
                 CmsTaskUserVO vo = new CmsTaskUserVO();
                 BeanUtils.copyProperties(request, vo);
-                cmsUserDao.updateTaskUser(id, vo);
+                cmsUserDao.updateTaskUser(userId, vo);
             }
             case "G" -> {
                 CmsUserVO vo = new CmsUserVO();
                 BeanUtils.copyProperties(request, vo);
-                cmsUserDao.updateGeneralUser(id, vo);
+                cmsUserDao.updateGeneralUser(userId, vo);
             }
             default -> throw new BizException("유효하지 않은 userSe 값입니다.", HttpStatus.BAD_REQUEST);
         }
 
         if (request.getPwd() != null && !request.getPwd().isBlank()) {
             CmsPasswordVO pwdVO = new CmsPasswordVO();
-            pwdVO.setUserId(id);
+            pwdVO.setUserId(userId);
             pwdVO.setUserSe(userSe);
             pwdVO.setPwd(egovPasswordEncoder.encryptPassword(request.getPwd()));
             cmsUserDao.updatePassword(pwdVO);
@@ -114,19 +104,15 @@ public class CmsUserServiceImpl extends EgovAbstractServiceImpl implements CmsUs
     }
 
     @Override
-    public void delete(String id, String userSe) {
-        if (userSe == null) {
-            throw new BizException("userSe는 필수입니다.", HttpStatus.BAD_REQUEST);
-        }
-
+    public void delete(String userId, String userSe) {
         switch (userSe) {
-            case "A" -> cmsUserDao.deleteAdminUser(id);
-            case "E" -> cmsUserDao.deleteTaskUser(id);
-            case "G" -> cmsUserDao.deleteGeneralUser(id);
+            case "A" -> cmsUserDao.deleteAdminUser(userId);
+            case "E" -> cmsUserDao.deleteTaskUser(userId);
+            case "G" -> cmsUserDao.deleteGeneralUser(userId);
             default -> throw new BizException("유효하지 않은 userSe 값입니다.", HttpStatus.BAD_REQUEST);
         }
 
-        cmsUserDao.deletePasswordByUserIdAndUserSe(id, userSe);
+        cmsUserDao.deletePasswordByUserIdAndUserSe(userId, userSe);
     }
 
     private void insertPassword(String userId, String userSe, String rawPwd) {

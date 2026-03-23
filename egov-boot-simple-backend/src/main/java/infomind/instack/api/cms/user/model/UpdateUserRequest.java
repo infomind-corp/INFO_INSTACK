@@ -7,7 +7,6 @@ import lombok.Setter;
 @Setter
 public class UpdateUserRequest {
 
-    private String userSe;
     private String userNm;
     private String eml;
     private String mtelno;
