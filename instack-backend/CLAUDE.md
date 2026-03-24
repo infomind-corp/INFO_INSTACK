@@ -17,19 +17,23 @@
 ## 패키지 구조
 ```
 /infomind/instack/api/
-├── config/          ← 전역 설정 (Security, DataSource, JPA, CORS, eGov)
-├── common/          ← 공통 모듈
-│   ├── exception/   ← BizException, GlobalExceptionHandler
-│   ├── model/       ← ApiResponse, PageRequest
-│   ├── aop/         ← LogAspect
-│   ├── filter/      ← IpBlockFilter
-│   └── util/        ← JwtUtil, UuidUtil, FileUtil
-├── auth/            ← JWT 인증
-│   └── {domain}/    ← controller / dao / entity / model / service/impl / mapper
-├── cms/             ← 관리자 API (/api/cms/**)
-│   └── {domain}/    ← 동일 구조
-└── user/            ← 사용자 API (/api/user/**)
-    └── {domain}/    ← 동일 구조
+├── config/
+│   └── security/        ← SecurityConfig, WebMvcConfig, CustomAuthenticationPrincipalResolver
+├── common/
+│   ├── model/           ← ApiResponse, PageRequest, PageResponse
+│   ├── exception/       ← BizException, GlobalExceptionHandler
+│   ├── entity/          ← BaseAuditVO (공통 감사 VO)
+│   ├── aop/             ← AuditAspect, AuditLog, AuditLogAspect
+│   ├── filter/          ← AuthenticationFilter, HTMLTagFilter, IpBlockFilter
+│   └── util/            ← AuditHolder, JwtUtil, UuidUtil, FileUtil
+│                          └── jwt/ ← EgovJwtTokenUtil, JwtAuthenticationFilter
+├── auth/
+│   ├── admin/           ← controller / service/impl / dao / entity / model
+│   └── basic/           ← entity / model (LoginRequest, LoginResponse, RefreshRequest)
+├── cms/                 ← 관리자 API (/api/cms/**)
+│   └── {domain}/        ← controller / service/impl / dao / entity / model
+└── user/                ← 사용자 API (/api/user/**)
+    └── {domain}/        ← 동일 구조
 ```
 
 ## Database
@@ -41,12 +45,9 @@
 
 ### 공통
 - Swagger 어노테이션으로 API 문서화: `@Tag`, `@Operation`, `@Parameter`, `@ApiResponse`, `@Schema`
-- `/api/common/` 경로 내의 파일은 공통적으로 쓰이고 자주 보일 파일이므로, Class 파일 상단에 설명 및 목적 주석 추가
+- `common/` 하위 파일은 Class 파일 상단에 설명 및 목적 주석 추가
 
 ### Controller
-- `ApiResponse` 객체로 응답 표준화
-- 반환값 있음: `ApiResponse.ok({data})`
-- 반환값 없음: `ApiResponse.ok()`
 
 ```java
 @RestController
@@ -72,10 +73,14 @@ public class {Domain}Controller {
 }
 ```
 
+- `ApiResponse.ok({data})`: 반환값 있음
+- `ApiResponse.ok()`: 반환값 없음
+
 ### Service
 - `EgovAbstractServiceImpl` 상속 필수
 - `BeanUtils.copyProperties(src, dest)`: 필드명이 동일한 경우 사용
 - 필드명이 다른 경우 setter로 직접 매핑
+- 다중 쿼리가 포함된 메서드는 `@Transactional` 적용
 
 ```java
 @Service
@@ -101,13 +106,17 @@ public class {Domain}ServiceImpl extends EgovAbstractServiceImpl implements {Dom
 - `@Getter`, `@Setter` 어노테이션만 사용
 - `LocalDateTime`, `Date` 등 날짜/시간 타입은 `String`으로 매핑
 - Request: Java Bean Validation 어노테이션으로 유효성 검사 적용 (`@NotBlank`, `@NotNull` 등)
+- 페이지 목록 응답 시 `PageResponse<T>` 사용
 
 ### Entity (VO)
 - DB 컬럼과 매핑되는 객체
 - `@Getter`, `@Setter` 사용
+- 감사 컬럼(CRT_AT, CRT_BY, CRT_IP, CRT_PGM, UPD_AT, UPD_BY, UPD_IP, UPD_PGM) 포함 시 `BaseAuditVO` 상속
+  - `BaseAuditVO`는 추상 클래스이며, 생성자에서 `AuditHolder`를 통해 BY/IP/PGM 자동 주입
+  - AT 컬럼은 SQL에서 `SYSDATE`로 처리
 
 ### DAO
-- MyBatis `@Mapper` 인터페이스로 작성
+- MyBatis `@EgovMapper` 인터페이스로 작성
 - 단건 조회는 `Optional<T>` 반환 (List 제외)
 - 도메인 별 DAO 하나만 작성
 - 파라미터가 2개 이상인 경우 `@Param` 어노테이션 사용
@@ -124,11 +133,34 @@ public interface {Domain}Dao {
 ```
 
 ### Mapper XML
-- 파일 위치: `src/main/resources/infomind/instack/api/{domain}/mapper/{dbtype}/{domain}_{dbtype}.xml`
+- 파일 위치: `src/main/resources/infomind/instack/api/{subject}/{domain}/mapper/oracle/{domain}_oracle.xml`
 - DB 타입별로 파일 분리 (oracle, mysql 등)
 - XML 엔티티(`&lt;`, `&gt;`) 대신 `<![CDATA[ ]]>` 사용
+- 감사 컬럼 INSERT/UPDATE 시 `auditFragment` 사용 (위치: `common/mapper/oracle/audit_oracle.xml`)
 
 ```xml
+<!-- INSERT 예시 -->
+<insert id="insert{Domain}" parameterType="...">
+    INSERT INTO {TABLE} (
+        ID,
+        NAME,
+        <include refid="auditFragment.insertColumns"/>
+    ) VALUES (
+        #{id},
+        #{name},
+        <include refid="auditFragment.insertValues"/>
+    )
+</insert>
+
+<!-- UPDATE 예시 (@Param("vo") 패턴) -->
+<update id="update{Domain}">
+    UPDATE {TABLE}
+    SET NAME   = #{vo.name},
+        <include refid="auditFragment.updateSet"/>
+    WHERE ID = #{id}
+</update>
+
+<!-- 목록 조회 예시 -->
 <select id="select{Domain}List" resultType="...">
     SELECT *
     FROM {TABLE}
@@ -139,3 +171,15 @@ public interface {Domain}Dao {
     </where>
 </select>
 ```
+
+### 감사(Audit) 자동화 구조
+- `AuditAspect`: `*.service.impl.*` 메서드 실행 시 AuditHolder에 감사 정보 자동 등록
+  - `crtBy`/`updBy`: SecurityContext의 로그인 사용자 ID
+  - `crtIp`/`updIp`: 요청 클라이언트 IP (X-Forwarded-For 우선)
+  - `crtPgm`/`updPgm`: `{ServiceClass}.{method}` 형식
+- `BaseAuditVO` 상속 VO 생성 시 생성자에서 자동 채워짐 → 코드에서 별도 세팅 불필요
+
+### 예외 처리
+- `BizException(message)`: HTTP 400 응답
+- `BizException(message, HttpStatus)`: 지정 HTTP 상태로 응답
+- `GlobalExceptionHandler`가 `ApiResponse` 형태로 일괄 변환
