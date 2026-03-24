@@ -138,8 +138,3 @@ public interface {Domain}Dao {
     </where>
 </select>
 ```
-
----
-
-## Commit
-- Branch가 `master`라면 `ClaudeSession` Branch 생성 후 Checkout한다.
