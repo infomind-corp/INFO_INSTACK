@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="infomind.instack.api.cms.site.dao.CmsSiteDao">
+
+    <select id="selectSiteList" resultType="infomind.instack.api.cms.site.model.SiteListResponse">
+        SELECT SITE_CD   AS siteCd
+             , SITE_NM   AS siteNm
+             , SITE_DESC AS siteDesc
+             , USE_YN    AS useYn
+             , TO_CHAR(CRT_AT, 'YYYY-MM-DD HH24:MI:SS') AS crtAt
+          FROM CMS_SITE
+         ORDER BY CRT_AT DESC
+    </select>
+
+    <select id="selectSiteBySiteCd" parameterType="string"
+            resultType="infomind.instack.api.cms.site.model.SiteDetailResponse">
+        SELECT SITE_CD   AS siteCd
+             , SITE_NM   AS siteNm
+             , SITE_DESC AS siteDesc
+             , USE_YN    AS useYn
+             , TO_CHAR(CRT_AT, 'YYYY-MM-DD HH24:MI:SS') AS crtAt
+             , CRT_BY    AS crtBy
+             , TO_CHAR(UPD_AT, 'YYYY-MM-DD HH24:MI:SS') AS updAt
+             , UPD_BY    AS updBy
+          FROM CMS_SITE
+         WHERE SITE_CD = #{siteCd}
+    </select>
+
+    <select id="selectSiteIpListBySiteCd" parameterType="string"
+            resultType="infomind.instack.api.cms.site.model.SiteIpListResponse">
+        SELECT SITE_CD    AS siteCd
+             , SN         AS sn
+             , USE_YN     AS useYn
+             , IP_DESC    AS ipDesc
+             , PERM_IP    AS permIp
+             , USE_ST_YMD AS useStYmd
+             , USE_END_YMD AS useEndYmd
+          FROM CMS_SITE_IP
+         WHERE SITE_CD = #{siteCd}
+         ORDER BY CRT_AT DESC
+    </select>
+
+    <select id="selectSiteIpBySiteCdAndSn"
+            resultType="infomind.instack.api.cms.site.model.SiteIpDetailResponse">
+        SELECT SITE_CD    AS siteCd
+             , SN         AS sn
+             , USE_YN     AS useYn
+             , IP_DESC    AS ipDesc
+             , PERM_IP    AS permIp
+             , USE_ST_YMD AS useStYmd
+             , USE_END_YMD AS useEndYmd
+             , TO_CHAR(CRT_AT, 'YYYY-MM-DD HH24:MI:SS') AS crtAt
+             , CRT_BY     AS crtBy
+             , TO_CHAR(UPD_AT, 'YYYY-MM-DD HH24:MI:SS') AS updAt
+             , UPD_BY     AS updBy
+          FROM CMS_SITE_IP
+         WHERE SITE_CD = #{siteCd}
+           AND SN = #{sn}
+    </select>
+
+    <insert id="insertSite" parameterType="infomind.instack.api.cms.site.entity.CmsSiteVO">
+        INSERT INTO CMS_SITE (
+            SITE_CD
+          , SITE_NM
+          , SITE_DESC
+          , USE_YN
+          , CRT_AT
+          , CRT_BY
+          , CRT_IP
+          , CRT_PGM
+          , UPD_AT
+          , UPD_BY
+          , UPD_IP
+          , UPD_PGM
+        ) VALUES (
+            #{siteCd}
+          , #{siteNm}
+          , #{siteDesc}
+          , #{useYn}
+          , SYSDATE
+          , 'SYSTEM'
+          , 'SYSTEM'
+          , 'SiteService'
+          , SYSDATE
+          , 'SYSTEM'
+          , 'SYSTEM'
+          , 'SiteService'
+        )
+    </insert>
+
+    <insert id="insertSiteIp" parameterType="infomind.instack.api.cms.site.entity.CmsSiteIpVO">
+        INSERT INTO CMS_SITE_IP (
+            SITE_CD
+          , SN
+          , USE_YN
+          , IP_DESC
+          , PERM_IP
+          , USE_ST_YMD
+          , USE_END_YMD
+          , CRT_AT
+          , CRT_BY
+          , CRT_IP
+          , CRT_PGM
+          , UPD_AT
+          , UPD_BY
+          , UPD_IP
+          , UPD_PGM
+        ) VALUES (
+            #{siteCd}
+          , #{sn}
+          , #{useYn}
+          , #{ipDesc}
+          , #{permIp}
+          , #{useStYmd}
+          , #{useEndYmd}
+          , SYSDATE
+          , 'SYSTEM'
+          , 'SYSTEM'
+          , 'SiteService'
+          , SYSDATE
+          , 'SYSTEM'
+          , 'SYSTEM'
+          , 'SiteService'
+        )
+    </insert>
+
+    <update id="updateSite">
+        UPDATE CMS_SITE
+           SET SITE_NM   = #{vo.siteNm}
+             , SITE_DESC = #{vo.siteDesc}
+             , USE_YN    = #{vo.useYn}
+             , UPD_AT    = SYSDATE
+             , UPD_BY    = 'SYSTEM'
+             , UPD_IP    = 'SYSTEM'
+             , UPD_PGM   = 'SiteService'
+         WHERE SITE_CD   = #{siteCd}
+    </update>
+
+    <update id="updateSiteIp">
+        UPDATE CMS_SITE_IP
+           SET PERM_IP     = #{vo.permIp}
+             , USE_YN      = #{vo.useYn}
+             , IP_DESC     = #{vo.ipDesc}
+             , USE_ST_YMD  = #{vo.useStYmd}
+             , USE_END_YMD = #{vo.useEndYmd}
+             , UPD_AT      = SYSDATE
+             , UPD_BY      = 'SYSTEM'
+             , UPD_IP      = 'SYSTEM'
+             , UPD_PGM     = 'SiteService'
+         WHERE SITE_CD     = #{siteCd}
+           AND SN          = #{sn}
+    </update>
+
+    <delete id="deleteSite" parameterType="string">
+        DELETE FROM CMS_SITE
+         WHERE SITE_CD = #{siteCd}
+    </delete>
+
+    <delete id="deleteSiteIpBySiteCd" parameterType="string">
+        DELETE FROM CMS_SITE_IP
+         WHERE SITE_CD = #{siteCd}
+    </delete>
+
+</mapper>
