@@ -13,6 +13,11 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+/**
+ * JWT 토큰 유틸리티 (INSTACK).
+ * <p>Access Token / Refresh Token 발급, 파싱, 유효성 검사, {@link infomind.instack.api.auth.basic.entity.AuthUserVO} 추출을 담당한다.
+ * eGov 레거시용 {@link infomind.instack.api.common.util.jwt.EgovJwtTokenUtil}과 구분되며, INSTACK API 전용으로 사용된다.</p>
+ */
 @Component
 public class JwtUtil {
 

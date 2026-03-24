@@ -66,27 +66,13 @@
           , SITE_NM
           , SITE_DESC
           , USE_YN
-          , CRT_AT
-          , CRT_BY
-          , CRT_IP
-          , CRT_PGM
-          , UPD_AT
-          , UPD_BY
-          , UPD_IP
-          , UPD_PGM
+          , <include refid="auditFragment.insertColumns"/>
         ) VALUES (
             #{siteCd}
           , #{siteNm}
           , #{siteDesc}
           , #{useYn}
-          , SYSDATE
-          , 'SYSTEM'
-          , 'SYSTEM'
-          , 'SiteService'
-          , SYSDATE
-          , 'SYSTEM'
-          , 'SYSTEM'
-          , 'SiteService'
+          , <include refid="auditFragment.insertValues"/>
         )
     </insert>
 
@@ -99,14 +85,7 @@
           , PERM_IP
           , USE_ST_YMD
           , USE_END_YMD
-          , CRT_AT
-          , CRT_BY
-          , CRT_IP
-          , CRT_PGM
-          , UPD_AT
-          , UPD_BY
-          , UPD_IP
-          , UPD_PGM
+          , <include refid="auditFragment.insertColumns"/>
         ) VALUES (
             #{siteCd}
           , #{sn}
@@ -115,14 +94,7 @@
           , #{permIp}
           , #{useStYmd}
           , #{useEndYmd}
-          , SYSDATE
-          , 'SYSTEM'
-          , 'SYSTEM'
-          , 'SiteService'
-          , SYSDATE
-          , 'SYSTEM'
-          , 'SYSTEM'
-          , 'SiteService'
+          , <include refid="auditFragment.insertValues"/>
         )
     </insert>
 
@@ -131,10 +103,7 @@
            SET SITE_NM   = #{vo.siteNm}
              , SITE_DESC = #{vo.siteDesc}
              , USE_YN    = #{vo.useYn}
-             , UPD_AT    = SYSDATE
-             , UPD_BY    = 'SYSTEM'
-             , UPD_IP    = 'SYSTEM'
-             , UPD_PGM   = 'SiteService'
+             , <include refid="auditFragment.updateSet"/>
          WHERE SITE_CD   = #{siteCd}
     </update>
 
@@ -145,10 +114,7 @@
              , IP_DESC     = #{vo.ipDesc}
              , USE_ST_YMD  = #{vo.useStYmd}
              , USE_END_YMD = #{vo.useEndYmd}
-             , UPD_AT      = SYSDATE
-             , UPD_BY      = 'SYSTEM'
-             , UPD_IP      = 'SYSTEM'
-             , UPD_PGM     = 'SiteService'
+             , <include refid="auditFragment.updateSet"/>
          WHERE SITE_CD     = #{siteCd}
            AND SN          = #{sn}
     </update>

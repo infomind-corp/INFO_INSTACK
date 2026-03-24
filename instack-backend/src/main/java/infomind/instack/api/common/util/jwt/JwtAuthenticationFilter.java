@@ -17,14 +17,9 @@ import java.io.IOException;
 import java.util.Arrays;
 
 /**
- * fileName       : JwtAuthenticationFilter
- * author         : crlee
- * date           : 2023/06/11
- * description    :
- * ===========================================================
- * DATE              AUTHOR             NOTE
- * -----------------------------------------------------------
- * 2023/06/11        crlee       최초 생성
+ * JWT 인증 필터 (eGov 레거시).
+ * <p>eGov {@link egovframework.com.cmm.LoginVO} 기반 토큰을 파싱하여 {@code SecurityContextHolder}에 인증 정보를 설정한다.
+ * INSTACK API 전용 {@link infomind.instack.api.common.filter.AuthenticationFilter}와 구분된다.</p>
  */
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 

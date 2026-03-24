@@ -51,28 +51,14 @@
           , TK
           , TK_EXP_DT
           , RVK_YN
-          , CRT_AT
-          , CRT_BY
-          , CRT_IP
-          , CRT_PGM
-          , UPD_AT
-          , UPD_BY
-          , UPD_IP
-          , UPD_PGM
+          , <include refid="auditFragment.insertColumns"/>
         ) VALUES (
             (SELECT NVL(MAX(TK_ID), 0) + 1 FROM CMS_RF_TK)
           , #{userId}
           , #{tk}
           , #{tkExpDt}
           , #{rkvYn}
-          , SYSDATE
-          , #{userId}
-          , 'SYSTEM'
-          , 'AdminAuthService'
-          , SYSDATE
-          , #{userId}
-          , 'SYSTEM'
-          , 'AdminAuthService'
+          , <include refid="auditFragment.insertValues"/>
         )
     </insert>
 

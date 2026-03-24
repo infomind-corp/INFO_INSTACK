@@ -17,6 +17,11 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 감사 로그 기록 AOP.
+ * <p>{@link AuditLog} 어노테이션이 선언된 메서드 실행 전, 인증 사용자 ID / 클라이언트 IP / HTTP 요청 정보 / 메서드 인자를
+ * {@code INFO} 레벨로 로깅한다. DB 감사 컬럼 처리와는 별개로 운영 감사 추적 목적으로 사용된다.</p>
+ */
 @Slf4j
 @Aspect
 @Component

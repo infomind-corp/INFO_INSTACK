@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.stream.Collectors;
 
+/**
+ * 전역 예외 핸들러.
+ * <p>{@link BizException}, Bean Validation 오류, 미처리 예외를 {@link infomind.instack.api.common.model.ApiResponse} 형태로 일관되게 응답한다.</p>
+ */
 @RestControllerAdvice(basePackages = "infomind.instack.api")
 public class GlobalExceptionHandler {
 

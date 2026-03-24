@@ -9,6 +9,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * IP 차단 필터.
+ * <p>차단 목록({@code blockedIps})에 등록된 IP에서 요청이 들어오면 {@code 403 Forbidden}으로 즉시 차단한다.</p>
+ */
 public class IpBlockFilter extends OncePerRequestFilter {
 
     private List<String> blockedIps = List.of();

@@ -1,11 +1,12 @@
 package infomind.instack.api.cms.user.entity;
 
+import infomind.instack.api.common.entity.BaseAuditVO;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class CmsUserVO {
+public class CmsUserVO extends BaseAuditVO {
 
     private String userId;
     private String userNm;

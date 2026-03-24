@@ -6,6 +6,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 페이징 요청 파라미터 모델.
+ * <p>목록 조회 API에서 {@code page}(페이지 번호)와 {@code size}(페이지 크기)를 받아 MyBatis OFFSET 값을 계산한다.</p>
+ */
 @Getter
 @Setter
 public class PageRequest {

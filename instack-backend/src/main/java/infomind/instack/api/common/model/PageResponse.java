@@ -4,6 +4,10 @@ import lombok.Getter;
 
 import java.util.List;
 
+/**
+ * 페이징 응답 래퍼 클래스.
+ * <p>목록({@code list}), 전체 건수({@code total}), 현재 페이지({@code page}), 페이지 크기({@code size})를 포함한다.</p>
+ */
 @Getter
 public class PageResponse<T> {
 

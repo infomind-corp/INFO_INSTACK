@@ -2,6 +2,10 @@ package infomind.instack.api.common.model;
 
 import lombok.Getter;
 
+/**
+ * API 응답 표준화 래퍼 클래스.
+ * <p>모든 REST API 응답을 {@code success}, {@code code}, {@code message}, {@code data} 구조로 통일한다.</p>
+ */
 @Getter
 public class ApiResponse<T> {
 

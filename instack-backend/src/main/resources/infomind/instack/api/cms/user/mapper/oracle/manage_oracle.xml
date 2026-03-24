@@ -139,14 +139,7 @@
           , ADDR
           , DADDR
           , ADM_STS_SE
-          , CRT_AT
-          , CRT_BY
-          , CRT_IP
-          , CRT_PGM
-          , UPD_AT
-          , UPD_BY
-          , UPD_IP
-          , UPD_PGM
+          , <include refid="auditFragment.insertColumns"/>
         ) VALUES (
             #{userId}
           , #{userNm}
@@ -157,14 +150,7 @@
           , #{addr}
           , #{daddr}
           , #{admStsSe}
-          , SYSDATE
-          , 'SYSTEM'
-          , 'SYSTEM'
-          , 'ManageService'
-          , SYSDATE
-          , 'SYSTEM'
-          , 'SYSTEM'
-          , 'ManageService'
+          , <include refid="auditFragment.insertValues"/>
         )
     </insert>
 
@@ -179,14 +165,7 @@
           , ADDR
           , DADDR
           , USER_STS_SE
-          , CRT_AT
-          , CRT_BY
-          , CRT_IP
-          , CRT_PGM
-          , UPD_AT
-          , UPD_BY
-          , UPD_IP
-          , UPD_PGM
+          , <include refid="auditFragment.insertColumns"/>
         ) VALUES (
             #{userId}
           , #{userNm}
@@ -197,14 +176,7 @@
           , #{addr}
           , #{daddr}
           , #{userStsSe}
-          , SYSDATE
-          , 'SYSTEM'
-          , 'SYSTEM'
-          , 'ManageService'
-          , SYSDATE
-          , 'SYSTEM'
-          , 'SYSTEM'
-          , 'ManageService'
+          , <include refid="auditFragment.insertValues"/>
         )
     </insert>
 
@@ -222,14 +194,7 @@
           , USER_STS_SE
           , EML_CERT_YN
           , TELNO_CERT_YN
-          , CRT_AT
-          , CRT_BY
-          , CRT_IP
-          , CRT_PGM
-          , UPD_AT
-          , UPD_BY
-          , UPD_IP
-          , UPD_PGM
+          , <include refid="auditFragment.insertColumns"/>
         ) VALUES (
             #{userId}
           , #{userNm}
@@ -243,14 +208,7 @@
           , #{userStsSe}
           , #{emlCertYn}
           , #{telnoCertYn}
-          , SYSDATE
-          , 'SYSTEM'
-          , 'SYSTEM'
-          , 'ManageService'
-          , SYSDATE
-          , 'SYSTEM'
-          , 'SYSTEM'
-          , 'ManageService'
+          , <include refid="auditFragment.insertValues"/>
         )
     </insert>
 
@@ -260,27 +218,13 @@
           , USER_SE
           , PWD
           , USE_YN
-          , CRT_AT
-          , CRT_BY
-          , CRT_IP
-          , CRT_PGM
-          , UPD_AT
-          , UPD_BY
-          , UPD_IP
-          , UPD_PGM
+          , <include refid="auditFragment.insertColumns"/>
         ) VALUES (
             #{userId}
           , #{userSe}
           , #{pwd}
           , #{useYn}
-          , SYSDATE
-          , 'SYSTEM'
-          , 'SYSTEM'
-          , 'ManageService'
-          , SYSDATE
-          , 'SYSTEM'
-          , 'SYSTEM'
-          , 'ManageService'
+          , <include refid="auditFragment.insertValues"/>
         )
     </insert>
 
@@ -293,10 +237,7 @@
              , TELNO    = #{vo.telno}
              , ADDR     = #{vo.addr}
              , DADDR    = #{vo.daddr}
-             , UPD_AT   = SYSDATE
-             , UPD_BY   = 'SYSTEM'
-             , UPD_IP   = 'SYSTEM'
-             , UPD_PGM  = 'ManageService'
+             , <include refid="auditFragment.updateSet"/>
          WHERE USER_ID  = #{userId}
     </update>
 
@@ -309,10 +250,7 @@
              , TELNO    = #{vo.telno}
              , ADDR     = #{vo.addr}
              , DADDR    = #{vo.daddr}
-             , UPD_AT   = SYSDATE
-             , UPD_BY   = 'SYSTEM'
-             , UPD_IP   = 'SYSTEM'
-             , UPD_PGM  = 'ManageService'
+             , <include refid="auditFragment.updateSet"/>
          WHERE USER_ID  = #{userId}
     </update>
 
@@ -326,20 +264,14 @@
              , ADDR     = #{vo.addr}
              , DADDR    = #{vo.daddr}
              , ZIP      = #{vo.zip}
-             , UPD_AT   = SYSDATE
-             , UPD_BY   = 'SYSTEM'
-             , UPD_IP   = 'SYSTEM'
-             , UPD_PGM  = 'ManageService'
+             , <include refid="auditFragment.updateSet"/>
          WHERE USER_ID  = #{userId}
     </update>
 
     <update id="updatePassword" parameterType="infomind.instack.api.cms.user.entity.CmsPasswordVO">
         UPDATE CMS_PWD
            SET PWD     = #{pwd}
-             , UPD_AT  = SYSDATE
-             , UPD_BY  = 'SYSTEM'
-             , UPD_IP  = 'SYSTEM'
-             , UPD_PGM = 'ManageService'
+             , <include refid="auditFragment.updateSetDirect"/>
          WHERE USER_ID = #{userId}
            AND USER_SE = #{userSe}
     </update>

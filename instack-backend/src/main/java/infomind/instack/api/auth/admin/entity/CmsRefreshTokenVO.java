@@ -1,5 +1,6 @@
 package infomind.instack.api.auth.admin.entity;
 
+import infomind.instack.api.common.entity.BaseAuditVO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +11,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-public class CmsRefreshTokenVO {
+public class CmsRefreshTokenVO extends BaseAuditVO {
     private String userId;
     private String tk;
     private Date tkExpDt;

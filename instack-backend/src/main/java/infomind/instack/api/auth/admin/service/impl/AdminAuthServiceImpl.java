@@ -85,6 +85,8 @@ public class AdminAuthServiceImpl extends EgovAbstractServiceImpl implements Adm
         refreshTokenVO.setTk(refreshToken);
         refreshTokenVO.setTkExpDt(new Date(System.currentTimeMillis() + refreshTokenExpireTime));
         refreshTokenVO.setRkvYn("N");
+        refreshTokenVO.setCrtBy(authUserVO.getId());
+        refreshTokenVO.setUpdBy(authUserVO.getId());
         adminAuthDao.insertRefreshToken(refreshTokenVO);
 
         LoginResponse loginResponse = new LoginResponse();

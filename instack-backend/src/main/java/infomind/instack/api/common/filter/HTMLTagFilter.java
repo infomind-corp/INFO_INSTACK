@@ -25,6 +25,11 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * HTML 태그 이스케이프 필터.
+ * <p>모든 요청 파라미터의 HTML 특수문자({@code <}, {@code >}, {@code "}, {@code '})를 엔티티로 변환하여 XSS를 방지한다.
+ * 실제 변환은 {@link HTMLTagFilterRequestWrapper}에서 처리된다.</p>
+ */
 public class HTMLTagFilter implements Filter{
 
 	@SuppressWarnings("unused")

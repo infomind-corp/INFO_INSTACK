@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="auditFragment">
+
+    <!-- INSERT 컬럼 목록 -->
+    <sql id="insertColumns">
+        CRT_AT
+      , CRT_BY
+      , CRT_IP
+      , CRT_PGM
+      , UPD_AT
+      , UPD_BY
+      , UPD_IP
+      , UPD_PGM
+    </sql>
+
+    <!-- INSERT VALUES (parameterType = VO, 직접 파라미터) -->
+    <sql id="insertValues">
+        SYSDATE
+      , #{crtBy}
+      , #{crtIp}
+      , #{crtPgm}
+      , SYSDATE
+      , #{updBy}
+      , #{updIp}
+      , #{updPgm}
+    </sql>
+
+    <!-- UPDATE SET (@Param("vo") 패턴) -->
+    <sql id="updateSet">
+        UPD_AT  = SYSDATE
+      , UPD_BY  = #{vo.updBy}
+      , UPD_IP  = #{vo.updIp}
+      , UPD_PGM = #{vo.updPgm}
+    </sql>
+
+    <!-- UPDATE SET (단일 VO 파라미터 패턴, @Param 없음) -->
+    <sql id="updateSetDirect">
+        UPD_AT  = SYSDATE
+      , UPD_BY  = #{updBy}
+      , UPD_IP  = #{updIp}
+      , UPD_PGM = #{updPgm}
+    </sql>
+
+</mapper>

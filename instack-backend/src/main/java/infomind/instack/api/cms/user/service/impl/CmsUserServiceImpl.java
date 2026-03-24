@@ -49,6 +49,7 @@ public class CmsUserServiceImpl extends EgovAbstractServiceImpl implements CmsUs
                 BeanUtils.copyProperties(request, vo);
                 vo.setUserId(request.getUserId());
                 vo.setAdmStsSe("ACTIVE");
+
                 cmsUserDao.insertAdminUser(vo);
             }
             case "E" -> {
@@ -56,6 +57,7 @@ public class CmsUserServiceImpl extends EgovAbstractServiceImpl implements CmsUs
                 BeanUtils.copyProperties(request, vo);
                 vo.setUserId(request.getUserId());
                 vo.setUserStsSe("ACTIVE");
+
                 cmsUserDao.insertTaskUser(vo);
             }
             case "G" -> {
@@ -65,6 +67,7 @@ public class CmsUserServiceImpl extends EgovAbstractServiceImpl implements CmsUs
                 vo.setUserStsSe("ACTIVE");
                 vo.setEmlCertYn("N");
                 vo.setTelnoCertYn("N");
+
                 cmsUserDao.insertGeneralUser(vo);
             }
             default -> throw new BizException("유효하지 않은 userSe 값입니다.", HttpStatus.BAD_REQUEST);
@@ -79,16 +82,19 @@ public class CmsUserServiceImpl extends EgovAbstractServiceImpl implements CmsUs
             case "A" -> {
                 CmsAdminUserVO vo = new CmsAdminUserVO();
                 BeanUtils.copyProperties(request, vo);
+
                 cmsUserDao.updateAdminUser(userId, vo);
             }
             case "E" -> {
                 CmsTaskUserVO vo = new CmsTaskUserVO();
                 BeanUtils.copyProperties(request, vo);
+
                 cmsUserDao.updateTaskUser(userId, vo);
             }
             case "G" -> {
                 CmsUserVO vo = new CmsUserVO();
                 BeanUtils.copyProperties(request, vo);
+
                 cmsUserDao.updateGeneralUser(userId, vo);
             }
             default -> throw new BizException("유효하지 않은 userSe 값입니다.", HttpStatus.BAD_REQUEST);

@@ -41,6 +41,7 @@
 
 ### 공통
 - Swagger 어노테이션으로 API 문서화: `@Tag`, `@Operation`, `@Parameter`, `@ApiResponse`, `@Schema`
+- `/api/common/` 경로 내의 파일은 공통적으로 쓰이고 자주 보일 파일이므로, Class 파일 상단에 설명 및 목적 주석 추가
 
 ### Controller
 - `ApiResponse` 객체로 응답 표준화

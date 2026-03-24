@@ -18,7 +18,11 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 
-//security 관련 제외한 jwt util 클래스
+/**
+ * JWT 토큰 유틸리티 (eGov 레거시).
+ * <p>eGov {@link egovframework.com.cmm.LoginVO} 기반의 토큰 생성·파싱을 담당한다.
+ * Spring Security 의존성 없이 동작하며, INSTACK API 전용 {@link infomind.instack.api.common.util.JwtUtil}과 구분된다.</p>
+ */
 @Slf4j
 @Component
 public class EgovJwtTokenUtil implements Serializable{

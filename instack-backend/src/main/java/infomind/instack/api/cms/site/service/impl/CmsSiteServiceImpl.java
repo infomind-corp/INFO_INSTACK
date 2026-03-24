@@ -49,6 +49,7 @@ public class CmsSiteServiceImpl extends EgovAbstractServiceImpl implements CmsSi
     public void create(CreateSiteRequest request) {
         CmsSiteVO siteVO = new CmsSiteVO();
         BeanUtils.copyProperties(request, siteVO);
+
         cmsSiteDao.insertSite(siteVO);
 
         if (request.getPermIp() != null && !request.getPermIp().isBlank()) {
@@ -57,6 +58,7 @@ public class CmsSiteServiceImpl extends EgovAbstractServiceImpl implements CmsSi
             ipVO.setSn(UuidUtil.generateCompact());
             ipVO.setPermIp(request.getPermIp());
             ipVO.setUseYn("Y");
+
             cmsSiteDao.insertSiteIp(ipVO);
         }
     }

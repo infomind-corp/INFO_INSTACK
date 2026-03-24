@@ -18,6 +18,11 @@ package infomind.instack.api.common.filter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 
+/**
+ * HTML 태그 이스케이프 요청 래퍼.
+ * <p>{@link HTMLTagFilter}와 함께 사용되며, {@code getParameter} / {@code getParameterValues} 호출 시
+ * HTML 특수문자를 엔티티 문자열로 치환하여 XSS 공격을 차단한다.</p>
+ */
 public class HTMLTagFilterRequestWrapper extends HttpServletRequestWrapper {
 
 	public HTMLTagFilterRequestWrapper(HttpServletRequest request) {

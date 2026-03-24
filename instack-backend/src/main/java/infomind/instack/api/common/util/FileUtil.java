@@ -7,6 +7,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * 파일 처리 유틸리티.
+ * <p>파일 확장자 추출, UUID 기반 저장 파일명 생성, 디렉터리 자동 생성 후 파일 저장 기능을 제공한다.</p>
+ */
 public class FileUtil {
 
     private FileUtil() {}

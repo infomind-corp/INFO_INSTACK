@@ -17,16 +17,9 @@ import egovframework.com.cmm.ResponseCode;
 import egovframework.com.cmm.service.ResultVO;
 
 /**
- * fileName       : JwtAuthenticationEntryPoint
- * author         : crlee
- * date           : 2023/06/11
- * description    :
- * ===========================================================
- * DATE              AUTHOR             NOTE
- * -----------------------------------------------------------
- * 2023/06/11        crlee       최초 생성
+ * JWT 인증 실패 진입점 (eGov 레거시).
+ * <p>인증되지 않은 요청이 보호된 리소스에 접근할 때 {@code 401 Unauthorized}와 eGov {@code ResultVO} 형식의 오류 응답을 반환한다.</p>
  */
-
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 

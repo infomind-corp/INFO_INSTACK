@@ -21,14 +21,9 @@ import java.io.IOException;
 import java.util.Arrays;
 
 /**
- * fileName       : JwtAuthenticationFilter
- * author         : crlee
- * date           : 2023/06/11
- * description    :
- * ===========================================================
- * DATE              AUTHOR             NOTE
- * -----------------------------------------------------------
- * 2023/06/11        crlee       최초 생성
+ * JWT 인증 필터 (INSTACK).
+ * <p>매 요청마다 {@code Authorization} 헤더의 Bearer 토큰을 파싱하여 {@link infomind.instack.api.auth.basic.entity.AuthUserVO}를
+ * 생성하고 {@code SecurityContextHolder}에 인증 정보를 설정한다.</p>
  */
 @RequiredArgsConstructor
 public class AuthenticationFilter extends OncePerRequestFilter {
