@@ -27,7 +27,7 @@
 		<java.version>17</java.version>
 		<httpclient5.version>5.5.1</httpclient5.version>
 		<tomcat.embed.version>11.0.13</tomcat.embed.version>
-		<springdoc.openapi.ui.version>2.6.0</springdoc.openapi.ui.version>
+		<springdoc.openapi.ui.version>2.7.0</springdoc.openapi.ui.version>
 		<commons.codec.version>1.18.0</commons.codec.version>
 		<commons.validator.version>1.9.0</commons.validator.version>
 	</properties>
