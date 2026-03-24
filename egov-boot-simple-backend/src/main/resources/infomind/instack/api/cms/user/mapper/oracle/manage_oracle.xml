@@ -8,40 +8,46 @@
             resultType="infomind.instack.api.cms.user.model.UserListResponse">
         SELECT id, userNm, eml, mtelno, gndrSe, userSe, userStsSe
           FROM (
-                SELECT USER_ID     AS id
-                     , USER_NM     AS userNm
-                     , EML         AS eml
-                     , MTELNO      AS mtelno
-                     , GNDR_SE     AS gndrSe
-                     , 'A'         AS userSe
-                     , ADM_STS_SE  AS userStsSe
-                  FROM CMS_USER_ADMIN
-                UNION ALL
-                SELECT USER_ID     AS id
-                     , USER_NM     AS userNm
-                     , EML         AS eml
-                     , MTELNO      AS mtelno
-                     , GNDR_SE     AS gndrSe
-                     , 'E'         AS userSe
-                     , USER_STS_SE AS userStsSe
-                  FROM CMS_USER_TASK
-                UNION ALL
-                SELECT USER_ID     AS id
-                     , USER_NM     AS userNm
-                     , EML         AS eml
-                     , MTELNO      AS mtelno
-                     , GNDR_SE     AS gndrSe
-                     , 'G'         AS userSe
-                     , USER_STS_SE AS userStsSe
-                  FROM CMS_USER
+                SELECT INNER_Q.*, ROWNUM AS RN
+                  FROM (
+                        SELECT id, userNm, eml, mtelno, gndrSe, userSe, userStsSe
+                          FROM (
+                                SELECT USER_ID     AS id
+                                     , USER_NM     AS userNm
+                                     , EML         AS eml
+                                     , MTELNO      AS mtelno
+                                     , GNDR_SE     AS gndrSe
+                                     , 'A'         AS userSe
+                                     , ADM_STS_SE  AS userStsSe
+                                  FROM CMS_USER_ADMIN
+                                UNION ALL
+                                SELECT USER_ID     AS id
+                                     , USER_NM     AS userNm
+                                     , EML         AS eml
+                                     , MTELNO      AS mtelno
+                                     , GNDR_SE     AS gndrSe
+                                     , 'E'         AS userSe
+                                     , USER_STS_SE AS userStsSe
+                                  FROM CMS_USER_TASK
+                                UNION ALL
+                                SELECT USER_ID     AS id
+                                     , USER_NM     AS userNm
+                                     , EML         AS eml
+                                     , MTELNO      AS mtelno
+                                     , GNDR_SE     AS gndrSe
+                                     , 'G'         AS userSe
+                                     , USER_STS_SE AS userStsSe
+                                  FROM CMS_USER
+                               )
+                        <where>
+                            <if test="userSe != null and userSe != ''">
+                                AND userSe = #{userSe}
+                            </if>
+                        </where>
+                         ORDER BY userSe, userNm
+                       ) INNER_Q
                )
-        <where>
-            <if test="userSe != null and userSe != ''">
-                AND userSe = #{userSe}
-            </if>
-        </where>
-         ORDER BY userSe, userNm
-         OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+         WHERE RN <![CDATA[ > ]]> #{offset} AND RN <![CDATA[ <= ]]> #{offset} + #{size}
     </select>
 
     <select id="countUserList" parameterType="infomind.instack.api.cms.user.model.UserListRequest"

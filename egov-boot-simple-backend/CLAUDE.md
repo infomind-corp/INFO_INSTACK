@@ -12,6 +12,7 @@
 ## 기술 스택
 - pom.xml 참고
 - 현 상태 유지
+- Database : Oracle 11g
 
 ## 패키지 구조 규칙
 ```
