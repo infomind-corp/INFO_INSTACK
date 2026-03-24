@@ -10,13 +10,13 @@ public class {domain}Controller {
 
     // GET 요청은 반환값이 있는 경우 ApiResponse.ok({data}) 형태로 반환한다.
     @GetMapping("/{action}")
-    public ApiResponse<{action}Response> {action}(@RequestBody {action}Request request) {
+    public ApiResponse<{action}Response> {action}(@Valid @RequestBody {action}Request request) {
         return ApiResponse.ok({domain}Service.{action}(request));
     }
     
     // POST, PUT, DELETE 등은 반환값이 없는 경우 ApiResponse.ok() 형태로 반환한다.
     @PostMapping("/{action}")
-    public ApiResponse<{action}Response> {action}(@RequestBody {action}Request request) {
+    public ApiResponse<{action}Response> {action}(@Valid @RequestBody {action}Request request) {
         {domain}Service.{action}(request)
         return ApiResponse.ok();
     }
@@ -52,6 +52,7 @@ public class {domain}ServiceImpl extends EgovAbstractServiceImpl implements {dom
 - Request 는 Controller에 요청된 값과 매핑하는 객체로 사용한다.
 - Response 는 Controller에서 반환되는 객체로 사용한다.
 - @Getter, @Setter 어노테이션만 사용한다.
+- Request에는 Java Bean Validation 어노테이션을 사용하여 필수값과 유효성 검사를 적용한다.
 - LocalDateTime, Date 등의 날짜 시간 타입은 String으로 매핑하여 사용한다.
 
 ## DAO

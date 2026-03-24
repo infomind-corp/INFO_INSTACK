@@ -4,6 +4,7 @@ import infomind.instack.api.cms.user.model.*;
 import infomind.instack.api.cms.user.service.CmsUserService;
 import infomind.instack.api.common.model.ApiResponse;
 import infomind.instack.api.common.model.PageResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +16,7 @@ public class CmsUserController {
     private final CmsUserService cmsUserService;
 
     @GetMapping("/list")
-    public ApiResponse<PageResponse<UserListResponse>> list(@ModelAttribute UserListRequest request) {
+    public ApiResponse<PageResponse<UserListResponse>> list(@Valid @ModelAttribute UserListRequest request) {
         return ApiResponse.ok(cmsUserService.list(request));
     }
 
@@ -25,13 +26,13 @@ public class CmsUserController {
     }
 
     @PostMapping("/{userSe}")
-    public ApiResponse<Void> create(@PathVariable String userSe, @RequestBody CreateUserRequest request) {
+    public ApiResponse<Void> create(@PathVariable String userSe, @Valid @RequestBody CreateUserRequest request) {
         cmsUserService.create(userSe, request);
         return ApiResponse.ok();
     }
 
     @PutMapping("/{userSe}/{userId}")
-    public ApiResponse<Void> update(@PathVariable String userSe, @PathVariable String userId, @RequestBody UpdateUserRequest request) {
+    public ApiResponse<Void> update(@PathVariable String userSe, @PathVariable String userId, @Valid @RequestBody UpdateUserRequest request) {
         cmsUserService.update(userSe, userId, request);
         return ApiResponse.ok();
     }

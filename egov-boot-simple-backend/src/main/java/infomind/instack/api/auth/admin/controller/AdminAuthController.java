@@ -6,6 +6,7 @@ import infomind.instack.api.auth.basic.model.LoginRequest;
 import infomind.instack.api.auth.basic.model.LoginResponse;
 import infomind.instack.api.auth.basic.model.RefreshRequest;
 import infomind.instack.api.common.model.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +19,12 @@ public class AdminAuthController {
     private final AdminAuthService adminAuthService;
 
     @PostMapping("/login")
-    public ApiResponse<LoginResponse> login(@RequestBody LoginRequest request) {
+    public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         return ApiResponse.ok(adminAuthService.login(request));
     }
 
     @PostMapping("/refresh")
-    public ApiResponse<LoginResponse> refresh(@RequestBody RefreshRequest request) {
+    public ApiResponse<LoginResponse> refresh(@Valid @RequestBody RefreshRequest request) {
         return ApiResponse.ok(adminAuthService.refresh(request));
     }
 

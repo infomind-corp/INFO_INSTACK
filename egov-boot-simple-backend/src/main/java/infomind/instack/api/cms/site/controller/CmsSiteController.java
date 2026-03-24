@@ -3,6 +3,7 @@ package infomind.instack.api.cms.site.controller;
 import infomind.instack.api.cms.site.model.*;
 import infomind.instack.api.cms.site.service.CmsSiteService;
 import infomind.instack.api.common.model.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +37,7 @@ public class CmsSiteController {
     }
 
     @PostMapping
-    public ApiResponse<Void> create(@RequestBody CreateSiteRequest request) {
+    public ApiResponse<Void> create(@Valid @RequestBody CreateSiteRequest request) {
         cmsSiteService.create(request);
         return ApiResponse.ok();
     }
