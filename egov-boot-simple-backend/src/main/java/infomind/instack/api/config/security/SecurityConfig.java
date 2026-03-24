@@ -25,7 +25,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.multipart.support.MultipartFilter;
 
-import egovframework.com.cmm.filter.HTMLTagFilter;
+import infomind.instack.api.common.filter.HTMLTagFilter;
 import infomind.instack.api.common.util.jwt.JwtAuthenticationEntryPoint;
 import jakarta.servlet.MultipartConfigElement;
 
@@ -86,7 +86,7 @@ public class SecurityConfig {
             "/api/auth/admin/login",
             "/api/auth/admin/refresh",
             "/api/auth/admin/logout",
-            "/api/cms/user/**"      // 생성 TEST
+            // "/api/cms/user/**"      // 생성 TEST
 
     };
     private static final String[] ORIGINS_WHITELIST = {
