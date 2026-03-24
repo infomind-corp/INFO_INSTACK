@@ -7,13 +7,13 @@ import infomind.instack.api.cms.user.entity.CmsUserVO;
 import infomind.instack.api.cms.user.model.UserDetailResponse;
 import infomind.instack.api.cms.user.model.UserListRequest;
 import infomind.instack.api.cms.user.model.UserListResponse;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.egovframe.rte.psl.dataaccess.mapper.EgovMapper;
 
 import java.util.List;
 import java.util.Optional;
 
-@Mapper
+@EgovMapper("CmsUserDao")
 public interface CmsUserDao {
 
     List<UserListResponse> selectUserList(UserListRequest request);

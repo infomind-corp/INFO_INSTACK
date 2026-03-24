@@ -112,7 +112,7 @@ public class {Domain}ServiceImpl extends EgovAbstractServiceImpl implements {Dom
 - 파라미터가 2개 이상인 경우 `@Param` 어노테이션 사용
 
 ```java
-@Mapper
+@EgovMapper("{Domain}Dao")
 public interface {Domain}Dao {
     List<{Domain}Response> select{Domain}List({Domain}Request request);
     Optional<{Domain}Response> select{Domain}ById(String id);

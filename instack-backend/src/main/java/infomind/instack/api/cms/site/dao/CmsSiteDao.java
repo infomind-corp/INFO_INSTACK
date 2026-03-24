@@ -6,13 +6,13 @@ import infomind.instack.api.cms.site.model.SiteDetailResponse;
 import infomind.instack.api.cms.site.model.SiteIpDetailResponse;
 import infomind.instack.api.cms.site.model.SiteIpListResponse;
 import infomind.instack.api.cms.site.model.SiteListResponse;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.egovframe.rte.psl.dataaccess.mapper.EgovMapper;
 
 import java.util.List;
 import java.util.Optional;
 
-@Mapper
+@EgovMapper("CmsSiteDao")
 public interface CmsSiteDao {
 
     List<SiteListResponse> selectSiteList();

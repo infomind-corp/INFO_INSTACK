@@ -1,11 +1,9 @@
 package infomind.instack.api.config;
 
 import jakarta.annotation.PostConstruct;
-import org.apache.ibatis.session.SqlSessionFactory;
+import org.egovframe.rte.psl.dataaccess.mapper.EgovMapper;
+import org.egovframe.rte.psl.dataaccess.mapper.MapperConfigurer;
 import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.SqlSessionTemplate;
-import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -16,17 +14,12 @@ import javax.sql.DataSource;
 import java.io.IOException;
 
 @Configuration
-@MapperScan(
-        basePackages = "infomind.instack.api",
-        annotationClass = org.apache.ibatis.annotations.Mapper.class,
-        sqlSessionFactoryRef = "instackSqlSession"
-)
-public class InstackMapperConfig {
+public class InstackSqlSessionConfig {
 
     private final DataSource dataSource;
     private final Environment env;
 
-    public InstackMapperConfig(DataSource dataSource, Environment env) {
+    public InstackSqlSessionConfig(DataSource dataSource, Environment env) {
         this.dataSource = dataSource;
         this.env = env;
     }
@@ -62,8 +55,11 @@ public class InstackMapperConfig {
     }
 
     @Bean
-    public SqlSessionTemplate instackSqlSessionTemplate(@Qualifier("instackSqlSession") SqlSessionFactory sqlSession) {
-        SqlSessionTemplate sqlSessionTemplate = new SqlSessionTemplate(sqlSession);
-        return sqlSessionTemplate;
+    static MapperConfigurer instackMapperConfigurer() {
+        MapperConfigurer mapperConfigurer = new MapperConfigurer();
+        mapperConfigurer.setBasePackage("infomind.instack.api");
+        mapperConfigurer.setAnnotationClass(EgovMapper.class);
+        mapperConfigurer.setSqlSessionFactoryBeanName("instackSqlSession");
+        return mapperConfigurer;
     }
 }

@@ -2,11 +2,11 @@ package infomind.instack.api.auth.admin.dao;
 
 import infomind.instack.api.auth.admin.entity.CmsRefreshTokenVO;
 import infomind.instack.api.auth.basic.entity.AuthUserVO;
-import org.apache.ibatis.annotations.Mapper;
+import org.egovframe.rte.psl.dataaccess.mapper.EgovMapper;
 
 import java.util.Optional;
 
-@Mapper
+@EgovMapper("AdminAuthDao")
 public interface AdminAuthDao {
 
     Optional<AuthUserVO> selectAdminUserByUserId(String userId);
