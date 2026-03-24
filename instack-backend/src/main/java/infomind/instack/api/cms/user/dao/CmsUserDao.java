@@ -34,11 +34,11 @@ public interface CmsUserDao {
 
     void insertPassword(CmsPasswordVO vo);
 
-    void updateAdminUser(String userId, @Param("vo") CmsAdminUserVO vo);
+    void updateAdminUser(@Param("userId") String userId, @Param("vo") CmsAdminUserVO vo);
 
-    void updateTaskUser(String userId, @Param("vo") CmsTaskUserVO vo);
+    void updateTaskUser(@Param("userId") String userId, @Param("vo") CmsTaskUserVO vo);
 
-    void updateGeneralUser(String userId, @Param("vo") CmsUserVO vo);
+    void updateGeneralUser(@Param("userId") String userId, @Param("vo") CmsUserVO vo);
 
     void updatePassword(CmsPasswordVO vo);
 
