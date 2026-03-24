@@ -1,2 +1,2 @@
 # Mapper XML
-- XML 엔티티보다는 `<![CDATA[  ]]>` 사용할 것 
+루트 `CLAUDE.md` 참고
