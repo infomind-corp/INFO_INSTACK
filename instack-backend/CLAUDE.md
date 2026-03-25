@@ -82,7 +82,7 @@ public class {Domain}Controller {
 - `EgovAbstractServiceImpl` 상속 필수
 - `BeanUtils.copyProperties(src, dest)`: 필드명이 동일한 경우 사용
 - 필드명이 다른 경우 setter로 직접 매핑
-- 다중 쿼리가 포함된 메서드는 `@Transactional` 적용
+- 다중 쿼리가 포함된 `@Override` 메서드는 `@Transactional` 적용
 
 ```java
 @Service
