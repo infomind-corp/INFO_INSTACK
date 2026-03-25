@@ -15,8 +15,8 @@ CREATE TABLE INS_APP.CMS_USER (
                                   LST_LGN_IP VARCHAR2(40),
                                   WD_DT DATE,
                                   USER_STS_SE VARCHAR2(20),
-                                  CI VARCHAR(100),
-                                  DI VARCHAR(100),
+                                  CI VARCHAR2(500),
+                                  DI VARCHAR2(500),
                                   CRT_AT DATE NOT NULL,
                                   CRT_BY VARCHAR2(100) NOT NULL,
                                   CRT_IP VARCHAR2(40) NOT NULL,
@@ -106,8 +106,9 @@ CREATE TABLE INS_APP.CMS_USER_TASK (
                                        AUTH_GRNT_YMD VARCHAR2(8),
                                        AUTH_RVK_SE VARCHAR2(20),
                                        USER_STS_SE VARCHAR2(20),
-                                       CI VARCHAR(100),
-                                       DI VARCHAR(100),
+                                       CI VARCHAR2(500),
+                                       DI VARCHAR2(500),
+                                       ZIP VARCHAR2(10),
                                        CRT_AT DATE NOT NULL,
                                        CRT_BY VARCHAR2(100) NOT NULL,
                                        CRT_IP VARCHAR2(40) NOT NULL,
@@ -147,6 +148,8 @@ COMMENT ON COLUMN INS_APP.CMS_USER_TASK.USER_STS_SE IS '활성화,  비활성화
 COMMENT ON COLUMN INS_APP.CMS_USER_TASK.CI IS 'CI';
 
 COMMENT ON COLUMN INS_APP.CMS_USER_TASK.DI IS 'DI';
+
+COMMENT ON COLUMN INS_APP.CMS_USER_TASK.ZIP IS '우편번호';
 
 COMMENT ON COLUMN INS_APP.CMS_USER_TASK.CRT_AT IS '등록일시';
 
@@ -189,8 +192,9 @@ CREATE TABLE INS_APP.CMS_USER_ADMIN (
                                         AUTH_GRNT_YMD VARCHAR2(8),
                                         AUTH_RVK_SE VARCHAR2(20),
                                         ADM_STS_SE VARCHAR2(20),
-                                        CI VARCHAR(100),
-                                        DI VARCHAR(100),
+                                        CI VARCHAR2(500),
+                                        DI VARCHAR2(500),
+                                        ZIP VARCHAR2(10),
                                         CRT_AT DATE NOT NULL,
                                         CRT_BY VARCHAR2(100) NOT NULL,
                                         CRT_IP VARCHAR2(40) NOT NULL,
@@ -230,6 +234,8 @@ COMMENT ON COLUMN INS_APP.CMS_USER_ADMIN.ADM_STS_SE IS '공통코드| 활성화v
 COMMENT ON COLUMN INS_APP.CMS_USER_ADMIN.CI IS 'CI';
 
 COMMENT ON COLUMN INS_APP.CMS_USER_ADMIN.DI IS 'DI';
+
+COMMENT ON COLUMN INS_APP.CMS_USER_ADMIN.ZIP IS '우편번호';
 
 COMMENT ON COLUMN INS_APP.CMS_USER_ADMIN.CRT_AT IS '등록일시';
 
@@ -328,13 +334,17 @@ ALTER TABLE INS_APP.CMS_PWD
 
 CREATE TABLE INS_APP.CMS_PWD_HIST (
                                       SN NUMBER(15) NOT NULL,
-                                      PWD VARCHAR(100) NOT NULL,
+                                      PWD VARCHAR2(500) NOT NULL,
+                                      USER_SE VARCHAR2(20) NOT NULL,
                                       PWD_CHG_YMD VARCHAR2(8) NOT NULL,
                                       PWD_CHG_SE VARCHAR2(20),
                                       CHG_USER_ID VARCHAR2(100) NOT NULL,
-                                      USER_SE VARCHAR2(20) NOT NULL,
+                                      CHG_USER_SE VARCHAR2(20),
                                       CHG_USER_IP VARCHAR2(40),
                                       PWD_EXP_YMD VARCHAR2(8),
+                                      LOCK_YN VARCHAR2(1),
+                                      LOCK_DT DATE,
+                                      LOCK_RVK_DT DATE,
                                       CRT_AT DATE NOT NULL,
                                       CRT_BY VARCHAR2(100) NOT NULL,
                                       CRT_IP VARCHAR2(40) NOT NULL,
@@ -347,17 +357,25 @@ COMMENT ON COLUMN INS_APP.CMS_PWD_HIST.SN IS '일련번호';
 
 COMMENT ON COLUMN INS_APP.CMS_PWD_HIST.PWD IS '비밀번호';
 
+COMMENT ON COLUMN INS_APP.CMS_PWD_HIST.USER_SE IS '관리자, 사용자, 업무사용자';
+
 COMMENT ON COLUMN INS_APP.CMS_PWD_HIST.PWD_CHG_YMD IS '비밀번호 변경 일자';
 
 COMMENT ON COLUMN INS_APP.CMS_PWD_HIST.PWD_CHG_SE IS '비밀번호 변경 구분';
 
 COMMENT ON COLUMN INS_APP.CMS_PWD_HIST.CHG_USER_ID IS '업무사용자, 사용자, 관리자';
 
-COMMENT ON COLUMN INS_APP.CMS_PWD_HIST.USER_SE IS '관리자, 사용자, 업무사용자';
+COMMENT ON COLUMN INS_APP.CMS_PWD_HIST.CHG_USER_SE IS '변경 사용자 구분';
 
 COMMENT ON COLUMN INS_APP.CMS_PWD_HIST.CHG_USER_IP IS '변경 사용자 아이피';
 
 COMMENT ON COLUMN INS_APP.CMS_PWD_HIST.PWD_EXP_YMD IS '비밀번호 만료 일자';
+
+COMMENT ON COLUMN INS_APP.CMS_PWD_HIST.LOCK_YN IS '잠금 여부';
+
+COMMENT ON COLUMN INS_APP.CMS_PWD_HIST.LOCK_DT IS '잠금 일시';
+
+COMMENT ON COLUMN INS_APP.CMS_PWD_HIST.LOCK_RVK_DT IS '잠금 회수 일시';
 
 COMMENT ON COLUMN INS_APP.CMS_PWD_HIST.CRT_AT IS '등록일시';
 
@@ -382,11 +400,12 @@ ALTER TABLE INS_APP.CMS_PWD_HIST
 CREATE TABLE INS_APP.CMS_RF_TK (
                                    TK_ID VARCHAR2(100) NOT NULL,
                                    USER_ID VARCHAR2(100) NOT NULL,
-                                   TK VARCHAR(100) NOT NULL,
+                                   USER_SE VARCHAR2(20),
+                                   TK VARCHAR2(4000) NOT NULL,
                                    TK_EXP_DT DATE NOT NULL,
                                    RVK_YN VARCHAR2(1) NOT NULL,
                                    IP_ADDR VARCHAR2(40),
-                                   USER_AGT VARCHAR2(100),
+                                   USER_AGT VARCHAR2(500),
                                    CRT_AT DATE NOT NULL,
                                    CRT_BY VARCHAR2(100) NOT NULL,
                                    CRT_IP VARCHAR2(40) NOT NULL,
@@ -402,6 +421,8 @@ COMMENT ON TABLE INS_APP.CMS_RF_TK IS '[00.시스템]06.JWT 리프레시 토큰'
 COMMENT ON COLUMN INS_APP.CMS_RF_TK.TK_ID IS '토큰 아이디';
 
 COMMENT ON COLUMN INS_APP.CMS_RF_TK.USER_ID IS '사용자 아이디';
+
+COMMENT ON COLUMN INS_APP.CMS_RF_TK.USER_SE IS '사용자 구분';
 
 COMMENT ON COLUMN INS_APP.CMS_RF_TK.TK IS 'TOKEN ';
 
@@ -449,8 +470,8 @@ CREATE TABLE INS_APP.CMS_SNS_IF (
                                     PRVD_UID VARCHAR2(50),
                                     PRVD_EML VARCHAR2(100),
                                     IF_DESC VARCHAR2(4000),
-                                    ACC_TK VARCHAR(100),
-                                    RF_TK VARCHAR(100),
+                                    ACC_TK VARCHAR2(4000),
+                                    RF_TK VARCHAR2(4000),
                                     TK_EXP_DT DATE,
                                     MAIN_LGN_YN VARCHAR2(1),
                                     LGN_AVL_YN VARCHAR2(1),
@@ -534,21 +555,21 @@ ALTER TABLE INS_APP.CMS_SNS_IF
                 );
 
 CREATE TABLE INS_APP.CMS_USER_AUTH (
-                                        USER_ID VARCHAR2(100) NOT NULL,
-                                        AUTH_CD VARCHAR2(20) NOT NULL,
-                                        USER_SE VARCHAR2(20) NOT NULL,
-                                        SITE_CD VARCHAR2(20),
-                                        AUTH_EXP_YMD VARCHAR2(8),
-                                        AUTH_GRNT_YMD VARCHAR2(8),
-                                        AUTH_SE VARCHAR2(20),
-                                        CRT_AT DATE NOT NULL,
-                                        CRT_BY VARCHAR2(100) NOT NULL,
-                                        CRT_IP VARCHAR2(40) NOT NULL,
-                                        CRT_PGM VARCHAR2(100) NOT NULL,
-                                        UPD_AT DATE NOT NULL,
-                                        UPD_BY VARCHAR2(100) NOT NULL,
-                                        UPD_IP VARCHAR2(40) NOT NULL,
-                                        UPD_PGM VARCHAR2(100) NOT NULL
+                                       USER_ID VARCHAR2(100) NOT NULL,
+                                       AUTH_CD VARCHAR2(20) NOT NULL,
+                                       USER_SE VARCHAR2(20) NOT NULL,
+                                       SITE_CD VARCHAR2(20),
+                                       AUTH_EXP_YMD VARCHAR2(8),
+                                       AUTH_GRNT_YMD VARCHAR2(8),
+                                       AUTH_SE VARCHAR2(20),
+                                       CRT_AT DATE NOT NULL,
+                                       CRT_BY VARCHAR2(100) NOT NULL,
+                                       CRT_IP VARCHAR2(40) NOT NULL,
+                                       CRT_PGM VARCHAR2(100) NOT NULL,
+                                       UPD_AT DATE NOT NULL,
+                                       UPD_BY VARCHAR2(100) NOT NULL,
+                                       UPD_IP VARCHAR2(40) NOT NULL,
+                                       UPD_PGM VARCHAR2(100) NOT NULL
 );
 
 COMMENT ON TABLE INS_APP.CMS_USER_AUTH IS '[00.시스템]08.사용자 권한';
@@ -585,9 +606,9 @@ COMMENT ON COLUMN INS_APP.CMS_USER_AUTH.UPD_PGM IS '수정프로그램';
 
 CREATE UNIQUE INDEX INS_APP.PK_CMS_USER_AUTH
     ON INS_APP.CMS_USER_AUTH (
-                               USER_ID ASC,
-                               AUTH_CD ASC,
-                               USER_SE ASC
+                              USER_ID ASC,
+                              AUTH_CD ASC,
+                              USER_SE ASC
         );
 
 ALTER TABLE INS_APP.CMS_USER_AUTH
@@ -599,11 +620,12 @@ ALTER TABLE INS_APP.CMS_USER_AUTH
                          USER_SE
                 );
 
-
 CREATE TABLE INS_APP.CMS_USER_AUTH_LOG (
+                                           SN NUMBER(15) NOT NULL,
                                            LOG_DT DATE,
                                            LOG_RSN VARCHAR2(4000),
                                            USER_ID VARCHAR2(100) NOT NULL,
+                                           USER_SE VARCHAR2(20),
                                            AUTH_CD VARCHAR2(20) NOT NULL,
                                            AUTH_EXP_YMD VARCHAR2(8),
                                            AUTH_GRNT_YMD VARCHAR2(8),
@@ -620,11 +642,15 @@ CREATE TABLE INS_APP.CMS_USER_AUTH_LOG (
 
 COMMENT ON TABLE INS_APP.CMS_USER_AUTH_LOG IS '[00.시스템]09.사용자 권한 로그';
 
+COMMENT ON COLUMN INS_APP.CMS_USER_AUTH_LOG.SN IS '일련번호';
+
 COMMENT ON COLUMN INS_APP.CMS_USER_AUTH_LOG.LOG_DT IS '로그 일시';
 
 COMMENT ON COLUMN INS_APP.CMS_USER_AUTH_LOG.LOG_RSN IS '로그 사유';
 
 COMMENT ON COLUMN INS_APP.CMS_USER_AUTH_LOG.USER_ID IS '업무사용자, 관리자, 일반사용자';
+
+COMMENT ON COLUMN INS_APP.CMS_USER_AUTH_LOG.USER_SE IS '사용자 구분';
 
 COMMENT ON COLUMN INS_APP.CMS_USER_AUTH_LOG.AUTH_CD IS '권한 테이블';
 
@@ -650,12 +676,29 @@ COMMENT ON COLUMN INS_APP.CMS_USER_AUTH_LOG.UPD_IP IS '수정자IP';
 
 COMMENT ON COLUMN INS_APP.CMS_USER_AUTH_LOG.UPD_PGM IS '수정프로그램';
 
+CREATE UNIQUE INDEX INS_APP.PK_CMS_USER_AUTH_LOG
+    ON INS_APP.CMS_USER_AUTH_LOG (
+                                  SN ASC
+        );
+
+ALTER TABLE INS_APP.CMS_USER_AUTH_LOG
+    ADD
+        CONSTRAINT PK_CMS_USER_AUTH_LOG
+            PRIMARY KEY (
+                         SN
+                );
+
 CREATE TABLE INS_APP.CMS_USER_CERT (
                                        SN NUMBER(15) NOT NULL,
                                        CERT_ID VARCHAR2(100) NOT NULL,
+                                       USER_ID VARCHAR2(100),
+                                       USER_SE VARCHAR2(20),
                                        MTELNO VARCHAR2(20),
                                        EML VARCHAR2(100),
-                                       CERT_SE VARCHAR2(20),
+                                       USER_CERT_SE VARCHAR2(20),
+                                       CERT_NO_EXP_DT DATE,
+                                       CERT_YN VARCHAR2(1),
+                                       CERT_USE_CNT <지정 되지 않음>,
                                        CERT_NO VARCHAR(100) NOT NULL,
                                        CRT_AT DATE NOT NULL,
                                        CRT_BY VARCHAR2(100) NOT NULL,
@@ -673,11 +716,21 @@ COMMENT ON COLUMN INS_APP.CMS_USER_CERT.SN IS '일련번호';
 
 COMMENT ON COLUMN INS_APP.CMS_USER_CERT.CERT_ID IS '인증 아이디';
 
+COMMENT ON COLUMN INS_APP.CMS_USER_CERT.USER_ID IS '사용자 아이디';
+
+COMMENT ON COLUMN INS_APP.CMS_USER_CERT.USER_SE IS '사용자 구분';
+
 COMMENT ON COLUMN INS_APP.CMS_USER_CERT.MTELNO IS '휴대전화번호';
 
 COMMENT ON COLUMN INS_APP.CMS_USER_CERT.EML IS '이메일';
 
-COMMENT ON COLUMN INS_APP.CMS_USER_CERT.CERT_SE IS '이메일,휴대전화번호';
+COMMENT ON COLUMN INS_APP.CMS_USER_CERT.USER_CERT_SE IS '이메일,휴대전화번호';
+
+COMMENT ON COLUMN INS_APP.CMS_USER_CERT.CERT_NO_EXP_DT IS '인증 번호 만료 일시';
+
+COMMENT ON COLUMN INS_APP.CMS_USER_CERT.CERT_YN IS '인증완료 여부';
+
+COMMENT ON COLUMN INS_APP.CMS_USER_CERT.CERT_USE_CNT IS '인증 시도횟수(무한시도x)';
 
 COMMENT ON COLUMN INS_APP.CMS_USER_CERT.CERT_NO IS '인증 번호';
 
@@ -721,7 +774,7 @@ CREATE TABLE INS_APP.CMS_PRV_QRY_LOG (
                                          QRY_RSN VARCHAR2(4000),
                                          QRY_PATH VARCHAR2(1000),
                                          ACC_IP VARCHAR2(40),
-                                         USER_AGT VARCHAR2(100),
+                                         USER_AGT VARCHAR2(500),
                                          CRT_AT DATE
 );
 
@@ -767,7 +820,9 @@ CREATE TABLE INS_APP.CMS_SU_LOGIN_LOG (
                                           USER_SE VARCHAR2(20),
                                           USER_ID VARCHAR2(100),
                                           USE_DT DATE,
-                                          USE_IP VARCHAR2(40)
+                                          CRT_BY VARCHAR2(100) NOT NULL,
+                                          CRT_IP VARCHAR2(40) NOT NULL,
+                                          CRT_PGM VARCHAR2(100) NOT NULL
 );
 
 COMMENT ON TABLE INS_APP.CMS_SU_LOGIN_LOG IS '[00.시스템]12.사용자 전환 로그인 로그';
@@ -782,7 +837,11 @@ COMMENT ON COLUMN INS_APP.CMS_SU_LOGIN_LOG.USER_ID IS '사용자 아이디';
 
 COMMENT ON COLUMN INS_APP.CMS_SU_LOGIN_LOG.USE_DT IS '사용 일시';
 
-COMMENT ON COLUMN INS_APP.CMS_SU_LOGIN_LOG.USE_IP IS '사용 아이피';
+COMMENT ON COLUMN INS_APP.CMS_SU_LOGIN_LOG.CRT_BY IS '등록자';
+
+COMMENT ON COLUMN INS_APP.CMS_SU_LOGIN_LOG.CRT_IP IS '등록자IP';
+
+COMMENT ON COLUMN INS_APP.CMS_SU_LOGIN_LOG.CRT_PGM IS '등록프로그램';
 
 CREATE UNIQUE INDEX INS_APP.PK_CMS_SU_LOGIN_LOG
     ON INS_APP.CMS_SU_LOGIN_LOG (
@@ -806,7 +865,7 @@ CREATE TABLE INS_APP.CMS_LOGIN_LOG (
                                        LGN_MTHD_SE VARCHAR2(20),
                                        LGN_FAIL_RSN_SE VARCHAR2(20),
                                        ACC_IP VARCHAR2(40),
-                                       USER_AGT VARCHAR2(100),
+                                       USER_AGT VARCHAR2(500),
                                        EQP_SE VARCHAR2(20),
                                        OS_NM VARCHAR2(100),
                                        BRWS_NM VARCHAR2(100),
@@ -830,13 +889,13 @@ COMMENT ON COLUMN INS_APP.CMS_LOGIN_LOG.LGNTRY_SE IS '로그인성공,실패,로
 COMMENT ON COLUMN INS_APP.CMS_LOGIN_LOG.LGN_MTHD_SE IS '자체,카카오,구글';
 
 COMMENT ON COLUMN INS_APP.CMS_LOGIN_LOG.LGN_FAIL_RSN_SE IS '비밀번호 불일치, 존재하지 않는 계정,계정 잠금
-,계정정지,비활성 계정, SNS 미연동 ';
+,계정정지';
 
 COMMENT ON COLUMN INS_APP.CMS_LOGIN_LOG.ACC_IP IS '접근 아이피';
 
 COMMENT ON COLUMN INS_APP.CMS_LOGIN_LOG.USER_AGT IS '사용자 에이전트';
 
-COMMENT ON COLUMN INS_APP.CMS_LOGIN_LOG.EQP_SE IS '장비 구분';
+COMMENT ON COLUMN INS_APP.CMS_LOGIN_LOG.EQP_SE IS 'pc|mobile|tablet';
 
 COMMENT ON COLUMN INS_APP.CMS_LOGIN_LOG.OS_NM IS 'Windows | macOS | iOS | Android';
 
@@ -856,6 +915,204 @@ ALTER TABLE INS_APP.CMS_LOGIN_LOG
                          SN
                 );
 
+CREATE TABLE INS_APP.CMS_CERT_HIST (
+                                       SN NUMBER(15) NOT NULL,
+                                       USER_ID VARCHAR2(100),
+                                       USER_SE VARCHAR2(20),
+                                       CERT_MTHD_SE VARCHAR2(20),
+                                       CI VARCHAR2(500),
+                                       DI VARCHAR2(500),
+                                       MTELNO VARCHAR2(20),
+                                       CERT_RSN_SE VARCHAR2(20),
+                                       CERT_SUCC_YN VARCHAR2(1),
+                                       CERT_FAIL_RSN VARCHAR2(300),
+                                       ACC_IP VARCHAR2(40),
+                                       CRT_IP VARCHAR2(40) NOT NULL,
+                                       CRT_PGM VARCHAR2(100) NOT NULL,
+                                       UPD_AT DATE NOT NULL,
+                                       UPD_BY VARCHAR2(100) NOT NULL,
+                                       UPD_IP VARCHAR2(40) NOT NULL,
+                                       UPD_PGM VARCHAR2(100) NOT NULL,
+                                       CRT_AT DATE NOT NULL,
+                                       CRT_BY VARCHAR2(100) NOT NULL
+);
+
+COMMENT ON TABLE INS_APP.CMS_CERT_HIST IS '[00.시스템]14.사용자 본인인증 이력';
+
+COMMENT ON COLUMN INS_APP.CMS_CERT_HIST.SN IS '일련번호';
+
+COMMENT ON COLUMN INS_APP.CMS_CERT_HIST.USER_ID IS '사용자 아이디';
+
+COMMENT ON COLUMN INS_APP.CMS_CERT_HIST.USER_SE IS '사용자 구분';
+
+COMMENT ON COLUMN INS_APP.CMS_CERT_HIST.CERT_MTHD_SE IS '카카오/PASS/통신사';
+
+COMMENT ON COLUMN INS_APP.CMS_CERT_HIST.CI IS 'CI';
+
+COMMENT ON COLUMN INS_APP.CMS_CERT_HIST.DI IS 'DI';
+
+COMMENT ON COLUMN INS_APP.CMS_CERT_HIST.MTELNO IS '휴대전화번호';
+
+COMMENT ON COLUMN INS_APP.CMS_CERT_HIST.CERT_RSN_SE IS '가입/비번찾기/탈퇴';
+
+COMMENT ON COLUMN INS_APP.CMS_CERT_HIST.CERT_SUCC_YN IS '인증 성공 여부';
+
+COMMENT ON COLUMN INS_APP.CMS_CERT_HIST.CERT_FAIL_RSN IS '인증 실패 사유';
+
+COMMENT ON COLUMN INS_APP.CMS_CERT_HIST.ACC_IP IS '접근 아이피';
+
+COMMENT ON COLUMN INS_APP.CMS_CERT_HIST.CRT_IP IS '등록자IP';
+
+COMMENT ON COLUMN INS_APP.CMS_CERT_HIST.CRT_PGM IS '등록프로그램';
+
+COMMENT ON COLUMN INS_APP.CMS_CERT_HIST.UPD_AT IS '수정일시';
+
+COMMENT ON COLUMN INS_APP.CMS_CERT_HIST.UPD_BY IS '수정자';
+
+COMMENT ON COLUMN INS_APP.CMS_CERT_HIST.UPD_IP IS '수정자IP';
+
+COMMENT ON COLUMN INS_APP.CMS_CERT_HIST.UPD_PGM IS '수정프로그램';
+
+COMMENT ON COLUMN INS_APP.CMS_CERT_HIST.CRT_AT IS '등록일시';
+
+COMMENT ON COLUMN INS_APP.CMS_CERT_HIST.CRT_BY IS '등록자';
+
+CREATE UNIQUE INDEX INS_APP.PK_CMS_CERT_HIST
+    ON INS_APP.CMS_CERT_HIST (
+                              SN ASC
+        );
+
+ALTER TABLE INS_APP.CMS_CERT_HIST
+    ADD
+        CONSTRAINT PK_CMS_CERT_HIST
+            PRIMARY KEY (
+                         SN
+                );
+
+CREATE TABLE INS_APP.CMS_USER_WD_HIST (
+                                          SN NUMBER(15) NOT NULL,
+                                          USER_ID VARCHAR2(100),
+                                          USER_SE VARCHAR2(20),
+                                          WD_RSN_SE VARCHAR2(20),
+                                          WD_RSN_DESC VARCHAR2(4000),
+                                          WD_YMD VARCHAR2(8),
+                                          CRT_BY VARCHAR2(100) NOT NULL,
+                                          CRT_IP VARCHAR2(40) NOT NULL,
+                                          CRT_PGM VARCHAR2(100) NOT NULL,
+                                          CRT_AT DATE NOT NULL
+);
+
+COMMENT ON TABLE INS_APP.CMS_USER_WD_HIST IS '[00.시스템]15.회원 탈퇴 이력';
+
+COMMENT ON COLUMN INS_APP.CMS_USER_WD_HIST.SN IS '일련번호';
+
+COMMENT ON COLUMN INS_APP.CMS_USER_WD_HIST.USER_ID IS '사용자 아이디';
+
+COMMENT ON COLUMN INS_APP.CMS_USER_WD_HIST.USER_SE IS '사용자 구분';
+
+COMMENT ON COLUMN INS_APP.CMS_USER_WD_HIST.WD_RSN_SE IS '탈퇴 사유 구분';
+
+COMMENT ON COLUMN INS_APP.CMS_USER_WD_HIST.WD_RSN_DESC IS '탈퇴 사유 내용';
+
+COMMENT ON COLUMN INS_APP.CMS_USER_WD_HIST.WD_YMD IS '탈퇴 일자';
+
+COMMENT ON COLUMN INS_APP.CMS_USER_WD_HIST.CRT_BY IS '등록자';
+
+COMMENT ON COLUMN INS_APP.CMS_USER_WD_HIST.CRT_IP IS '등록자IP';
+
+COMMENT ON COLUMN INS_APP.CMS_USER_WD_HIST.CRT_PGM IS '등록프로그램';
+
+COMMENT ON COLUMN INS_APP.CMS_USER_WD_HIST.CRT_AT IS '등록일시';
+
+CREATE UNIQUE INDEX INS_APP.PK_CMS_USER_WD_HIST
+    ON INS_APP.CMS_USER_WD_HIST (
+                                 SN ASC
+        );
+
+ALTER TABLE INS_APP.CMS_USER_WD_HIST
+    ADD
+        CONSTRAINT PK_CMS_USER_WD_HIST
+            PRIMARY KEY (
+                         SN
+                );
+
+CREATE TABLE INS_APP.CMS_PUSH_LOG (
+                                      SN NUMBER(15) NOT NULL,
+                                      USER_ID VARCHAR2(100),
+                                      USER_SE VARCHAR2(20),
+                                      SEND_HMS VARCHAR2(6),
+                                      SEND_SUCC_YN VARCHAR2(1),
+                                      PUSH_DESC VARCHAR2(4000),
+                                      PUSH_SEND_RSLT_SE VARCHAR2(20),
+                                      SITE_CD VARCHAR2(20),
+                                      PUSH_CH_SE VARCHAR2(20),
+                                      PUSH_TTL VARCHAR2(300),
+                                      DVC_ID VARCHAR2(100),
+                                      EQP_SE VARCHAR2(20),
+                                      CRT_AT DATE NOT NULL,
+                                      CRT_BY VARCHAR2(100) NOT NULL,
+                                      CRT_IP VARCHAR2(40) NOT NULL,
+                                      CRT_PGM VARCHAR2(100) NOT NULL,
+                                      UPD_AT DATE NOT NULL,
+                                      UPD_BY VARCHAR2(100) NOT NULL,
+                                      UPD_IP VARCHAR2(40) NOT NULL,
+                                      UPD_PGM VARCHAR2(100) NOT NULL
+);
+
+COMMENT ON TABLE INS_APP.CMS_PUSH_LOG IS '[00.시스템]97.푸시 로그';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_LOG.SN IS '일련번호';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_LOG.USER_ID IS '사용자 아이디';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_LOG.USER_SE IS '사용자 구분';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_LOG.SEND_HMS IS '전송 시분초';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_LOG.SEND_SUCC_YN IS '전송 성공 여부';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_LOG.PUSH_DESC IS '푸시 내용';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_LOG.PUSH_SEND_RSLT_SE IS '푸시 전송 결과 구분';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_LOG.SITE_CD IS '사이트 코드';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_LOG.PUSH_CH_SE IS '푸시 채널 구분';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_LOG.PUSH_TTL IS '푸시 제목';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_LOG.DVC_ID IS '장치 아이디';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_LOG.EQP_SE IS '장비 구분';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_LOG.CRT_AT IS '등록일시';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_LOG.CRT_BY IS '등록자';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_LOG.CRT_IP IS '등록자IP';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_LOG.CRT_PGM IS '등록프로그램';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_LOG.UPD_AT IS '수정일시';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_LOG.UPD_BY IS '수정자';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_LOG.UPD_IP IS '수정자IP';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_LOG.UPD_PGM IS '수정프로그램';
+
+CREATE UNIQUE INDEX INS_APP.PK_CMS_PUSH_LOG
+    ON INS_APP.CMS_PUSH_LOG (
+                             SN ASC
+        );
+
+ALTER TABLE INS_APP.CMS_PUSH_LOG
+    ADD
+        CONSTRAINT PK_CMS_PUSH_LOG
+            PRIMARY KEY (
+                         SN
+                );
+
 CREATE TABLE INS_APP.CMS_PUSH_TK (
                                      SN NUMBER(15) NOT NULL,
                                      SITE_CD VARCHAR2(20) NOT NULL,
@@ -866,20 +1123,21 @@ CREATE TABLE INS_APP.CMS_PUSH_TK (
                                      EQP_SE VARCHAR2(20) NOT NULL,
                                      OS_NM VARCHAR2(100),
                                      APP_VER VARCHAR2(100),
-                                     PUSH_CH VARCHAR2(100),
-                                     PUSH_TK VARCHAR(100) NOT NULL,
+                                     PUSH_CH_SE VARCHAR2(100),
+                                     PUSH_TK VARCHAR2(4000) NOT NULL,
+                                     APNS_ENV VARCHAR(100),
                                      USE_YN VARCHAR2(1),
                                      PUSH_AGR_YN VARCHAR2(1),
                                      LST_PUSH_USE_DT DATE,
                                      TK_EXP_YMD VARCHAR2(8),
+                                     CRT_AT DATE NOT NULL,
                                      CRT_BY VARCHAR2(100) NOT NULL,
                                      CRT_IP VARCHAR2(40) NOT NULL,
                                      CRT_PGM VARCHAR2(100) NOT NULL,
                                      UPD_AT DATE NOT NULL,
                                      UPD_BY VARCHAR2(100) NOT NULL,
                                      UPD_IP VARCHAR2(40) NOT NULL,
-                                     UPD_PGM VARCHAR2(100) NOT NULL,
-                                     CRT_AT DATE NOT NULL
+                                     UPD_PGM VARCHAR2(100) NOT NULL
 );
 
 COMMENT ON TABLE INS_APP.CMS_PUSH_TK IS '[00.시스템]98.푸시 토큰';
@@ -902,10 +1160,11 @@ COMMENT ON COLUMN INS_APP.CMS_PUSH_TK.OS_NM IS '운영체제 명';
 
 COMMENT ON COLUMN INS_APP.CMS_PUSH_TK.APP_VER IS '앱 버전';
 
-COMMENT ON COLUMN INS_APP.CMS_PUSH_TK.PUSH_CH IS 'fcm | apns | web_push';
+COMMENT ON COLUMN INS_APP.CMS_PUSH_TK.PUSH_CH_SE IS 'fcm | apns | web_push';
 
 COMMENT ON COLUMN INS_APP.CMS_PUSH_TK.PUSH_TK IS '푸시 토큰';
 
+COMMENT ON COLUMN INS_APP.CMS_PUSH_TK.APNS_ENV IS 'sandbox | production';
 
 COMMENT ON COLUMN INS_APP.CMS_PUSH_TK.USE_YN IS '사용 여부';
 
@@ -914,6 +1173,8 @@ COMMENT ON COLUMN INS_APP.CMS_PUSH_TK.PUSH_AGR_YN IS '푸시 동의 여부';
 COMMENT ON COLUMN INS_APP.CMS_PUSH_TK.LST_PUSH_USE_DT IS '최종 푸시 사용 일시';
 
 COMMENT ON COLUMN INS_APP.CMS_PUSH_TK.TK_EXP_YMD IS '토큰 만료 일자';
+
+COMMENT ON COLUMN INS_APP.CMS_PUSH_TK.CRT_AT IS '등록일시';
 
 COMMENT ON COLUMN INS_APP.CMS_PUSH_TK.CRT_BY IS '등록자';
 
@@ -928,8 +1189,6 @@ COMMENT ON COLUMN INS_APP.CMS_PUSH_TK.UPD_BY IS '수정자';
 COMMENT ON COLUMN INS_APP.CMS_PUSH_TK.UPD_IP IS '수정자IP';
 
 COMMENT ON COLUMN INS_APP.CMS_PUSH_TK.UPD_PGM IS '수정프로그램';
-
-COMMENT ON COLUMN INS_APP.CMS_PUSH_TK.CRT_AT IS '등록일시';
 
 CREATE UNIQUE INDEX INS_APP.PK_CMS_PUSH_TK
     ON INS_APP.CMS_PUSH_TK (
@@ -948,7 +1207,7 @@ CREATE TABLE INS_APP.CMS_PUSH_TK_LOG (
                                          SITE_CD VARCHAR2(20),
                                          USER_ID VARCHAR2(100),
                                          DVC_ID VARCHAR2(100),
-                                         PUSH_CH VARCHAR2(100),
+                                         PUSH_CH_SE VARCHAR2(100),
                                          TK_KND_SE VARCHAR2(20) NOT NULL,
                                          RSLT_CD VARCHAR2(20),
                                          RSLT_MSG VARCHAR2(4000),
@@ -962,7 +1221,7 @@ CREATE TABLE INS_APP.CMS_PUSH_TK_LOG (
                                          CRT_AT DATE NOT NULL
 );
 
-COMMENT ON TABLE INS_APP.CMS_PUSH_TK_LOG IS '[00.시스템]99.푸시 토큰 이력';
+COMMENT ON TABLE INS_APP.CMS_PUSH_TK_LOG IS '[00.시스템]99.푸시 토큰 로그';
 
 COMMENT ON COLUMN INS_APP.CMS_PUSH_TK_LOG.SN IS '일련번호';
 
@@ -972,7 +1231,7 @@ COMMENT ON COLUMN INS_APP.CMS_PUSH_TK_LOG.USER_ID IS '사용자 아이디';
 
 COMMENT ON COLUMN INS_APP.CMS_PUSH_TK_LOG.DVC_ID IS '장치 아이디';
 
-COMMENT ON COLUMN INS_APP.CMS_PUSH_TK_LOG.PUSH_CH IS '푸시 채널';
+COMMENT ON COLUMN INS_APP.CMS_PUSH_TK_LOG.PUSH_CH_SE IS '푸시 채널 구분';
 
 COMMENT ON COLUMN INS_APP.CMS_PUSH_TK_LOG.TK_KND_SE IS '등록,갱신,삭제,발송성공,발송실패,토큰만료';
 
@@ -1026,6 +1285,10 @@ CREATE TABLE INS_APP.CMS_COM_CODE (
                                       REF_NUM4 NUMBER(10,4),
                                       REF_NUM5 NUMBER(10,4),
                                       CD_RMK VARCHAR2(4000),
+                                      ENG_CD_NM VARCHAR2(100),
+                                      CHS_CD_NM VARCHAR2(100),
+                                      CHT_CD_NM VARCHAR2(100),
+                                      JPN_CD_NM VARCHAR2(100),
                                       CRT_BY VARCHAR2(100) NOT NULL,
                                       CRT_IP VARCHAR2(40) NOT NULL,
                                       CRT_PGM VARCHAR2(100) NOT NULL,
@@ -1040,11 +1303,11 @@ COMMENT ON TABLE INS_APP.CMS_COM_CODE IS '[01.공통]01.코드';
 
 COMMENT ON COLUMN INS_APP.CMS_COM_CODE.CD IS '코드';
 
-COMMENT ON COLUMN INS_APP.CMS_COM_CODE.UP_CD IS '상위 코드';
+COMMENT ON COLUMN INS_APP.CMS_COM_CODE.UP_CD IS '1레벨: 업무단위';
 
 COMMENT ON COLUMN INS_APP.CMS_COM_CODE.CD_NM IS '코드 명';
 
-COMMENT ON COLUMN INS_APP.CMS_COM_CODE.CD_LVL IS '코드 레벨';
+COMMENT ON COLUMN INS_APP.CMS_COM_CODE.CD_LVL IS '3레벨로 관리예정';
 
 COMMENT ON COLUMN INS_APP.CMS_COM_CODE.USE_YN IS '사용 여부';
 
@@ -1071,6 +1334,14 @@ COMMENT ON COLUMN INS_APP.CMS_COM_CODE.REF_NUM4 IS '참조 숫자4';
 COMMENT ON COLUMN INS_APP.CMS_COM_CODE.REF_NUM5 IS '참조 숫자5';
 
 COMMENT ON COLUMN INS_APP.CMS_COM_CODE.CD_RMK IS '코드 비고';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_CODE.ENG_CD_NM IS '영문 코드 명';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_CODE.CHS_CD_NM IS '중문(간체) 코드 명';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_CODE.CHT_CD_NM IS '중문(번체) 코드 명';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_CODE.JPN_CD_NM IS '일문 코드 명';
 
 COMMENT ON COLUMN INS_APP.CMS_COM_CODE.CRT_BY IS '등록자';
 
@@ -1115,28 +1386,28 @@ CREATE TABLE INS_APP.CMS_COM_MENU (
                                       SAVE_USE_YN VARCHAR2(1),
                                       DEL_USE_YN VARCHAR2(1),
                                       OUTP_USE_YN VARCHAR2(1),
-                                      URL_MTHD_SE VARCHAR2(20),
+                                      URL_TGT_SE VARCHAR2(20),
                                       URL_ADDR VARCHAR2(1000),
                                       PARAM1 VARCHAR2(100),
                                       PARAM2 VARCHAR2(100),
                                       PARAM3 VARCHAR2(100),
-                                      PARAM_4 VARCHAR2(100),
-                                      PARAM_5 VARCHAR2(100),
+                                      PARAM4 VARCHAR2(100),
+                                      PARAM5 VARCHAR2(100),
                                       MENU_RMK VARCHAR2(4000),
                                       PRV_USE_YN VARCHAR2(1),
+                                      CRT_AT DATE NOT NULL,
                                       CRT_BY VARCHAR2(100) NOT NULL,
                                       CRT_IP VARCHAR2(40) NOT NULL,
                                       CRT_PGM VARCHAR2(100) NOT NULL,
                                       UPD_AT DATE NOT NULL,
                                       UPD_BY VARCHAR2(100) NOT NULL,
                                       UPD_IP VARCHAR2(40) NOT NULL,
-                                      UPD_PGM VARCHAR2(100) NOT NULL,
-                                      CRT_AT DATE NOT NULL
+                                      UPD_PGM VARCHAR2(100) NOT NULL
 );
 
-COMMENT ON TABLE INS_APP.CMS_COM_MENU IS '[01.공통]02.메뉴';
+COMMENT ON TABLE INS_APP.CMS_COM_MENU IS '[01.공통]02.메뉴(CMS 메뉴)';
 
-COMMENT ON COLUMN INS_APP.CMS_COM_MENU.MENU_CD IS '메뉴 코드';
+COMMENT ON COLUMN INS_APP.CMS_COM_MENU.MENU_CD IS 'CMS+1lvl(2자리)+2lvl(3자리)+3lvl(3자리)';
 
 COMMENT ON COLUMN INS_APP.CMS_COM_MENU.PRGM_NM IS '소스 파일 명';
 
@@ -1160,7 +1431,7 @@ COMMENT ON COLUMN INS_APP.CMS_COM_MENU.DEL_USE_YN IS '삭제 사용 여부';
 
 COMMENT ON COLUMN INS_APP.CMS_COM_MENU.OUTP_USE_YN IS '출력 사용 여부';
 
-COMMENT ON COLUMN INS_APP.CMS_COM_MENU.URL_MTHD_SE IS '내부/ 새창';
+COMMENT ON COLUMN INS_APP.CMS_COM_MENU.URL_TGT_SE IS '내부/ 새창';
 
 COMMENT ON COLUMN INS_APP.CMS_COM_MENU.URL_ADDR IS '외부  URL 사용하는 경우';
 
@@ -1170,13 +1441,15 @@ COMMENT ON COLUMN INS_APP.CMS_COM_MENU.PARAM2 IS '파라미터2';
 
 COMMENT ON COLUMN INS_APP.CMS_COM_MENU.PARAM3 IS '파라미터3';
 
-COMMENT ON COLUMN INS_APP.CMS_COM_MENU.PARAM_4 IS '파라미터4';
+COMMENT ON COLUMN INS_APP.CMS_COM_MENU.PARAM4 IS '파라미터4';
 
-COMMENT ON COLUMN INS_APP.CMS_COM_MENU.PARAM_5 IS '파라미터5';
+COMMENT ON COLUMN INS_APP.CMS_COM_MENU.PARAM5 IS '파라미터5';
 
 COMMENT ON COLUMN INS_APP.CMS_COM_MENU.MENU_RMK IS '메뉴 비고';
 
 COMMENT ON COLUMN INS_APP.CMS_COM_MENU.PRV_USE_YN IS '개인정보 사용 여부';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_MENU.CRT_AT IS '등록일시';
 
 COMMENT ON COLUMN INS_APP.CMS_COM_MENU.CRT_BY IS '등록자';
 
@@ -1191,8 +1464,6 @@ COMMENT ON COLUMN INS_APP.CMS_COM_MENU.UPD_BY IS '수정자';
 COMMENT ON COLUMN INS_APP.CMS_COM_MENU.UPD_IP IS '수정자IP';
 
 COMMENT ON COLUMN INS_APP.CMS_COM_MENU.UPD_PGM IS '수정프로그램';
-
-COMMENT ON COLUMN INS_APP.CMS_COM_MENU.CRT_AT IS '등록일시';
 
 CREATE UNIQUE INDEX INS_APP.PK_CMS_COM_MENU
     ON INS_APP.CMS_COM_MENU (
@@ -1468,23 +1739,25 @@ CREATE TABLE INS_APP.CMS_FILE_GRP (
                                       AFILE_ID VARCHAR2(100) NOT NULL,
                                       TASK_SITE_SE VARCHAR2(20),
                                       LGN_USE_YN VARCHAR2(1),
+                                      CRT_BY VARCHAR2(100) NOT NULL,
                                       CRT_IP VARCHAR2(40) NOT NULL,
                                       CRT_PGM VARCHAR2(100) NOT NULL,
                                       UPD_AT DATE NOT NULL,
                                       UPD_BY VARCHAR2(100) NOT NULL,
                                       UPD_IP VARCHAR2(40) NOT NULL,
                                       UPD_PGM VARCHAR2(100) NOT NULL,
-                                      CRT_AT DATE NOT NULL,
-                                      CRT_BY VARCHAR2(100) NOT NULL
+                                      CRT_AT DATE NOT NULL
 );
 
-COMMENT ON TABLE INS_APP.CMS_FILE_GRP IS '[01.공통]07..파일그룹';
+COMMENT ON TABLE INS_APP.CMS_FILE_GRP IS '[01.공통]07.파일그룹';
 
 COMMENT ON COLUMN INS_APP.CMS_FILE_GRP.AFILE_ID IS '첨부파일 아이디';
 
 COMMENT ON COLUMN INS_APP.CMS_FILE_GRP.TASK_SITE_SE IS 'cms/ 별개 시스템';
 
 COMMENT ON COLUMN INS_APP.CMS_FILE_GRP.LGN_USE_YN IS '로그인 사용 여부';
+
+COMMENT ON COLUMN INS_APP.CMS_FILE_GRP.CRT_BY IS '등록자';
 
 COMMENT ON COLUMN INS_APP.CMS_FILE_GRP.CRT_IP IS '등록자IP';
 
@@ -1499,8 +1772,6 @@ COMMENT ON COLUMN INS_APP.CMS_FILE_GRP.UPD_IP IS '수정자IP';
 COMMENT ON COLUMN INS_APP.CMS_FILE_GRP.UPD_PGM IS '수정프로그램';
 
 COMMENT ON COLUMN INS_APP.CMS_FILE_GRP.CRT_AT IS '등록일시';
-
-COMMENT ON COLUMN INS_APP.CMS_FILE_GRP.CRT_BY IS '등록자';
 
 CREATE UNIQUE INDEX INS_APP.PK_CMS_FILE_GRP
     ON INS_APP.CMS_FILE_GRP (
@@ -1519,17 +1790,19 @@ CREATE TABLE INS_APP.CMS_FILE (
                                   AFILE_SN NUMBER(15) NOT NULL,
                                   FILE_PATH VARCHAR2(400),
                                   FILE_NM VARCHAR2(300),
+                                  ORI_FILE_NM VARCHAR2(300),
+                                  FILE_EXT VARCHAR2(100),
                                   FILE_DESC VARCHAR2(4000),
                                   FILE_SZ NUMBER(15,5),
                                   DEL_YN VARCHAR2(1),
+                                  CRT_BY VARCHAR2(100) NOT NULL,
                                   CRT_IP VARCHAR2(40) NOT NULL,
                                   CRT_PGM VARCHAR2(100) NOT NULL,
                                   UPD_AT DATE NOT NULL,
                                   UPD_BY VARCHAR2(100) NOT NULL,
                                   UPD_IP VARCHAR2(40) NOT NULL,
                                   UPD_PGM VARCHAR2(100) NOT NULL,
-                                  CRT_AT DATE NOT NULL,
-                                  CRT_BY VARCHAR2(100) NOT NULL
+                                  CRT_AT DATE NOT NULL
 );
 
 COMMENT ON TABLE INS_APP.CMS_FILE IS '[01.공통]08.파일';
@@ -1542,11 +1815,17 @@ COMMENT ON COLUMN INS_APP.CMS_FILE.FILE_PATH IS '파일 경로';
 
 COMMENT ON COLUMN INS_APP.CMS_FILE.FILE_NM IS '파일 명';
 
+COMMENT ON COLUMN INS_APP.CMS_FILE.ORI_FILE_NM IS '원본 파일 명';
+
+COMMENT ON COLUMN INS_APP.CMS_FILE.FILE_EXT IS '파일 확장자';
+
 COMMENT ON COLUMN INS_APP.CMS_FILE.FILE_DESC IS '파일 내용';
 
 COMMENT ON COLUMN INS_APP.CMS_FILE.FILE_SZ IS '파일 크기';
 
 COMMENT ON COLUMN INS_APP.CMS_FILE.DEL_YN IS '삭제 여부';
+
+COMMENT ON COLUMN INS_APP.CMS_FILE.CRT_BY IS '등록자';
 
 COMMENT ON COLUMN INS_APP.CMS_FILE.CRT_IP IS '등록자IP';
 
@@ -1562,8 +1841,6 @@ COMMENT ON COLUMN INS_APP.CMS_FILE.UPD_PGM IS '수정프로그램';
 
 COMMENT ON COLUMN INS_APP.CMS_FILE.CRT_AT IS '등록일시';
 
-COMMENT ON COLUMN INS_APP.CMS_FILE.CRT_BY IS '등록자';
-
 CREATE UNIQUE INDEX INS_APP.PK_CMS_FILE
     ON INS_APP.CMS_FILE (
                          AFILE_ID ASC,
@@ -1578,10 +1855,124 @@ ALTER TABLE INS_APP.CMS_FILE
                          AFILE_SN
                 );
 
+CREATE TABLE INS_APP.CMS_COM_LOG (
+                                     SN NUMBER(15) NOT NULL,
+                                     LOG_CRT_DT DATE,
+                                     LOG_URL_PATH VARCHAR2(1000),
+                                     LOG_CTRL VARCHAR2(100),
+                                     LOG_HTTP_MTHD_SE VARCHAR2(20),
+                                     LOG_MTHD VARCHAR2(300),
+                                     LOG_SRCH_COND_1LVL VARCHAR2(100),
+                                     LOG_SRCH_COND_2LVL VARCHAR2(100),
+                                     LOG_SRCH_COND_3LVL VARCHAR2(100),
+                                     LOG_SRCH_ORG_CD VARCHAR2(20),
+                                     LOG_SRCH_KWD VARCHAR2(300),
+                                     LOG_SRCH_USE_YN VARCHAR2(1),
+                                     LOG_SRCH_YR NUMBER(5),
+                                     LOG_MENU_CD VARCHAR2(20),
+                                     LOG_SRCH_TOT_YN VARCHAR2(1),
+                                     LOG_PAGE_SZ NUMBER(10),
+                                     LOG_PAGE NUMBER(10),
+                                     LOG_PAGE_CNT NUMBER(10),
+                                     LOG_BRD_ID VARCHAR2(100),
+                                     LOG_SRCH_TOT_PARAM VARCHAR2(4000),
+                                     LOG_KND_SE VARCHAR2(20),
+                                     LOG_SUCC_HMS VARCHAR2(6),
+                                     LOG_USER_ID VARCHAR2(100),
+                                     LOG_USER_SE VARCHAR2(20),
+                                     CRT_BY VARCHAR2(100) NOT NULL,
+                                     CRT_IP VARCHAR2(40) NOT NULL,
+                                     CRT_PGM VARCHAR2(100) NOT NULL,
+                                     UPD_AT DATE NOT NULL,
+                                     UPD_BY VARCHAR2(100) NOT NULL,
+                                     UPD_IP VARCHAR2(40) NOT NULL,
+                                     UPD_PGM VARCHAR2(100) NOT NULL,
+                                     CRT_AT DATE NOT NULL
+);
+
+COMMENT ON TABLE INS_APP.CMS_COM_LOG IS '[01.공통]09.cms 로그 ';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.SN IS '일련번호';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_CRT_DT IS '로그 생성 일시';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_URL_PATH IS 'url';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_CTRL IS '로그 컨트롤러';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_HTTP_MTHD_SE IS 'GET|POST|';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_MTHD IS '로그 메소드';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_SRCH_COND_1LVL IS '로그 검색 조건 1레벨';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_SRCH_COND_2LVL IS '로그 검색 조건 2레벨';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_SRCH_COND_3LVL IS '로그 검색 조건 3레벨';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_SRCH_ORG_CD IS '로그 검색 조직 코드';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_SRCH_KWD IS '로그 검색 키워드';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_SRCH_USE_YN IS '로그 검색 사용 여부';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_SRCH_YR IS '로그 검색 연도';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_MENU_CD IS '로그 메뉴 코드';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_SRCH_TOT_YN IS '로그 검색 총 여부';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_PAGE_SZ IS '로그 페이지 크기';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_PAGE IS '로그 페이지';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_PAGE_CNT IS '로그 페이지 수';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_BRD_ID IS '로그 게시판 아이디';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_SRCH_TOT_PARAM IS '로그 검색 총 파라미터';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_KND_SE IS '로그 종류 구분';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_SUCC_HMS IS '로그 성공 시분초';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_USER_ID IS '로그 사용자 아이디';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.LOG_USER_SE IS '로그 사용자 구분';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.CRT_BY IS '등록자';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.CRT_IP IS '등록자IP';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.CRT_PGM IS '등록프로그램';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.UPD_AT IS '수정일시';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.UPD_BY IS '수정자';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.UPD_IP IS '수정자IP';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.UPD_PGM IS '수정프로그램';
+
+COMMENT ON COLUMN INS_APP.CMS_COM_LOG.CRT_AT IS '등록일시';
+
+CREATE UNIQUE INDEX INS_APP.PK_CMS_COM_LOG
+    ON INS_APP.CMS_COM_LOG (
+                            SN ASC
+        );
+
+ALTER TABLE INS_APP.CMS_COM_LOG
+    ADD
+        CONSTRAINT PK_CMS_COM_LOG
+            PRIMARY KEY (
+                         SN
+                );
+
 CREATE TABLE INS_APP.CMS_SITE (
                                   SITE_CD VARCHAR2(20) NOT NULL,
                                   SITE_NM VARCHAR2(100),
                                   SITE_DESC VARCHAR2(4000),
+                                  SITE_URL VARCHAR2(1000),
                                   USE_YN VARCHAR2(1),
                                   CRT_AT DATE NOT NULL,
                                   CRT_BY VARCHAR2(100) NOT NULL,
@@ -1600,6 +1991,8 @@ COMMENT ON COLUMN INS_APP.CMS_SITE.SITE_CD IS '사이트 코드?';
 COMMENT ON COLUMN INS_APP.CMS_SITE.SITE_NM IS '사이트 명';
 
 COMMENT ON COLUMN INS_APP.CMS_SITE.SITE_DESC IS '사이트 설명';
+
+COMMENT ON COLUMN INS_APP.CMS_SITE.SITE_URL IS '사이트 URL';
 
 COMMENT ON COLUMN INS_APP.CMS_SITE.USE_YN IS '사용 여부';
 
@@ -1631,65 +2024,68 @@ ALTER TABLE INS_APP.CMS_SITE
                          SITE_CD
                 );
 
-CREATE TABLE INS_APP.CMS_SITE_IP (
-                                     SITE_CD VARCHAR2(20) NOT NULL,
-                                     SN VARCHAR(20) NOT NULL,
-                                     USE_YN VARCHAR(1),
-                                     IP_DESC VARCHAR(4000),
-                                     PERM_IP VARCHAR(40),
-                                     USE_ST_YMD VARCHAR(8),
-                                     USE_END_YMD VARCHAR(8),
-                                     CRT_AT DATE NOT NULL,
-                                     CRT_BY VARCHAR(100) NOT NULL,
-                                     CRT_IP VARCHAR(40) NOT NULL,
-                                     CRT_PGM VARCHAR(100) NOT NULL,
-                                     UPD_AT DATE NOT NULL,
-                                     UPD_BY VARCHAR(100) NOT NULL,
-                                     UPD_IP VARCHAR(40) NOT NULL,
-                                     UPD_PGM VARCHAR(100) NOT NULL
+CREATE TABLE INS_APP.CMS_SITE_ACC_PERM (
+                                           SITE_CD VARCHAR2(20) NOT NULL,
+                                           SN NUMBER(15) NOT NULL,
+                                           USE_YN VARCHAR2(1),
+                                           SITE_PERM_KND_SE VARCHAR2(20),
+                                           SITE_PERM_NM VARCHAR2(200),
+                                           SITE_PERM_DESC VARCHAR2(4000),
+                                           USE_ST_YMD VARCHAR2(8),
+                                           USE_END_YMD VARCHAR2(8),
+                                           CRT_AT DATE NOT NULL,
+                                           CRT_BY VARCHAR2(100) NOT NULL,
+                                           CRT_IP VARCHAR2(40) NOT NULL,
+                                           CRT_PGM VARCHAR2(100) NOT NULL,
+                                           UPD_AT DATE NOT NULL,
+                                           UPD_BY VARCHAR2(100) NOT NULL,
+                                           UPD_IP VARCHAR2(40) NOT NULL,
+                                           UPD_PGM VARCHAR2(100) NOT NULL
 );
 
-COMMENT ON TABLE INS_APP.CMS_SITE_IP IS '[03.사이트]02.사이트 아이피';
+COMMENT ON TABLE INS_APP.CMS_SITE_ACC_PERM IS '[02.사이트]02.사이트 접근 허용';
 
-COMMENT ON COLUMN INS_APP.CMS_SITE_IP.SITE_CD IS '사이트 코드';
+COMMENT ON COLUMN INS_APP.CMS_SITE_ACC_PERM.SITE_CD IS '사이트 코드';
 
-COMMENT ON COLUMN INS_APP.CMS_SITE_IP.SN IS '일련번호';
+COMMENT ON COLUMN INS_APP.CMS_SITE_ACC_PERM.SN IS '일련번호';
 
-COMMENT ON COLUMN INS_APP.CMS_SITE_IP.USE_YN IS '사용 여부';
+COMMENT ON COLUMN INS_APP.CMS_SITE_ACC_PERM.USE_YN IS '사용 여부';
 
-COMMENT ON COLUMN INS_APP.CMS_SITE_IP.IP_DESC IS '아이피 내용';
+COMMENT ON COLUMN INS_APP.CMS_SITE_ACC_PERM.SITE_PERM_KND_SE IS 'ip/domain';
 
-COMMENT ON COLUMN INS_APP.CMS_SITE_IP.PERM_IP IS '허용 아이피';
+COMMENT ON COLUMN INS_APP.CMS_SITE_ACC_PERM.SITE_PERM_NM IS 'ip주소,도메인명';
 
-COMMENT ON COLUMN INS_APP.CMS_SITE_IP.USE_ST_YMD IS '사용 시작 일자';
+COMMENT ON COLUMN INS_APP.CMS_SITE_ACC_PERM.SITE_PERM_DESC IS '사이트 허용 내용';
 
-COMMENT ON COLUMN INS_APP.CMS_SITE_IP.USE_END_YMD IS '사용 종료 일자';
+COMMENT ON COLUMN INS_APP.CMS_SITE_ACC_PERM.USE_ST_YMD IS '사용 시작 일자';
 
-COMMENT ON COLUMN INS_APP.CMS_SITE_IP.CRT_AT IS '등록일시';
+COMMENT ON COLUMN INS_APP.CMS_SITE_ACC_PERM.USE_END_YMD IS '사용 종료 일자';
 
-COMMENT ON COLUMN INS_APP.CMS_SITE_IP.CRT_BY IS '등록자';
+COMMENT ON COLUMN INS_APP.CMS_SITE_ACC_PERM.CRT_AT IS '등록일시';
 
-COMMENT ON COLUMN INS_APP.CMS_SITE_IP.CRT_IP IS '등록자IP';
+COMMENT ON COLUMN INS_APP.CMS_SITE_ACC_PERM.CRT_BY IS '등록자';
 
-COMMENT ON COLUMN INS_APP.CMS_SITE_IP.CRT_PGM IS '등록프로그램';
+COMMENT ON COLUMN INS_APP.CMS_SITE_ACC_PERM.CRT_IP IS '등록자IP';
 
-COMMENT ON COLUMN INS_APP.CMS_SITE_IP.UPD_AT IS '수정일시';
+COMMENT ON COLUMN INS_APP.CMS_SITE_ACC_PERM.CRT_PGM IS '등록프로그램';
 
-COMMENT ON COLUMN INS_APP.CMS_SITE_IP.UPD_BY IS '수정자';
+COMMENT ON COLUMN INS_APP.CMS_SITE_ACC_PERM.UPD_AT IS '수정일시';
 
-COMMENT ON COLUMN INS_APP.CMS_SITE_IP.UPD_IP IS '수정자IP';
+COMMENT ON COLUMN INS_APP.CMS_SITE_ACC_PERM.UPD_BY IS '수정자';
 
-COMMENT ON COLUMN INS_APP.CMS_SITE_IP.UPD_PGM IS '수정프로그램';
+COMMENT ON COLUMN INS_APP.CMS_SITE_ACC_PERM.UPD_IP IS '수정자IP';
 
-CREATE UNIQUE INDEX INS_APP.PK_CMS_SITE_IP
-    ON INS_APP.CMS_SITE_IP (
-                            SITE_CD ASC,
-                            SN ASC
+COMMENT ON COLUMN INS_APP.CMS_SITE_ACC_PERM.UPD_PGM IS '수정프로그램';
+
+CREATE UNIQUE INDEX INS_APP.PK_CMS_SITE_ACC_PERM
+    ON INS_APP.CMS_SITE_ACC_PERM (
+                                  SITE_CD ASC,
+                                  SN ASC
         );
 
-ALTER TABLE INS_APP.CMS_SITE_IP
+ALTER TABLE INS_APP.CMS_SITE_ACC_PERM
     ADD
-        CONSTRAINT PK_CMS_SITE_IP
+        CONSTRAINT PK_CMS_SITE_ACC_PERM
             PRIMARY KEY (
                          SITE_CD,
                          SN
@@ -1708,7 +2104,7 @@ CREATE TABLE INS_APP.CMS_SITE_MENU (
                                        CTT_ID VARCHAR2(100),
                                        MENU_ORD NUMBER(10),
                                        LGN_USE_YN VARCHAR2(1),
-                                       URL_MTHD_SE VARCHAR2(20),
+                                       URL_TGT_SE VARCHAR2(20),
                                        URL_ADDR VARCHAR2(1000),
                                        PARAM1 VARCHAR2(100),
                                        PARAM2 VARCHAR2(100),
@@ -1717,6 +2113,7 @@ CREATE TABLE INS_APP.CMS_SITE_MENU (
                                        PARAM5 VARCHAR2(100),
                                        PRV_USE_YN VARCHAR2(1),
                                        PRGM_TYPE_SE VARCHAR2(20),
+                                       MENU_USE_YN VARCHAR2(1),
                                        CRT_AT DATE NOT NULL,
                                        CRT_BY VARCHAR2(100) NOT NULL,
                                        CRT_IP VARCHAR2(40) NOT NULL,
@@ -1727,7 +2124,7 @@ CREATE TABLE INS_APP.CMS_SITE_MENU (
                                        UPD_PGM VARCHAR2(100) NOT NULL
 );
 
-COMMENT ON TABLE INS_APP.CMS_SITE_MENU IS '[03.사이트]03.사이트 메뉴';
+COMMENT ON TABLE INS_APP.CMS_SITE_MENU IS '[02.사이트]03.사이트 메뉴';
 
 COMMENT ON COLUMN INS_APP.CMS_SITE_MENU.SITE_CD IS '사이트 코드';
 
@@ -1753,7 +2150,7 @@ COMMENT ON COLUMN INS_APP.CMS_SITE_MENU.MENU_ORD IS '메뉴 순서';
 
 COMMENT ON COLUMN INS_APP.CMS_SITE_MENU.LGN_USE_YN IS '로그인 해야만 사용 가능';
 
-COMMENT ON COLUMN INS_APP.CMS_SITE_MENU.URL_MTHD_SE IS '내부/ 새창';
+COMMENT ON COLUMN INS_APP.CMS_SITE_MENU.URL_TGT_SE IS '내부/ 새창';
 
 COMMENT ON COLUMN INS_APP.CMS_SITE_MENU.URL_ADDR IS '외부  URL 사용하는 경우';
 
@@ -1770,6 +2167,8 @@ COMMENT ON COLUMN INS_APP.CMS_SITE_MENU.PARAM5 IS '파라미터5';
 COMMENT ON COLUMN INS_APP.CMS_SITE_MENU.PRV_USE_YN IS '개인정보 조회 이력에 로그';
 
 COMMENT ON COLUMN INS_APP.CMS_SITE_MENU.PRGM_TYPE_SE IS '조회/저장/출력 등 관리?';
+
+COMMENT ON COLUMN INS_APP.CMS_SITE_MENU.MENU_USE_YN IS '메뉴 사용 여부';
 
 COMMENT ON COLUMN INS_APP.CMS_SITE_MENU.CRT_AT IS '등록일시';
 
@@ -1808,11 +2207,11 @@ CREATE TABLE INS_APP.CMS_SITE_VST_HIST (
                                            MENU_CD VARCHAR2(20) NOT NULL,
                                            LANG_SE VARCHAR2(20) NOT NULL,
                                            SN NUMBER(15) NOT NULL,
-                                           IP VARCHAR2(40),
+                                           VST_IP VARCHAR2(40),
                                            VST_YMD VARCHAR2(8),
                                            OS_NM VARCHAR2(100),
                                            BRWS_NM VARCHAR2(100),
-                                           USER_AGT VARCHAR2(100),
+                                           USER_AGT VARCHAR2(500),
                                            TGT_BRWS_NM VARCHAR2(100),
                                            PSTN VARCHAR2(100),
                                            BRD_ID VARCHAR2(100),
@@ -1831,7 +2230,7 @@ CREATE TABLE INS_APP.CMS_SITE_VST_HIST (
                                            UPD_PGM VARCHAR2(100) NOT NULL
 );
 
-COMMENT ON TABLE INS_APP.CMS_SITE_VST_HIST IS '[03.사이트]04.사이트 방문 이력';
+COMMENT ON TABLE INS_APP.CMS_SITE_VST_HIST IS '[02.사이트]04.사이트 방문 이력';
 
 COMMENT ON COLUMN INS_APP.CMS_SITE_VST_HIST.SITE_CD IS '사이트 코드';
 
@@ -1841,7 +2240,7 @@ COMMENT ON COLUMN INS_APP.CMS_SITE_VST_HIST.LANG_SE IS '언어 구분';
 
 COMMENT ON COLUMN INS_APP.CMS_SITE_VST_HIST.SN IS '일련번호';
 
-COMMENT ON COLUMN INS_APP.CMS_SITE_VST_HIST.IP IS '아이피';
+COMMENT ON COLUMN INS_APP.CMS_SITE_VST_HIST.VST_IP IS '방문 아이피';
 
 COMMENT ON COLUMN INS_APP.CMS_SITE_VST_HIST.VST_YMD IS '방문 일자';
 
@@ -1902,22 +2301,60 @@ ALTER TABLE INS_APP.CMS_SITE_VST_HIST
                 );
 
 CREATE TABLE INS_APP.CMS_BNR_GRP (
-                                     BNR_GRP_ID VARCHAR(100) NOT NULL,
-                                     SITE_CD VARCHAR2(20) NOT NULL
-
+                                     BNR_GRP_ID VARCHAR2(100) NOT NULL,
+                                     SITE_CD VARCHAR2(20) NOT NULL,
+                                     LANG_SE VARCHAR2(20) NOT NULL,
+                                     BNR_GRP_NM VARCHAR2(100),
+                                     BNR_GRP_DESC VARCHAR2(4000),
+                                     USE_YN VARCHAR2(1),
+                                     SORT NUMBER(10),
+                                     CRT_AT DATE NOT NULL,
+                                     CRT_BY VARCHAR2(100) NOT NULL,
+                                     CRT_IP VARCHAR2(40) NOT NULL,
+                                     CRT_PGM VARCHAR2(100) NOT NULL,
+                                     UPD_AT DATE NOT NULL,
+                                     UPD_BY VARCHAR2(100) NOT NULL,
+                                     UPD_IP VARCHAR2(40) NOT NULL,
+                                     UPD_PGM VARCHAR2(100) NOT NULL
 );
 
-COMMENT ON TABLE INS_APP.CMS_BNR_GRP IS '[03.사이트]05.배너 그룹';
+COMMENT ON TABLE INS_APP.CMS_BNR_GRP IS '[02.사이트]05.배너 그룹';
 
 COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.BNR_GRP_ID IS '배너 그룹 아이디';
 
 COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.SITE_CD IS '사이트 코드';
 
+COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.LANG_SE IS '언어 구분';
+
+COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.BNR_GRP_NM IS '배너 그룹 명';
+
+COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.BNR_GRP_DESC IS '배너 그룹 내용';
+
+COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.USE_YN IS '사용여부';
+
+COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.SORT IS '정렬';
+
+COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.CRT_AT IS '등록일시';
+
+COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.CRT_BY IS '등록자';
+
+COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.CRT_IP IS '등록자IP';
+
+COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.CRT_PGM IS '등록프로그램';
+
+COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.UPD_AT IS '수정일시';
+
+COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.UPD_BY IS '수정자';
+
+COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.UPD_IP IS '수정자IP';
+
+COMMENT ON COLUMN INS_APP.CMS_BNR_GRP.UPD_PGM IS '수정프로그램';
 
 CREATE UNIQUE INDEX INS_APP.PK_CMS_BNR_GRP
     ON INS_APP.CMS_BNR_GRP (
                             BNR_GRP_ID ASC,
-                            SITE_CD ASC
+                            SITE_CD ASC,
+                            LANG_SE ASC
         );
 
 ALTER TABLE INS_APP.CMS_BNR_GRP
@@ -1925,38 +2362,40 @@ ALTER TABLE INS_APP.CMS_BNR_GRP
         CONSTRAINT PK_CMS_BNR_GRP
             PRIMARY KEY (
                          BNR_GRP_ID,
-                         SITE_CD
+                         SITE_CD,
+                         LANG_SE
                 );
 
 CREATE TABLE INS_APP.CMS_BNR (
-                                 BNR_ID VARCHAR(100) NOT NULL,
-                                 BNR_GRP_ID VARCHAR(100) NOT NULL,
+                                 BNR_ID VARCHAR2(100) NOT NULL,
+                                 BNR_GRP_ID VARCHAR2(100) NOT NULL,
                                  SITE_CD VARCHAR2(20) NOT NULL,
-                                 BNR_NM VARCHAR(100),
-                                 BNR_DESC VARCHAR(4000),
-                                 BNR_FILE_NM VARCHAR(300),
-                                 BNR_FILE_PATH VARCHAR(400),
-                                 PUB_ST_DAY VARCHAR(8),
-                                 PUB_ST_HR VARCHAR(4),
-                                 PUB_END_DAY VARCHAR(8),
-                                 PUB_END_HR VARCHAR(4),
-                                 USE_YN VARCHAR(1),
-                                 BNR_SE VARCHAR(20),
-                                 BNR_SZ_SE VARCHAR(20),
-                                 BNR_URL VARCHAR(1000),
-                                 DEL_YN VARCHAR(1),
-                                 RMK BLOB,
+                                 LANG_SE VARCHAR2(20) NOT NULL,
+                                 BNR_NM VARCHAR2(100),
+                                 BNR_DESC VARCHAR2(4000),
+                                 AFILE_ID VARCHAR2(100),
+                                 ORD NUMBER(10),
+                                 PUB_ST_YMD VARCHAR2(8),
+                                 PUB_ST_HR VARCHAR2(4),
+                                 PUB_END_YMD VARCHAR2(8),
+                                 PUB_END_HR VARCHAR2(4),
+                                 USE_YN VARCHAR2(1),
+                                 BNR_SE VARCHAR2(20),
+                                 BNR_SZ_SE VARCHAR2(20),
+                                 BNR_URL VARCHAR2(1000),
+                                 DEL_YN VARCHAR2(1),
+                                 BNR_RMK VARCHAR2(4000),
                                  CRT_AT DATE NOT NULL,
-                                 CRT_BY VARCHAR(100) NOT NULL,
-                                 CRT_IP VARCHAR(40) NOT NULL,
-                                 CRT_PGM VARCHAR(100) NOT NULL,
+                                 CRT_BY VARCHAR2(100) NOT NULL,
+                                 CRT_IP VARCHAR2(40) NOT NULL,
+                                 CRT_PGM VARCHAR2(100) NOT NULL,
                                  UPD_AT DATE NOT NULL,
-                                 UPD_BY VARCHAR(100) NOT NULL,
-                                 UPD_IP VARCHAR(40) NOT NULL,
-                                 UPD_PGM VARCHAR(100) NOT NULL
+                                 UPD_BY VARCHAR2(100) NOT NULL,
+                                 UPD_IP VARCHAR2(40) NOT NULL,
+                                 UPD_PGM VARCHAR2(100) NOT NULL
 );
 
-COMMENT ON TABLE INS_APP.CMS_BNR IS '[03.사이트]06.베너';
+COMMENT ON TABLE INS_APP.CMS_BNR IS '[02.사이트]06.베너';
 
 COMMENT ON COLUMN INS_APP.CMS_BNR.BNR_ID IS '배너 아이디';
 
@@ -1964,19 +2403,21 @@ COMMENT ON COLUMN INS_APP.CMS_BNR.BNR_GRP_ID IS '배너 그룹 아이디';
 
 COMMENT ON COLUMN INS_APP.CMS_BNR.SITE_CD IS '사이트 코드';
 
+COMMENT ON COLUMN INS_APP.CMS_BNR.LANG_SE IS '언어 구분';
+
 COMMENT ON COLUMN INS_APP.CMS_BNR.BNR_NM IS '배너 명';
 
 COMMENT ON COLUMN INS_APP.CMS_BNR.BNR_DESC IS '배너 내용';
 
-COMMENT ON COLUMN INS_APP.CMS_BNR.BNR_FILE_NM IS '배너 파일 명';
+COMMENT ON COLUMN INS_APP.CMS_BNR.AFILE_ID IS '첨부파일 아이디';
 
-COMMENT ON COLUMN INS_APP.CMS_BNR.BNR_FILE_PATH IS '배너 파일 경로';
+COMMENT ON COLUMN INS_APP.CMS_BNR.ORD IS '순서';
 
-COMMENT ON COLUMN INS_APP.CMS_BNR.PUB_ST_DAY IS '게시 시작 일';
+COMMENT ON COLUMN INS_APP.CMS_BNR.PUB_ST_YMD IS '게시 시작 일자';
 
 COMMENT ON COLUMN INS_APP.CMS_BNR.PUB_ST_HR IS '게시 시작 시간';
 
-COMMENT ON COLUMN INS_APP.CMS_BNR.PUB_END_DAY IS '게시 종료 일';
+COMMENT ON COLUMN INS_APP.CMS_BNR.PUB_END_YMD IS '게시 종료 일자';
 
 COMMENT ON COLUMN INS_APP.CMS_BNR.PUB_END_HR IS '게시 종료 시간';
 
@@ -1990,7 +2431,7 @@ COMMENT ON COLUMN INS_APP.CMS_BNR.BNR_URL IS '배너 URL';
 
 COMMENT ON COLUMN INS_APP.CMS_BNR.DEL_YN IS '삭제 여부';
 
-COMMENT ON COLUMN INS_APP.CMS_BNR.RMK IS '비고';
+COMMENT ON COLUMN INS_APP.CMS_BNR.BNR_RMK IS '배너 비고';
 
 COMMENT ON COLUMN INS_APP.CMS_BNR.CRT_AT IS '등록일시';
 
@@ -2012,7 +2453,8 @@ CREATE UNIQUE INDEX INS_APP.PK_CMS_BNR
     ON INS_APP.CMS_BNR (
                         BNR_ID ASC,
                         BNR_GRP_ID ASC,
-                        SITE_CD ASC
+                        SITE_CD ASC,
+                        LANG_SE ASC
         );
 
 ALTER TABLE INS_APP.CMS_BNR
@@ -2021,16 +2463,22 @@ ALTER TABLE INS_APP.CMS_BNR
             PRIMARY KEY (
                          BNR_ID,
                          BNR_GRP_ID,
-                         SITE_CD
+                         SITE_CD,
+                         LANG_SE
                 );
 
 CREATE TABLE INS_APP.CMS_CTT (
                                  SITE_CD VARCHAR2(20) NOT NULL,
                                  CTT_ID VARCHAR2(100) NOT NULL,
+                                 LANG_SE VARCHAR2(20) NOT NULL,
                                  CTT_NM VARCHAR2(100),
-                                 CTT_DESC VARCHAR2(4000),
+                                 CTT_DESC CLOB,
                                  USE_YN VARCHAR2(1),
                                  PUB_YN VARCHAR2(1),
+                                 PUB_ST_YMD VARCHAR2(8),
+                                 PUB_ST_HHMM VARCHAR2(4),
+                                 PUB_END_YMD VARCHAR2(8),
+                                 PUB_END_HHMM VARCHAR2(4),
                                  CTT_RMK VARCHAR2(4000),
                                  CRT_BY VARCHAR2(100) NOT NULL,
                                  CRT_IP VARCHAR2(40) NOT NULL,
@@ -2042,11 +2490,13 @@ CREATE TABLE INS_APP.CMS_CTT (
                                  CRT_AT DATE NOT NULL
 );
 
-COMMENT ON TABLE INS_APP.CMS_CTT IS '[03.사이트]07.컨텐츠 - puck editor 사용';
+COMMENT ON TABLE INS_APP.CMS_CTT IS '[02.사이트]07.컨텐츠 - puck editor 사용';
 
 COMMENT ON COLUMN INS_APP.CMS_CTT.SITE_CD IS '사이트 코드';
 
 COMMENT ON COLUMN INS_APP.CMS_CTT.CTT_ID IS '컨텐츠 아이디';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT.LANG_SE IS '언어 구분';
 
 COMMENT ON COLUMN INS_APP.CMS_CTT.CTT_NM IS '컨텐츠 명';
 
@@ -2055,6 +2505,14 @@ COMMENT ON COLUMN INS_APP.CMS_CTT.CTT_DESC IS '컨텐츠 내용';
 COMMENT ON COLUMN INS_APP.CMS_CTT.USE_YN IS '사용 여부';
 
 COMMENT ON COLUMN INS_APP.CMS_CTT.PUB_YN IS '중간저장 등의 이슈가 있을 수 있음.';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT.PUB_ST_YMD IS '게시 시작 일자';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT.PUB_ST_HHMM IS '게시 시작 시분';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT.PUB_END_YMD IS '게시 종료 일자';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT.PUB_END_HHMM IS '게시 종료 시분';
 
 COMMENT ON COLUMN INS_APP.CMS_CTT.CTT_RMK IS '컨텐츠 비고';
 
@@ -2077,7 +2535,8 @@ COMMENT ON COLUMN INS_APP.CMS_CTT.CRT_AT IS '등록일시';
 CREATE UNIQUE INDEX INS_APP.PK_CMS_CTT
     ON INS_APP.CMS_CTT (
                         SITE_CD ASC,
-                        CTT_ID ASC
+                        CTT_ID ASC,
+                        LANG_SE ASC
         );
 
 ALTER TABLE INS_APP.CMS_CTT
@@ -2085,13 +2544,15 @@ ALTER TABLE INS_APP.CMS_CTT
         CONSTRAINT PK_CMS_CTT
             PRIMARY KEY (
                          SITE_CD,
-                         CTT_ID
+                         CTT_ID,
+                         LANG_SE
                 );
 
 CREATE TABLE INS_APP.CMS_CTT_SEO (
                                      SN NUMBER(15) NOT NULL,
                                      SITE_CD VARCHAR2(20) NOT NULL,
                                      CTT_ID VARCHAR2(100) NOT NULL,
+                                     LANG_SE VARCHAR2(20) NOT NULL,
                                      META_TTL VARCHAR2(300),
                                      META_DESC VARCHAR2(4000),
                                      CRT_IP VARCHAR2(40) NOT NULL,
@@ -2104,13 +2565,15 @@ CREATE TABLE INS_APP.CMS_CTT_SEO (
                                      CRT_BY VARCHAR2(100) NOT NULL
 );
 
-COMMENT ON TABLE INS_APP.CMS_CTT_SEO IS '[03.사이트]08.컨텐츠 SEO';
+COMMENT ON TABLE INS_APP.CMS_CTT_SEO IS '[02.사이트]08.컨텐츠 SEO';
 
 COMMENT ON COLUMN INS_APP.CMS_CTT_SEO.SN IS '일련번호';
 
 COMMENT ON COLUMN INS_APP.CMS_CTT_SEO.SITE_CD IS '사이트 코드';
 
 COMMENT ON COLUMN INS_APP.CMS_CTT_SEO.CTT_ID IS '컨텐츠 아이디';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_SEO.LANG_SE IS '언어 구분';
 
 COMMENT ON COLUMN INS_APP.CMS_CTT_SEO.META_TTL IS '메타 제목';
 
@@ -2136,7 +2599,8 @@ CREATE UNIQUE INDEX INS_APP.PK_CMS_CTT_SEO
     ON INS_APP.CMS_CTT_SEO (
                             SN ASC,
                             SITE_CD ASC,
-                            CTT_ID ASC
+                            CTT_ID ASC,
+                            LANG_SE ASC
         );
 
 ALTER TABLE INS_APP.CMS_CTT_SEO
@@ -2145,18 +2609,108 @@ ALTER TABLE INS_APP.CMS_CTT_SEO
             PRIMARY KEY (
                          SN,
                          SITE_CD,
-                         CTT_ID
+                         CTT_ID,
+                         LANG_SE
+                );
+
+CREATE TABLE INS_APP.CMS_CTT_HIST (
+                                      SITE_CD VARCHAR2(20) NOT NULL,
+                                      SN NUMBER(15) NOT NULL,
+                                      VER_NUM NUMBER(5),
+                                      CTT_SAVE_RSN_SE VARCHAR2(20),
+                                      CTT_ID VARCHAR2(100) NOT NULL,
+                                      LANG_SE VARCHAR2(20) NOT NULL,
+                                      CTT_NM VARCHAR2(100),
+                                      CTT_DESC CLOB,
+                                      USE_YN VARCHAR2(1),
+                                      PUB_ST_YMD VARCHAR2(8),
+                                      PUB_ST_HHMM VARCHAR2(4),
+                                      PUB_END_YMD VARCHAR2(8),
+                                      PUB_END_HHMM VARCHAR2(4),
+                                      PUB_YN VARCHAR2(1),
+                                      CTT_RMK VARCHAR2(4000),
+                                      CRT_BY VARCHAR2(100) NOT NULL,
+                                      CRT_IP VARCHAR2(40) NOT NULL,
+                                      CRT_PGM VARCHAR2(100) NOT NULL,
+                                      UPD_AT DATE NOT NULL,
+                                      UPD_BY VARCHAR2(100) NOT NULL,
+                                      UPD_IP VARCHAR2(40) NOT NULL,
+                                      UPD_PGM VARCHAR2(100) NOT NULL,
+                                      CRT_AT DATE NOT NULL
+);
+
+COMMENT ON TABLE INS_APP.CMS_CTT_HIST IS '[02.사이트]09.컨텐츠 히스토리';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.SITE_CD IS '사이트 코드';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.SN IS '일련번호';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.VER_NUM IS '버전 숫자';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.CTT_SAVE_RSN_SE IS '컨텐츠 저장 사유 구분';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.CTT_ID IS '컨텐츠 아이디';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.LANG_SE IS '언어 구분';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.CTT_NM IS '컨텐츠 명';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.CTT_DESC IS '컨텐츠 내용';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.USE_YN IS '사용 여부';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.PUB_ST_YMD IS '게시 시작 일자';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.PUB_ST_HHMM IS '게시 시작 시분';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.PUB_END_YMD IS '게시 종료 일자';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.PUB_END_HHMM IS '게시 종료 시분';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.PUB_YN IS '중간저장 등의 이슈가 있을 수 있음.';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.CTT_RMK IS '컨텐츠 비고';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.CRT_BY IS '등록자';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.CRT_IP IS '등록자IP';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.CRT_PGM IS '등록프로그램';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.UPD_AT IS '수정일시';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.UPD_BY IS '수정자';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.UPD_IP IS '수정자IP';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.UPD_PGM IS '수정프로그램';
+
+COMMENT ON COLUMN INS_APP.CMS_CTT_HIST.CRT_AT IS '등록일시';
+
+CREATE UNIQUE INDEX INS_APP.PK_CMS_CTT_HIST
+    ON INS_APP.CMS_CTT_HIST (
+                             SITE_CD ASC,
+                             SN ASC
+        );
+
+ALTER TABLE INS_APP.CMS_CTT_HIST
+    ADD
+        CONSTRAINT PK_CMS_CTT_HIST
+            PRIMARY KEY (
+                         SITE_CD,
+                         SN
                 );
 
 CREATE TABLE INS_APP.CMS_POP (
                                  SITE_CD VARCHAR2(20) NOT NULL,
                                  POP_GRP_ID VARCHAR2(100) NOT NULL,
                                  POP_ID VARCHAR2(100) NOT NULL,
+                                 LANG_SE VARCHAR2(20) NOT NULL,
                                  POP_NM VARCHAR2(100),
                                  POP_TTL VARCHAR2(300),
                                  POP_DESC VARCHAR2(4000),
-                                 PUB_ST_DAY VARCHAR2(8),
-                                 PUB_END_DAY VARCHAR2(8),
+                                 PUB_ST_YMD VARCHAR2(8),
+                                 PUB_END_YMD VARCHAR2(8),
                                  PUB_ST_HR VARCHAR2(4),
                                  PUB_END_HR VARCHAR2(4),
                                  POP_PUB_SE VARCHAR2(20),
@@ -2168,6 +2722,7 @@ CREATE TABLE INS_APP.CMS_POP (
                                  W_PSTN NUMBER(10,4),
                                  POP_H NUMBER(10,4),
                                  H_PSTN NUMBER(10,4),
+                                 AFILE_ID VARCHAR2(100),
                                  CRT_IP VARCHAR2(40) NOT NULL,
                                  CRT_PGM VARCHAR2(100) NOT NULL,
                                  UPD_AT DATE NOT NULL,
@@ -2178,7 +2733,7 @@ CREATE TABLE INS_APP.CMS_POP (
                                  CRT_BY VARCHAR2(100) NOT NULL
 );
 
-COMMENT ON TABLE INS_APP.CMS_POP IS '[03.사이트]09.팝업';
+COMMENT ON TABLE INS_APP.CMS_POP IS '[02.사이트]10.팝업';
 
 COMMENT ON COLUMN INS_APP.CMS_POP.SITE_CD IS '사이트 코드';
 
@@ -2186,15 +2741,17 @@ COMMENT ON COLUMN INS_APP.CMS_POP.POP_GRP_ID IS '팝업 그룹 아이디';
 
 COMMENT ON COLUMN INS_APP.CMS_POP.POP_ID IS '팝업 아이디';
 
+COMMENT ON COLUMN INS_APP.CMS_POP.LANG_SE IS '언어 구분';
+
 COMMENT ON COLUMN INS_APP.CMS_POP.POP_NM IS '팝업 명';
 
 COMMENT ON COLUMN INS_APP.CMS_POP.POP_TTL IS '팝업 제목';
 
 COMMENT ON COLUMN INS_APP.CMS_POP.POP_DESC IS '팝업 내용';
 
-COMMENT ON COLUMN INS_APP.CMS_POP.PUB_ST_DAY IS '게시 시작 일';
+COMMENT ON COLUMN INS_APP.CMS_POP.PUB_ST_YMD IS '게시 시작 일자';
 
-COMMENT ON COLUMN INS_APP.CMS_POP.PUB_END_DAY IS '게시 종료 일';
+COMMENT ON COLUMN INS_APP.CMS_POP.PUB_END_YMD IS '게시 종료 일자';
 
 COMMENT ON COLUMN INS_APP.CMS_POP.PUB_ST_HR IS '게시 시작 시간';
 
@@ -2218,6 +2775,8 @@ COMMENT ON COLUMN INS_APP.CMS_POP.POP_H IS '팝업 세로';
 
 COMMENT ON COLUMN INS_APP.CMS_POP.H_PSTN IS '세로 위치';
 
+COMMENT ON COLUMN INS_APP.CMS_POP.AFILE_ID IS '첨부파일 아이디';
+
 COMMENT ON COLUMN INS_APP.CMS_POP.CRT_IP IS '등록자IP';
 
 COMMENT ON COLUMN INS_APP.CMS_POP.CRT_PGM IS '등록프로그램';
@@ -2238,7 +2797,8 @@ CREATE UNIQUE INDEX INS_APP.PK_CMS_POP
     ON INS_APP.CMS_POP (
                         SITE_CD ASC,
                         POP_GRP_ID ASC,
-                        POP_ID ASC
+                        POP_ID ASC,
+                        LANG_SE ASC
         );
 
 ALTER TABLE INS_APP.CMS_POP
@@ -2247,12 +2807,14 @@ ALTER TABLE INS_APP.CMS_POP
             PRIMARY KEY (
                          SITE_CD,
                          POP_GRP_ID,
-                         POP_ID
+                         POP_ID,
+                         LANG_SE
                 );
 
 CREATE TABLE INS_APP.CMS_POP_GRP (
                                      SITE_CD VARCHAR2(20) NOT NULL,
                                      POP_GRP_ID VARCHAR2(100) NOT NULL,
+                                     LANG_SE VARCHAR2(20) NOT NULL,
                                      POP_GRP_NM VARCHAR2(100),
                                      USE_YN VARCHAR2(1),
                                      POP_GRP_ORD NUMBER(10),
@@ -2266,11 +2828,13 @@ CREATE TABLE INS_APP.CMS_POP_GRP (
                                      CRT_BY VARCHAR2(100) NOT NULL
 );
 
-COMMENT ON TABLE INS_APP.CMS_POP_GRP IS '[03.사이트]10.팝업 그룹';
+COMMENT ON TABLE INS_APP.CMS_POP_GRP IS '[02.사이트]11.팝업 그룹';
 
 COMMENT ON COLUMN INS_APP.CMS_POP_GRP.SITE_CD IS '사이트 코드';
 
 COMMENT ON COLUMN INS_APP.CMS_POP_GRP.POP_GRP_ID IS '팝업 그룹 아이디';
+
+COMMENT ON COLUMN INS_APP.CMS_POP_GRP.LANG_SE IS '언어 구분';
 
 COMMENT ON COLUMN INS_APP.CMS_POP_GRP.POP_GRP_NM IS '팝업 그룹 명';
 
@@ -2297,7 +2861,8 @@ COMMENT ON COLUMN INS_APP.CMS_POP_GRP.CRT_BY IS '등록자';
 CREATE UNIQUE INDEX INS_APP.PK_CMS_POP_GRP
     ON INS_APP.CMS_POP_GRP (
                             SITE_CD ASC,
-                            POP_GRP_ID ASC
+                            POP_GRP_ID ASC,
+                            LANG_SE ASC
         );
 
 ALTER TABLE INS_APP.CMS_POP_GRP
@@ -2305,7 +2870,8 @@ ALTER TABLE INS_APP.CMS_POP_GRP
         CONSTRAINT PK_CMS_POP_GRP
             PRIMARY KEY (
                          SITE_CD,
-                         POP_GRP_ID
+                         POP_GRP_ID,
+                         LANG_SE
                 );
 
 CREATE TABLE INS_APP.CMS_BRD (
@@ -2331,7 +2897,7 @@ CREATE TABLE INS_APP.CMS_BRD (
                                  UPD_PGM VARCHAR2(100) NOT NULL
 );
 
-COMMENT ON TABLE INS_APP.CMS_BRD IS '[04.게시판]01.게시판';
+COMMENT ON TABLE INS_APP.CMS_BRD IS '[03.게시판]01.게시판';
 
 COMMENT ON COLUMN INS_APP.CMS_BRD.SITE_CD IS '사이트 코드';
 
@@ -2406,7 +2972,7 @@ CREATE TABLE INS_APP.CMS_BRD_AUTH (
                                       CRT_AT DATE NOT NULL
 );
 
-COMMENT ON TABLE INS_APP.CMS_BRD_AUTH IS '[04.게시판]02.게시판 권한';
+COMMENT ON TABLE INS_APP.CMS_BRD_AUTH IS '[03.게시판]02.게시판 권한';
 
 COMMENT ON COLUMN INS_APP.CMS_BRD_AUTH.BRD_ID IS '게시판 아이디';
 
@@ -2475,6 +3041,7 @@ CREATE TABLE INS_APP.CMS_PST (
                                  PWD_USE_YN VARCHAR2(1),
                                  AFILE_ID VARCHAR2(100),
                                  PWD VARCHAR(100),
+                                 UP_PST_SN NUMBER(15),
                                  CRT_BY VARCHAR2(100) NOT NULL,
                                  CRT_IP VARCHAR2(40) NOT NULL,
                                  CRT_PGM VARCHAR2(100) NOT NULL,
@@ -2485,7 +3052,7 @@ CREATE TABLE INS_APP.CMS_PST (
                                  CRT_AT DATE NOT NULL
 );
 
-COMMENT ON TABLE INS_APP.CMS_PST IS '[04.게시판]03.게시글';
+COMMENT ON TABLE INS_APP.CMS_PST IS '[03.게시판]03.게시글';
 
 COMMENT ON COLUMN INS_APP.CMS_PST.SITE_CD IS '사이트 코드';
 
@@ -2531,6 +3098,8 @@ COMMENT ON COLUMN INS_APP.CMS_PST.AFILE_ID IS '첨부파일 아이디';
 
 COMMENT ON COLUMN INS_APP.CMS_PST.PWD IS '비밀글의 경우';
 
+COMMENT ON COLUMN INS_APP.CMS_PST.UP_PST_SN IS '답글인 경우 사용';
+
 COMMENT ON COLUMN INS_APP.CMS_PST.CRT_BY IS '등록자';
 
 COMMENT ON COLUMN INS_APP.CMS_PST.CRT_IP IS '등록자IP';
@@ -2570,24 +3139,27 @@ CREATE TABLE INS_APP.CMS_PST_CMT (
                                      BRD_ID VARCHAR2(100) NOT NULL,
                                      BRD_SE VARCHAR2(20) NOT NULL,
                                      PST_SN NUMBER(15) NOT NULL,
-                                     CMT_TTL VARCHAR(300),
-                                     CMT_DESC VARCHAR(4000),
-                                     PWD_USE_YN VARCHAR(1),
-                                     CMT_PWD VARCHAR(500),
-                                     USE_YN VARCHAR(1),
-                                     DEL_YN VARCHAR(1),
-                                     CMT_DEL_SE VARCHAR(20),
-                                     CRT_AT DATE NOT NULL,
-                                     CRT_BY VARCHAR(100) NOT NULL,
-                                     CRT_IP VARCHAR(40) NOT NULL,
-                                     CRT_PGM VARCHAR(100) NOT NULL,
+                                     CMT_SN NUMBER(15) NOT NULL,
+                                     CMT_TTL VARCHAR2(300),
+                                     LIKE_CNT NUMBER(10),
+                                     CMT_DESC VARCHAR2(4000),
+                                     PWD_USE_YN VARCHAR2(1),
+                                     CMT_PWD VARCHAR(100),
+                                     USE_YN VARCHAR2(1),
+                                     DEL_YN VARCHAR2(1),
+                                     CMT_DEL_SE VARCHAR2(1),
+                                     CMT_ORD NUMBER(10),
+                                     CRT_BY VARCHAR2(100) NOT NULL,
+                                     CRT_IP VARCHAR2(40) NOT NULL,
+                                     CRT_PGM VARCHAR2(100) NOT NULL,
                                      UPD_AT DATE NOT NULL,
-                                     UPD_BY VARCHAR(100) NOT NULL,
-                                     UPD_IP VARCHAR(40) NOT NULL,
-                                     UPD_PGM VARCHAR(100) NOT NULL
+                                     UPD_BY VARCHAR2(100) NOT NULL,
+                                     UPD_IP VARCHAR2(40) NOT NULL,
+                                     UPD_PGM VARCHAR2(100) NOT NULL,
+                                     CRT_AT DATE NOT NULL
 );
 
-COMMENT ON TABLE INS_APP.CMS_PST_CMT IS '[04.게시판]04.게시물 댓글';
+COMMENT ON TABLE INS_APP.CMS_PST_CMT IS '[03.게시판]04.게시물 댓글';
 
 COMMENT ON COLUMN INS_APP.CMS_PST_CMT.SITE_CD IS '사이트 코드';
 
@@ -2597,7 +3169,11 @@ COMMENT ON COLUMN INS_APP.CMS_PST_CMT.BRD_SE IS '게시판 구분';
 
 COMMENT ON COLUMN INS_APP.CMS_PST_CMT.PST_SN IS '게시글 순번';
 
+COMMENT ON COLUMN INS_APP.CMS_PST_CMT.CMT_SN IS '댓글 순번';
+
 COMMENT ON COLUMN INS_APP.CMS_PST_CMT.CMT_TTL IS '댓글 제목';
+
+COMMENT ON COLUMN INS_APP.CMS_PST_CMT.LIKE_CNT IS '좋아요 수';
 
 COMMENT ON COLUMN INS_APP.CMS_PST_CMT.CMT_DESC IS '댓글 내용';
 
@@ -2611,7 +3187,7 @@ COMMENT ON COLUMN INS_APP.CMS_PST_CMT.DEL_YN IS '삭제 여부';
 
 COMMENT ON COLUMN INS_APP.CMS_PST_CMT.CMT_DEL_SE IS '관리자/본인삭제';
 
-COMMENT ON COLUMN INS_APP.CMS_PST_CMT.CRT_AT IS '등록일시';
+COMMENT ON COLUMN INS_APP.CMS_PST_CMT.CMT_ORD IS '댓글 순서';
 
 COMMENT ON COLUMN INS_APP.CMS_PST_CMT.CRT_BY IS '등록자';
 
@@ -2627,6 +3203,28 @@ COMMENT ON COLUMN INS_APP.CMS_PST_CMT.UPD_IP IS '수정자IP';
 
 COMMENT ON COLUMN INS_APP.CMS_PST_CMT.UPD_PGM IS '수정프로그램';
 
+COMMENT ON COLUMN INS_APP.CMS_PST_CMT.CRT_AT IS '등록일시';
+
+CREATE UNIQUE INDEX INS_APP.PK_CMS_PST_CMT
+    ON INS_APP.CMS_PST_CMT (
+                            SITE_CD ASC,
+                            BRD_ID ASC,
+                            BRD_SE ASC,
+                            PST_SN ASC,
+                            CMT_SN ASC
+        );
+
+ALTER TABLE INS_APP.CMS_PST_CMT
+    ADD
+        CONSTRAINT PK_CMS_PST_CMT
+            PRIMARY KEY (
+                         SITE_CD,
+                         BRD_ID,
+                         BRD_SE,
+                         PST_SN,
+                         CMT_SN
+                );
+
 ALTER TABLE INS_APP.CMS_COM_DEPT
     ADD
         CONSTRAINT FK_CMS_COM_ORG_TO_CMS_COM_DEPT
@@ -2637,85 +3235,207 @@ ALTER TABLE INS_APP.CMS_COM_DEPT
                                                 ORG_CD
                     );
 
--- Foreign Key Constraints - Optimized Version
--- Identifier length: Maximum 30 characters (Oracle compatible)
+-- CMS_COM_AUTH_MENU 테이블
+ALTER TABLE INS_APP.CMS_COM_AUTH_MENU
+    ADD
+        CONSTRAINT FK_COMAUTH_TO_COMAUTHMENU
+            FOREIGN KEY (
+                         AUTH_CD
+                )
+                REFERENCES INS_APP.CMS_COM_AUTH (
+                                                 AUTH_CD
+                    );
 
 ALTER TABLE INS_APP.CMS_COM_AUTH_MENU
-    ADD CONSTRAINT FK_CMS_AUTH_TO_AUTH_MENU
-        FOREIGN KEY (AUTH_CD)
-            REFERENCES INS_APP.CMS_COM_AUTH (AUTH_CD);
+    ADD
+        CONSTRAINT FK_COMMENU_TO_COMAUTHMENU
+            FOREIGN KEY (
+                         MENU_CD
+                )
+                REFERENCES INS_APP.CMS_COM_MENU (
+                                                 MENU_CD
+                    );
 
-ALTER TABLE INS_APP.CMS_COM_AUTH_MENU
-    ADD CONSTRAINT FK_CMS_MENU_TO_AUTH_MENU
-        FOREIGN KEY (MENU_CD)
-            REFERENCES INS_APP.CMS_COM_MENU (MENU_CD);
-
+-- CMS_FILE 테이블
 ALTER TABLE INS_APP.CMS_FILE
-    ADD CONSTRAINT FK_CMS_FILE_GRP_TO_FILE
-        FOREIGN KEY (AFILE_ID)
-            REFERENCES INS_APP.CMS_FILE_GRP (AFILE_ID);
+    ADD
+        CONSTRAINT FK_FILEGRP_TO_FILE
+            FOREIGN KEY (
+                         AFILE_ID
+                )
+                REFERENCES INS_APP.CMS_FILE_GRP (
+                                                 AFILE_ID
+                    );
 
-ALTER TABLE INS_APP.CMS_SITE_IP
-    ADD CONSTRAINT FK_CMS_SITE_TO_SITE_IP
-        FOREIGN KEY (SITE_CD)
-            REFERENCES INS_APP.CMS_SITE (SITE_CD);
+-- CMS_SITE_ACC_PERM 테이블
+ALTER TABLE INS_APP.CMS_SITE_ACC_PERM
+    ADD
+        CONSTRAINT FK_SITE_TO_ACCPERM
+            FOREIGN KEY (
+                         SITE_CD
+                )
+                REFERENCES INS_APP.CMS_SITE (
+                                             SITE_CD
+                    );
 
+-- CMS_SITE_MENU 테이블
 ALTER TABLE INS_APP.CMS_SITE_MENU
-    ADD CONSTRAINT FK_CMS_SITE_TO_SITE_MENU
-        FOREIGN KEY (SITE_CD)
-            REFERENCES INS_APP.CMS_SITE (SITE_CD);
+    ADD
+        CONSTRAINT FK_SITE_TO_SITEMENU
+            FOREIGN KEY (
+                         SITE_CD
+                )
+                REFERENCES INS_APP.CMS_SITE (
+                                             SITE_CD
+                    );
 
+-- CMS_SITE_VST_HIST 테이블
 ALTER TABLE INS_APP.CMS_SITE_VST_HIST
-    ADD CONSTRAINT FK_SITE_MENU_TO_VST_HIST
-        FOREIGN KEY (SITE_CD, MENU_CD, LANG_SE)
-            REFERENCES INS_APP.CMS_SITE_MENU (SITE_CD, MENU_CD, LANG_SE);
+    ADD
+        CONSTRAINT FK_SITEMENU_TO_VSTHIST
+            FOREIGN KEY (
+                         SITE_CD,
+                         MENU_CD,
+                         LANG_SE
+                )
+                REFERENCES INS_APP.CMS_SITE_MENU (
+                                                  SITE_CD,
+                                                  MENU_CD,
+                                                  LANG_SE
+                    );
 
+-- CMS_BNR_GRP 테이블
 ALTER TABLE INS_APP.CMS_BNR_GRP
-    ADD CONSTRAINT FK_CMS_SITE_TO_BNR_GRP
-        FOREIGN KEY (SITE_CD)
-            REFERENCES INS_APP.CMS_SITE (SITE_CD);
+    ADD
+        CONSTRAINT FK_SITE_TO_BNRGRP
+            FOREIGN KEY (
+                         SITE_CD
+                )
+                REFERENCES INS_APP.CMS_SITE (
+                                             SITE_CD
+                    );
 
+-- CMS_BNR 테이블
 ALTER TABLE INS_APP.CMS_BNR
-    ADD CONSTRAINT FK_BNR_GRP_TO_BNR
-        FOREIGN KEY (BNR_GRP_ID, SITE_CD)
-            REFERENCES INS_APP.CMS_BNR_GRP (BNR_GRP_ID, SITE_CD);
+    ADD
+        CONSTRAINT FK_BNRGRP_TO_BNR
+            FOREIGN KEY (
+                         BNR_GRP_ID,
+                         SITE_CD,
+                         LANG_SE
+                )
+                REFERENCES INS_APP.CMS_BNR_GRP (
+                                                BNR_GRP_ID,
+                                                SITE_CD,
+                                                LANG_SE
+                    );
 
+-- CMS_CTT 테이블
 ALTER TABLE INS_APP.CMS_CTT
-    ADD CONSTRAINT FK_CMS_SITE_TO_CTT
-        FOREIGN KEY (SITE_CD)
-            REFERENCES INS_APP.CMS_SITE (SITE_CD);
+    ADD
+        CONSTRAINT FK_SITE_TO_CTT
+            FOREIGN KEY (
+                         SITE_CD
+                )
+                REFERENCES INS_APP.CMS_SITE (
+                                             SITE_CD
+                    );
 
+-- CMS_CTT_SEO 테이블
 ALTER TABLE INS_APP.CMS_CTT_SEO
-    ADD CONSTRAINT FK_CMS_CTT_TO_CTT_SEO
-        FOREIGN KEY (SITE_CD, CTT_ID)
-            REFERENCES INS_APP.CMS_CTT (SITE_CD, CTT_ID);
+    ADD
+        CONSTRAINT FK_CTT_TO_CTTSEO
+            FOREIGN KEY (
+                         SITE_CD,
+                         CTT_ID,
+                         LANG_SE
+                )
+                REFERENCES INS_APP.CMS_CTT (
+                                            SITE_CD,
+                                            CTT_ID,
+                                            LANG_SE
+                    );
 
+-- CMS_POP 테이블
 ALTER TABLE INS_APP.CMS_POP
-    ADD CONSTRAINT FK_POP_GRP_TO_POP
-        FOREIGN KEY (SITE_CD, POP_GRP_ID)
-            REFERENCES INS_APP.CMS_POP_GRP (SITE_CD, POP_GRP_ID);
+    ADD
+        CONSTRAINT FK_POPGRP_TO_POP
+            FOREIGN KEY (
+                         SITE_CD,
+                         POP_GRP_ID,
+                         LANG_SE
+                )
+                REFERENCES INS_APP.CMS_POP_GRP (
+                                                SITE_CD,
+                                                POP_GRP_ID,
+                                                LANG_SE
+                    );
 
+-- CMS_POP_GRP 테이블
 ALTER TABLE INS_APP.CMS_POP_GRP
-    ADD CONSTRAINT FK_CMS_SITE_TO_POP_GRP
-        FOREIGN KEY (SITE_CD)
-            REFERENCES INS_APP.CMS_SITE (SITE_CD);
+    ADD
+        CONSTRAINT FK_SITE_TO_POPGRP
+            FOREIGN KEY (
+                         SITE_CD
+                )
+                REFERENCES INS_APP.CMS_SITE (
+                                             SITE_CD
+                    );
 
+-- CMS_BRD 테이블
 ALTER TABLE INS_APP.CMS_BRD
-    ADD CONSTRAINT FK_CMS_SITE_TO_BRD
-        FOREIGN KEY (SITE_CD)
-            REFERENCES INS_APP.CMS_SITE (SITE_CD);
+    ADD
+        CONSTRAINT FK_SITE_TO_BRD
+            FOREIGN KEY (
+                         SITE_CD
+                )
+                REFERENCES INS_APP.CMS_SITE (
+                                             SITE_CD
+                    );
 
+-- CMS_BRD_AUTH 테이블
 ALTER TABLE INS_APP.CMS_BRD_AUTH
-    ADD CONSTRAINT FK_CMS_BRD_TO_BRD_AUTH
-        FOREIGN KEY (SITE_CD, BRD_ID, BRD_SE)
-            REFERENCES INS_APP.CMS_BRD (SITE_CD, BRD_ID, BRD_SE);
+    ADD
+        CONSTRAINT FK_BRD_TO_BRDAUTH
+            FOREIGN KEY (
+                         SITE_CD,
+                         BRD_ID,
+                         BRD_SE
+                )
+                REFERENCES INS_APP.CMS_BRD (
+                                            SITE_CD,
+                                            BRD_ID,
+                                            BRD_SE
+                    );
 
+-- CMS_PST 테이블
 ALTER TABLE INS_APP.CMS_PST
-    ADD CONSTRAINT FK_CMS_BRD_TO_PST
-        FOREIGN KEY (SITE_CD, BRD_ID, BRD_SE)
-            REFERENCES INS_APP.CMS_BRD (SITE_CD, BRD_ID, BRD_SE);
+    ADD
+        CONSTRAINT FK_BRD_TO_PST
+            FOREIGN KEY (
+                         SITE_CD,
+                         BRD_ID,
+                         BRD_SE
+                )
+                REFERENCES INS_APP.CMS_BRD (
+                                            SITE_CD,
+                                            BRD_ID,
+                                            BRD_SE
+                    );
 
+-- CMS_PST_CMT 테이블
 ALTER TABLE INS_APP.CMS_PST_CMT
-    ADD CONSTRAINT FK_CMS_PST_TO_PST_CMT
-        FOREIGN KEY (SITE_CD, BRD_ID, BRD_SE, PST_SN)
-            REFERENCES INS_APP.CMS_PST (SITE_CD, BRD_ID, BRD_SE, PST_SN);
+    ADD
+        CONSTRAINT FK_PST_TO_PSTCMT
+            FOREIGN KEY (
+                         SITE_CD,
+                         BRD_ID,
+                         BRD_SE,
+                         PST_SN
+                )
+                REFERENCES INS_APP.CMS_PST (
+                                            SITE_CD,
+                                            BRD_ID,
+                                            BRD_SE,
+                                            PST_SN
+                    );
