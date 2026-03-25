@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="infomind.instack.api.cms.menu.dao.CmsMenuDao">
+
+    <select id="selectMenuListByUpMenuCd" parameterType="java.lang.String" resultType="infomind.instack.api.cms.menu.model.MenuResponse">
+        SELECT MENU_CD as menuCd,
+               UP_MENU_CD as upMenuCd,
+               MENU_NM as menuNm,
+               MENU_LVL as menuLvl,
+               MENU_ORD as menuOrd,
+               PRGM_NM as prgmNm,
+               PRGM_PATH as prgmPath,
+               QRY_USE_YN as qryUseYn,
+               NEW_USE_YN as newUseYn,
+               SAVE_USE_YN as saveUseYn,
+               DEL_USE_YN as delUseYn,
+               OUTP_USE_YN as outpUseYn,
+               URL_MTHD_SE as urlMthdSe,
+               URL_ADDR as urlAddr,
+               PARAM1 as param1,
+               PARAM2 as param2,
+               PARAM3 as param3,
+               PARAM_4 as param4,
+               PARAM_5 as param5,
+               MENU_RMK as menuRmk,
+               PRV_USE_YN as prvUseYn,
+               TO_CHAR(CRT_AT, 'YYYY-MM-DD HH24:MI:SS') AS crtAt,
+               TO_CHAR(UPD_AT, 'YYYY-MM-DD HH24:MI:SS') AS updAt
+        FROM CMS_COM_MENU
+        <where>
+            <choose>
+                <when test="upMenuCd == null">
+                    UP_MENU_CD IS NULL
+                </when>
+                <otherwise>
+                    UP_MENU_CD = #{upMenuCd}
+                </otherwise>
+            </choose>
+        </where>
+        ORDER BY MENU_ORD ASC
+    </select>
+
+    <select id="selectMenuById" parameterType="java.lang.String" resultType="infomind.instack.api.cms.menu.model.MenuResponse">
+        SELECT MENU_CD as menuCd,
+               UP_MENU_CD as upMenuCd,
+               MENU_NM as menuNm,
+               MENU_LVL as menuLvl,
+               MENU_ORD as menuOrd,
+               PRGM_NM as prgmNm,
+               PRGM_PATH as prgmPath,
+               QRY_USE_YN as qryUseYn,
+               NEW_USE_YN as newUseYn,
+               SAVE_USE_YN as saveUseYn,
+               DEL_USE_YN as delUseYn,
+               OUTP_USE_YN as outpUseYn,
+               URL_MTHD_SE as urlMthdSe,
+               URL_ADDR as urlAddr,
+               PARAM1 as param1,
+               PARAM2 as param2,
+               PARAM3 as param3,
+               PARAM_4 as param4,
+               PARAM_5 as param5,
+               MENU_RMK as menuRmk,
+               PRV_USE_YN as prvUseYn,
+               TO_CHAR(CRT_AT, 'YYYY-MM-DD HH24:MI:SS') AS crtAt,
+               TO_CHAR(UPD_AT, 'YYYY-MM-DD HH24:MI:SS') AS updAt
+        FROM CMS_COM_MENU
+        WHERE MENU_CD = #{menuCd}
+    </select>
+
+    <insert id="insertMenu" parameterType="infomind.instack.api.cms.menu.entity.CmsMenuVO">
+        INSERT INTO CMS_COM_MENU (
+            MENU_CD,
+            UP_MENU_CD,
+            MENU_NM,
+            MENU_LVL,
+            MENU_ORD,
+            PRGM_NM,
+            PRGM_PATH,
+            QRY_USE_YN,
+            NEW_USE_YN,
+            SAVE_USE_YN,
+            DEL_USE_YN,
+            OUTP_USE_YN,
+            URL_MTHD_SE,
+            URL_ADDR,
+            PARAM1,
+            PARAM2,
+            PARAM3,
+            PARAM_4,
+            PARAM_5,
+            MENU_RMK,
+            PRV_USE_YN,
+            <include refid="auditFragment.insertColumns"/>
+        ) VALUES (
+            #{menuCd},
+            #{upMenuCd},
+            #{menuNm},
+            #{menuLvl},
+            #{menuOrd},
+            #{prgmNm},
+            #{prgmPath},
+            #{qryUseYn},
+            #{newUseYn},
+            #{saveUseYn},
+            #{delUseYn},
+            #{outpUseYn},
+            #{urlMthdSe},
+            #{urlAddr},
+            #{param1},
+            #{param2},
+            #{param3},
+            #{param4},
+            #{param5},
+            #{menuRmk},
+            #{prvUseYn},
+            <include refid="auditFragment.insertValues"/>
+        )
+    </insert>
+
+    <update id="updateMenu">
+        UPDATE CMS_COM_MENU
+        SET MENU_NM = #{vo.menuNm},
+            MENU_ORD = #{vo.menuOrd},
+            PRGM_NM = #{vo.prgmNm},
+            PRGM_PATH = #{vo.prgmPath},
+            QRY_USE_YN = #{vo.qryUseYn},
+            NEW_USE_YN = #{vo.newUseYn},
+            SAVE_USE_YN = #{vo.saveUseYn},
+            DEL_USE_YN = #{vo.delUseYn},
+            OUTP_USE_YN = #{vo.outpUseYn},
+            URL_MTHD_SE = #{vo.urlMthdSe},
+            URL_ADDR = #{vo.urlAddr},
+            PARAM1 = #{vo.param1},
+            PARAM2 = #{vo.param2},
+            PARAM3 = #{vo.param3},
+            PARAM_4 = #{vo.param4},
+            PARAM_5 = #{vo.param5},
+            MENU_RMK = #{vo.menuRmk},
+            PRV_USE_YN = #{vo.prvUseYn},
+            <include refid="auditFragment.updateSet"/>
+        WHERE MENU_CD = #{menuCd}
+    </update>
+
+    <delete id="deleteMenu" parameterType="java.lang.String">
+        DELETE FROM CMS_COM_MENU
+        WHERE MENU_CD = #{menuCd}
+    </delete>
+
+    <delete id="deleteMenuByUpMenuCd" parameterType="java.lang.String">
+        DELETE FROM CMS_COM_MENU
+        WHERE UP_MENU_CD = #{upMenuCd}
+    </delete>
+
+</mapper>
