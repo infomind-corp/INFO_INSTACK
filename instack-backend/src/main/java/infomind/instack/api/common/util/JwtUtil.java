@@ -128,6 +128,7 @@ public class JwtUtil {
                         if (item instanceof Map) {
                             Map<String, Object> map = (Map<String, Object>) item;
                             return new UserAuthority(
+                                    getStringFromMap(map, "siteCd"),
                                     getStringFromMap(map, "authCd"),
                                     getStringFromMap(map, "authExpYmd"),
                                     getStringFromMap(map, "authSe")
