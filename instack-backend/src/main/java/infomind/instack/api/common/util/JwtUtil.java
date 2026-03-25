@@ -1,6 +1,7 @@
 package infomind.instack.api.common.util;
 
-import infomind.instack.api.auth.basic.entity.AuthUserVO;
+import infomind.instack.api.auth.jwt.entity.AuthUserVO;
+import infomind.instack.api.auth.jwt.entity.UserAuthority;
 import infomind.instack.api.common.util.jwt.InvalidJwtException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -12,10 +13,12 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * JWT 토큰 유틸리티 (INSTACK).
- * <p>Access Token / Refresh Token 발급, 파싱, 유효성 검사, {@link infomind.instack.api.auth.basic.entity.AuthUserVO} 추출을 담당한다.
+ * <p>Access Token / Refresh Token 발급, 파싱, 유효성 검사, {@link AuthUserVO} 추출을 담당한다.
  * eGov 레거시용 {@link infomind.instack.api.common.util.jwt.EgovJwtTokenUtil}과 구분되며, INSTACK API 전용으로 사용된다.</p>
  */
 @Component
@@ -46,7 +49,7 @@ public class JwtUtil {
     public String generateRefreshToken(AuthUserVO authUserVO) {
         SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         return Jwts.builder()
-                .claims(authUserVO.toClaims())
+                .claims(authUserVO.toMinimalClaims())
                 .subject(AUTHORIZATION)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + refreshExpiration))
@@ -89,8 +92,11 @@ public class JwtUtil {
             String id = claims.get("id") != null ? claims.get("id").toString() : null;
             if (id == null) throw new InvalidJwtException("Missing id in token");
 
+            List<UserAuthority> authorities = convertAuthorities(claims.get("authorities"));
+
             return new AuthUserVO(
                     id,
+                    getStringClaim(claims, "siteCd"),
                     getStringClaim(claims, "userNm"),
                     getStringClaim(claims, "eml"),
                     getStringClaim(claims, "mtelno"),
@@ -100,13 +106,45 @@ public class JwtUtil {
                     getStringClaim(claims, "daddr"),
                     getStringClaim(claims, "ci"),
                     getStringClaim(claims, "di"),
-                    getStringClaim(claims, "userSe")
+                    getStringClaim(claims, "userSe"),
+                    authorities
             );
         } catch (IllegalArgumentException e) {
             throw new InvalidJwtException("Unable to verify JWT Token: " + e.getMessage());
         } catch (JwtException e) {
             throw new InvalidJwtException("Unable to verify JWT Token: " + e.getMessage());
         }
+    }
+
+    private List<UserAuthority> convertAuthorities(Object authoritiesObj) {
+        if (authoritiesObj == null) {
+            return List.of();
+        }
+
+        if (authoritiesObj instanceof List) {
+            List<?> list = (List<?>) authoritiesObj;
+            return list.stream()
+                    .map(item -> {
+                        if (item instanceof Map) {
+                            Map<String, Object> map = (Map<String, Object>) item;
+                            return new UserAuthority(
+                                    getStringFromMap(map, "authCd"),
+                                    getStringFromMap(map, "authExpYmd"),
+                                    getStringFromMap(map, "authSe")
+                            );
+                        }
+                        return null;
+                    })
+                    .filter(auth -> auth != null)
+                    .toList();
+        }
+
+        return List.of();
+    }
+
+    private String getStringFromMap(Map<String, Object> map, String key) {
+        Object value = map.get(key);
+        return value != null ? value.toString() : null;
     }
 
     private String getStringClaim(Claims claims, String key) {

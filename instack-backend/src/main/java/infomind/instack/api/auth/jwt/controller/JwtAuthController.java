@@ -1,10 +1,10 @@
 package infomind.instack.api.auth.jwt.controller;
 
 import infomind.instack.api.auth.jwt.service.JwtAuthService;
-import infomind.instack.api.auth.basic.entity.AuthUserVO;
-import infomind.instack.api.auth.basic.model.LoginRequest;
-import infomind.instack.api.auth.basic.model.LoginResponse;
-import infomind.instack.api.auth.basic.model.RefreshRequest;
+import infomind.instack.api.auth.jwt.entity.AuthUserVO;
+import infomind.instack.api.auth.jwt.model.LoginRequest;
+import infomind.instack.api.auth.jwt.model.LoginResponse;
+import infomind.instack.api.auth.jwt.model.RefreshRequest;
 import infomind.instack.api.common.aop.AuditLog;
 import infomind.instack.api.common.model.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;

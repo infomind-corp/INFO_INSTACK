@@ -1,8 +1,8 @@
 package infomind.instack.api.auth.jwt.service;
 
-import infomind.instack.api.auth.basic.model.LoginRequest;
-import infomind.instack.api.auth.basic.model.LoginResponse;
-import infomind.instack.api.auth.basic.model.RefreshRequest;
+import infomind.instack.api.auth.jwt.model.LoginRequest;
+import infomind.instack.api.auth.jwt.model.LoginResponse;
+import infomind.instack.api.auth.jwt.model.RefreshRequest;
 
 /**
  * 통합 JWT 인증 서비스 인터페이스

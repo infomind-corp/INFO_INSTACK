@@ -1,7 +1,7 @@
 package infomind.instack.api.auth.jwt.dao;
 
-import infomind.instack.api.auth.admin.entity.CmsRefreshTokenVO;
-import infomind.instack.api.auth.basic.entity.AuthUserVO;
+import infomind.instack.api.auth.jwt.entity.RefreshTokenVO;
+import infomind.instack.api.auth.jwt.entity.AuthUserVO;
 import org.egovframe.rte.psl.dataaccess.mapper.EgovMapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -39,12 +39,12 @@ public interface JwtAuthDao {
     /**
      * Refresh Token 조회 (CMS_RF_TK)
      */
-    Optional<CmsRefreshTokenVO> selectRefreshTokenByUserId(String userId);
+    Optional<RefreshTokenVO> selectRefreshTokenByUserId(String userId);
 
     /**
      * Refresh Token 저장 (CMS_RF_TK)
      */
-    void insertRefreshToken(CmsRefreshTokenVO vo);
+    void insertRefreshToken(RefreshTokenVO vo);
 
     /**
      * Refresh Token 삭제 (CMS_RF_TK)

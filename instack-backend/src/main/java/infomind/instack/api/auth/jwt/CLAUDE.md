@@ -5,6 +5,7 @@
 - CMS_USER_TASK — 업무 사용자 (PK: USER_ID)
 - CMS_USER_ADMIN — 관리자 (PK: USER_ID)
 - CMS_PWD — 비밀번호 저장소 (PK: USER_ID + USER_SE)
+- CMS_USER_AUTH - 사용자 권한 정보 (PK: USER_ID + AUTH_CD + USER_SE)
 
 ## 필드
 - USER_SE : 'A' (관리자), 'E' (업무사용자), 'G' (일반 사용자)
@@ -57,3 +58,12 @@ mapper/oracle/
 - `id`: 사용자 ID
 - `userSe`: A/E/G (Spring Security role로 사용)
 - `userNm`, `eml`, `mtelno`, `gndrSe`, `telno`, `addr`, `daddr`, `ci`, `di`
+- `authCd` : 권한 코드 (CMS_USER_AUTH에서 조회하여 콤마로 구분된 문자열로 저장)
+- `siteCd` : 사이트 코드 (CMS_USER에서 조회하여 저장)
+- `authExpYmd` : 권한 만료 일자 (CMS_USER_AUTH에서 조회하여 저장)
+- `authSe` : 권한 구분 (CMS_USER_AUTH에서 조회하여 저장)
+
+## Refresh 클레임 구성
+- `id`: 사용자 ID
+- `userSe`: A/E/G
+- `siteCd` : 사이트 코드 (CMS_USER에서 조회하여 저장)

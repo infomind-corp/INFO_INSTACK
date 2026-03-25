@@ -2,11 +2,11 @@ package infomind.instack.api.auth.jwt.service.impl;
 
 import infomind.instack.api.auth.jwt.dao.JwtAuthDao;
 import infomind.instack.api.auth.jwt.service.JwtAuthService;
-import infomind.instack.api.auth.admin.entity.CmsRefreshTokenVO;
-import infomind.instack.api.auth.basic.entity.AuthUserVO;
-import infomind.instack.api.auth.basic.model.LoginRequest;
-import infomind.instack.api.auth.basic.model.LoginResponse;
-import infomind.instack.api.auth.basic.model.RefreshRequest;
+import infomind.instack.api.auth.jwt.entity.RefreshTokenVO;
+import infomind.instack.api.auth.jwt.entity.AuthUserVO;
+import infomind.instack.api.auth.jwt.model.LoginRequest;
+import infomind.instack.api.auth.jwt.model.LoginResponse;
+import infomind.instack.api.auth.jwt.model.RefreshRequest;
 import infomind.instack.api.common.exception.BizException;
 import infomind.instack.api.common.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -77,7 +77,7 @@ public class JwtAuthServiceImpl extends EgovAbstractServiceImpl implements JwtAu
         String userId = jwtUtil.getIdFromToken(request.getRefreshToken());
 
         // DB에 저장된 Refresh Token 확인
-        CmsRefreshTokenVO storedToken = jwtAuthDao.selectRefreshTokenByUserId(userId)
+        RefreshTokenVO storedToken = jwtAuthDao.selectRefreshTokenByUserId(userId)
                 .orElseThrow(() -> new BizException("유효하지 않은 Refresh Token입니다.", HttpStatus.UNAUTHORIZED));
 
         // Refresh Token 만료 여부 확인
@@ -112,7 +112,7 @@ public class JwtAuthServiceImpl extends EgovAbstractServiceImpl implements JwtAu
         jwtAuthDao.deleteRefreshTokenByUserId(authUserVO.getId());
 
         // 새 Refresh Token 저장
-        CmsRefreshTokenVO refreshTokenVO = new CmsRefreshTokenVO();
+        RefreshTokenVO refreshTokenVO = new RefreshTokenVO();
         refreshTokenVO.setUserId(authUserVO.getId());
         refreshTokenVO.setTk(refreshToken);
         refreshTokenVO.setTkExpDt(new Date(System.currentTimeMillis() + refreshTokenExpireTime));

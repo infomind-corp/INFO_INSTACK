@@ -1,6 +1,6 @@
 package infomind.instack.api.common.aop;
 
-import infomind.instack.api.auth.basic.entity.AuthUserVO;
+import infomind.instack.api.auth.jwt.entity.AuthUserVO;
 import infomind.instack.api.common.util.AuditHolder;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;

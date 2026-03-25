@@ -1,7 +1,7 @@
 package infomind.instack.api.common.filter;
 
 import egovframework.let.utl.fcc.service.EgovStringUtil;
-import infomind.instack.api.auth.basic.entity.AuthUserVO;
+import infomind.instack.api.auth.jwt.entity.AuthUserVO;
 import infomind.instack.api.common.util.JwtUtil;
 import infomind.instack.api.common.util.jwt.InvalidJwtException;
 import jakarta.servlet.FilterChain;
@@ -18,11 +18,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * JWT 인증 필터 (INSTACK).
- * <p>매 요청마다 {@code Authorization} 헤더의 Bearer 토큰을 파싱하여 {@link infomind.instack.api.auth.basic.entity.AuthUserVO}를
+ * <p>매 요청마다 {@code Authorization} 헤더의 Bearer 토큰을 파싱하여 {@link infomind.instack.api.auth.jwt.entity.AuthUserVO}를
  * 생성하고 {@code SecurityContextHolder}에 인증 정보를 설정한다.</p>
  */
 @RequiredArgsConstructor
@@ -50,10 +51,21 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 logger.debug("jwtToken validated");
                 logger.debug("===>>> loginVO.getUserSe() = "+ authUserVO.getUserSe());
 
-                String role = authUserVO.getUserSe();
+                // authorities에서 authCd 추출하여 role 매핑 (만료되지 않은 권한만)
+                List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+                if (authUserVO.getAuthorities() != null && !authUserVO.getAuthorities().isEmpty()) {
+                    authUserVO.getAuthorities().forEach(auth -> {
+                        if (auth.getAuthCd() != null && auth.isValid()) {
+                            authorities.add(new SimpleGrantedAuthority(auth.getAuthCd()));
+                            logger.debug("===>>> Added authority: " + auth.getAuthCd());
+                        } else if (auth.getAuthCd() != null && auth.isExpired()) {
+                            logger.debug("===>>> Expired authority: " + auth.getAuthCd() + " (expDate: " + auth.getAuthExpYmd() + ")");
+                        }
+                    });
+                }
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        authUserVO, null, Arrays.asList(new SimpleGrantedAuthority(role))
+                        authUserVO, null, authorities
                 );
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));

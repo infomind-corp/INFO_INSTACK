@@ -1,7 +1,7 @@
 package infomind.instack.api.common.aop;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import infomind.instack.api.auth.basic.entity.AuthUserVO;
+import infomind.instack.api.auth.jwt.entity.AuthUserVO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

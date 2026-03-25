@@ -4,10 +4,33 @@
 
 <mapper namespace="infomind.instack.api.auth.jwt.dao.JwtAuthDao">
 
+    <!-- AuthUserVO resultMap -->
+    <resultMap id="authUserMap" type="infomind.instack.api.auth.jwt.entity.AuthUserVO">
+        <id column="id" property="id"/>
+        <result column="siteCd" property="siteCd"/>
+        <result column="userNm" property="userNm"/>
+        <result column="eml" property="eml"/>
+        <result column="mtelno" property="mtelno"/>
+        <result column="gndrSe" property="gndrSe"/>
+        <result column="telno" property="telno"/>
+        <result column="addr" property="addr"/>
+        <result column="daddr" property="daddr"/>
+        <result column="ci" property="ci"/>
+        <result column="di" property="di"/>
+        <result column="userSe" property="userSe"/>
+        <collection property="authorities" ofType="infomind.instack.api.auth.jwt.entity.UserAuthority">
+            <result column="authSiteCd" property="siteCd"/>
+            <result column="authCd" property="authCd"/>
+            <result column="authExpYmd" property="authExpYmd"/>
+            <result column="authSe" property="authSe"/>
+        </collection>
+    </resultMap>
+
     <!-- 관리자 사용자 조회 (CMS_USER_ADMIN) -->
     <select id="selectAdminUserByUserId" parameterType="string"
-            resultType="infomind.instack.api.auth.basic.entity.AuthUserVO">
+            resultMap="authUserMap">
         SELECT A.USER_ID    AS id
+             , A.SITE_CD    AS siteCd
              , A.USER_NM    AS userNm
              , A.EML        AS eml
              , A.MTELNO     AS mtelno
@@ -18,14 +41,21 @@
              , A.CI         AS ci
              , A.DI         AS di
              , 'A'          AS userSe
+             , B.SITE_CD    AS authSiteCd
+             , B.AUTH_CD    AS authCd
+             , B.AUTH_EXP_YMD AS authExpYmd
+             , B.AUTH_SE    AS authSe
           FROM CMS_USER_ADMIN A
+          LEFT JOIN CMS_USER_AUTH B ON A.USER_ID = B.USER_ID AND B.USER_SE = 'A'
          WHERE A.USER_ID = #{userId}
+         ORDER BY B.AUTH_CD
     </select>
 
     <!-- 업무 사용자 조회 (CMS_USER_TASK) -->
     <select id="selectTaskUserByUserId" parameterType="string"
-            resultType="infomind.instack.api.auth.basic.entity.AuthUserVO">
+            resultMap="authUserMap">
         SELECT A.USER_ID    AS id
+             , A.SITE_CD    AS siteCd
              , A.USER_NM    AS userNm
              , A.EML        AS eml
              , A.MTELNO     AS mtelno
@@ -36,14 +66,21 @@
              , A.CI         AS ci
              , A.DI         AS di
              , 'E'          AS userSe
+             , B.SITE_CD    AS authSiteCd
+             , B.AUTH_CD    AS authCd
+             , B.AUTH_EXP_YMD AS authExpYmd
+             , B.AUTH_SE    AS authSe
           FROM CMS_USER_TASK A
+          LEFT JOIN CMS_USER_AUTH B ON A.USER_ID = B.USER_ID AND B.USER_SE = 'E'
          WHERE A.USER_ID = #{userId}
+         ORDER BY B.AUTH_CD
     </select>
 
     <!-- 일반 사용자 조회 (CMS_USER) -->
     <select id="selectUserByUserId" parameterType="string"
-            resultType="infomind.instack.api.auth.basic.entity.AuthUserVO">
+            resultMap="authUserMap">
         SELECT A.USER_ID    AS id
+             , A.SITE_CD    AS siteCd
              , A.USER_NM    AS userNm
              , A.EML        AS eml
              , A.MTELNO     AS mtelno
@@ -54,8 +91,14 @@
              , A.CI         AS ci
              , A.DI         AS di
              , 'G'          AS userSe
+             , B.SITE_CD    AS authSiteCd
+             , B.AUTH_CD    AS authCd
+             , B.AUTH_EXP_YMD AS authExpYmd
+             , B.AUTH_SE    AS authSe
           FROM CMS_USER A
+          LEFT JOIN CMS_USER_AUTH B ON A.USER_ID = B.USER_ID AND B.USER_SE = 'G'
          WHERE A.USER_ID = #{userId}
+         ORDER BY B.AUTH_CD
     </select>
 
     <!-- 비밀번호 조회 (CMS_PWD) -->
@@ -69,7 +112,7 @@
 
     <!-- Refresh Token 조회 (CMS_RF_TK) -->
     <select id="selectRefreshTokenByUserId" parameterType="string"
-            resultType="infomind.instack.api.auth.admin.entity.CmsRefreshTokenVO">
+            resultType="infomind.instack.api.auth.jwt.entity.RefreshTokenVO">
         SELECT TK_ID      AS tkId
              , USER_ID    AS userId
              , TK         AS tk
@@ -84,7 +127,7 @@
 
     <!-- Refresh Token 저장 (CMS_RF_TK) -->
     <insert id="insertRefreshToken"
-            parameterType="infomind.instack.api.auth.admin.entity.CmsRefreshTokenVO">
+            parameterType="infomind.instack.api.auth.jwt.entity.RefreshTokenVO">
         INSERT INTO CMS_RF_TK (
             TK_ID
           , USER_ID

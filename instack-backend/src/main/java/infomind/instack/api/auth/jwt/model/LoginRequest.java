@@ -1,4 +1,4 @@
-package infomind.instack.api.auth.basic.model;
+package infomind.instack.api.auth.jwt.model;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

@@ -1,21 +1,27 @@
-package infomind.instack.api.auth.admin.entity;
+package infomind.instack.api.auth.jwt.entity;
 
 import infomind.instack.api.common.entity.BaseAuditVO;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
 
 /**
- * CMS_RF_TK 테이블 매핑 엔티티
+ * Refresh Token 저장소 (CMS_RF_TK)
  */
 @Getter
 @Setter
-public class CmsRefreshTokenVO extends BaseAuditVO {
+@NoArgsConstructor
+public class RefreshTokenVO extends BaseAuditVO {
+
+    private String tkId;
     private String userId;
     private String tk;
     private Date tkExpDt;
     private String rkvYn;
     private String ipAddr;
     private String userAgt;
+    private Date crtAt;
+    private Date updAt;
 }

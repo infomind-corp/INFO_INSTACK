@@ -534,19 +534,21 @@ ALTER TABLE INS_APP.CMS_SNS_IF
                 );
 
 CREATE TABLE INS_APP.CMS_USER_AUTH (
-                                       USER_ID VARCHAR2(100) NOT NULL,
-                                       AUTH_CD VARCHAR2(20) NOT NULL,
-                                       AUTH_EXP_YMD VARCHAR2(8),
-                                       AUTH_GRNT_YMD VARCHAR2(8),
-                                       AUTH_SE VARCHAR2(20),
-                                       CRT_AT DATE NOT NULL,
-                                       CRT_BY VARCHAR2(100) NOT NULL,
-                                       CRT_IP VARCHAR2(40) NOT NULL,
-                                       CRT_PGM VARCHAR2(100) NOT NULL,
-                                       UPD_AT DATE NOT NULL,
-                                       UPD_BY VARCHAR2(100) NOT NULL,
-                                       UPD_IP VARCHAR2(40) NOT NULL,
-                                       UPD_PGM VARCHAR2(100) NOT NULL
+                                        USER_ID VARCHAR2(100) NOT NULL,
+                                        AUTH_CD VARCHAR2(20) NOT NULL,
+                                        USER_SE VARCHAR2(20) NOT NULL,
+                                        SITE_CD VARCHAR2(20),
+                                        AUTH_EXP_YMD VARCHAR2(8),
+                                        AUTH_GRNT_YMD VARCHAR2(8),
+                                        AUTH_SE VARCHAR2(20),
+                                        CRT_AT DATE NOT NULL,
+                                        CRT_BY VARCHAR2(100) NOT NULL,
+                                        CRT_IP VARCHAR2(40) NOT NULL,
+                                        CRT_PGM VARCHAR2(100) NOT NULL,
+                                        UPD_AT DATE NOT NULL,
+                                        UPD_BY VARCHAR2(100) NOT NULL,
+                                        UPD_IP VARCHAR2(40) NOT NULL,
+                                        UPD_PGM VARCHAR2(100) NOT NULL
 );
 
 COMMENT ON TABLE INS_APP.CMS_USER_AUTH IS '[00.시스템]08.사용자 권한';
@@ -554,6 +556,10 @@ COMMENT ON TABLE INS_APP.CMS_USER_AUTH IS '[00.시스템]08.사용자 권한';
 COMMENT ON COLUMN INS_APP.CMS_USER_AUTH.USER_ID IS '업무사용자, 관리자, 일반사용자';
 
 COMMENT ON COLUMN INS_APP.CMS_USER_AUTH.AUTH_CD IS '권한 테이블';
+
+COMMENT ON COLUMN INS_APP.CMS_USER_AUTH.USER_SE IS '사용자 구분';
+
+COMMENT ON COLUMN INS_APP.CMS_USER_AUTH.SITE_CD IS '사이트 코드';
 
 COMMENT ON COLUMN INS_APP.CMS_USER_AUTH.AUTH_EXP_YMD IS '권한 만료 일자';
 
@@ -579,8 +585,9 @@ COMMENT ON COLUMN INS_APP.CMS_USER_AUTH.UPD_PGM IS '수정프로그램';
 
 CREATE UNIQUE INDEX INS_APP.PK_CMS_USER_AUTH
     ON INS_APP.CMS_USER_AUTH (
-                              USER_ID ASC,
-                              AUTH_CD ASC
+                               USER_ID ASC,
+                               AUTH_CD ASC,
+                               USER_SE ASC
         );
 
 ALTER TABLE INS_APP.CMS_USER_AUTH
@@ -588,8 +595,10 @@ ALTER TABLE INS_APP.CMS_USER_AUTH
         CONSTRAINT PK_CMS_USER_AUTH
             PRIMARY KEY (
                          USER_ID,
-                         AUTH_CD
+                         AUTH_CD,
+                         USER_SE
                 );
+
 
 CREATE TABLE INS_APP.CMS_USER_AUTH_LOG (
                                            LOG_DT DATE,

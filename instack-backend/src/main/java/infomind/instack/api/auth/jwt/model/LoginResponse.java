@@ -1,4 +1,4 @@
-package infomind.instack.api.auth.basic.model;
+package infomind.instack.api.auth.jwt.model;
 
 import lombok.Getter;
 import lombok.Setter;
