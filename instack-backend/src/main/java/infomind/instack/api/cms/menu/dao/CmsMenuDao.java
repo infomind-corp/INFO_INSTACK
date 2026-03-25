@@ -1,9 +1,9 @@
 package infomind.instack.api.cms.menu.dao;
 
+import org.apache.ibatis.annotations.Param;
 import org.egovframe.rte.psl.dataaccess.mapper.EgovMapper;
 import infomind.instack.api.cms.menu.entity.CmsMenuVO;
 import infomind.instack.api.cms.menu.model.MenuResponse;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 @EgovMapper("CmsMenuDao")
 public interface CmsMenuDao {
-    List<MenuResponse> selectMenuListByUpMenuCd(String upMenuCd);
+    List<MenuResponse> selectMenuListByUpMenuCd(@Param("upMenuCd") String upMenuCd);
 
     Optional<MenuResponse> selectMenuById(String menuCd);
 

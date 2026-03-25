@@ -20,7 +20,7 @@ public class MenuResponse {
     @Schema(description = "메뉴 명", example = "통계 관리")
     private String menuNm;
 
-    @Schema(description = "메뉴 레벨", example = "1")
+    @Schema(description = "메뉴 레벨", example = "2")
     private Integer menuLvl;
 
     @Schema(description = "메뉴 순서", example = "10")

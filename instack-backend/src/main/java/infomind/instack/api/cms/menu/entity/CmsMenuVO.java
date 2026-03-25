@@ -14,7 +14,7 @@ public class CmsMenuVO extends BaseAuditVO {
     private String menuCd;        // 메뉴 코드 (PK)
     private String upMenuCd;      // 상위 메뉴 코드 (FK, self-referencing)
     private String menuNm;        // 메뉴 명
-    private Integer menuLvl;      // 메뉴 레벨 (1=최상위, 2=하위)
+    private Integer menuLvl;      // 메뉴 레벨
     private Integer menuOrd;      // 메뉴 순서
     private String prgmNm;        // 소스 파일 명
     private String prgmPath;      // 소스 경로

@@ -1,6 +1,5 @@
 package infomind.instack.api.cms.menu.service.impl;
 
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import infomind.instack.api.cms.menu.dao.CmsMenuDao;
 import infomind.instack.api.cms.menu.entity.CmsMenuVO;
 import infomind.instack.api.cms.menu.model.MenuRequest;
@@ -8,6 +7,7 @@ import infomind.instack.api.cms.menu.model.MenuResponse;
 import infomind.instack.api.cms.menu.service.CmsMenuService;
 import infomind.instack.api.common.exception.BizException;
 import lombok.RequiredArgsConstructor;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,11 +25,6 @@ public class CmsMenuServiceImpl extends EgovAbstractServiceImpl implements CmsMe
     private final CmsMenuDao cmsMenuDao;
 
     @Override
-    public List<MenuResponse> listTop() {
-        return cmsMenuDao.selectMenuListByUpMenuCd(null);
-    }
-
-    @Override
     public List<MenuResponse> listByUpMenuCd(String upMenuCd) {
         return cmsMenuDao.selectMenuListByUpMenuCd(upMenuCd);
     }
@@ -42,25 +37,13 @@ public class CmsMenuServiceImpl extends EgovAbstractServiceImpl implements CmsMe
 
     @Override
     @Transactional
-    public void insertTop(MenuRequest request) {
-        CmsMenuVO vo = new CmsMenuVO();
-        BeanUtils.copyProperties(request, vo);
-        vo.setMenuLvl(1);
-        vo.setUpMenuCd(null);
-        cmsMenuDao.insertMenu(vo);
-    }
-
-    @Override
-    @Transactional
-    public void insertSub(String upMenuCd, MenuRequest request) {
+    public void insert(MenuRequest request) {
         // 상위 메뉴 존재 여부 확인
-        cmsMenuDao.selectMenuById(upMenuCd)
+        cmsMenuDao.selectMenuById(request.getUpMenuCd())
                 .orElseThrow(() -> new BizException("상위 메뉴를 찾을 수 없습니다", HttpStatus.NOT_FOUND));
 
         CmsMenuVO vo = new CmsMenuVO();
         BeanUtils.copyProperties(request, vo);
-        vo.setMenuLvl(2);
-        vo.setUpMenuCd(upMenuCd);
         cmsMenuDao.insertMenu(vo);
     }
 
