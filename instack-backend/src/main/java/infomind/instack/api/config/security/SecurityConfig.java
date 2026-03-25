@@ -83,9 +83,8 @@ public class SecurityConfig {
             "/webjars/**", // Swagger UI 정적 리소스
 
             /* INSTACK */
-            "/api/auth/admin/login",
-            "/api/auth/admin/refresh",
-            "/api/auth/admin/logout",
+            "/api/auth/admin/**",
+            "/api/auth/jwt/**",
             // "/api/cms/user/**"      // 생성 TEST
 
     };

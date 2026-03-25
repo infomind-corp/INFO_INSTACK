@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="infomind.instack.api.auth.jwt.dao.JwtAuthDao">
+
+    <!-- 관리자 사용자 조회 (CMS_USER_ADMIN) -->
+    <select id="selectAdminUserByUserId" parameterType="string"
+            resultType="infomind.instack.api.auth.basic.entity.AuthUserVO">
+        SELECT A.USER_ID    AS id
+             , A.USER_NM    AS userNm
+             , A.EML        AS eml
+             , A.MTELNO     AS mtelno
+             , A.GNDR_SE    AS gndrSe
+             , A.TELNO      AS telno
+             , A.ADDR       AS addr
+             , A.DADDR      AS daddr
+             , A.CI         AS ci
+             , A.DI         AS di
+             , 'A'          AS userSe
+          FROM CMS_USER_ADMIN A
+         WHERE A.USER_ID = #{userId}
+    </select>
+
+    <!-- 업무 사용자 조회 (CMS_USER_TASK) -->
+    <select id="selectTaskUserByUserId" parameterType="string"
+            resultType="infomind.instack.api.auth.basic.entity.AuthUserVO">
+        SELECT A.USER_ID    AS id
+             , A.USER_NM    AS userNm
+             , A.EML        AS eml
+             , A.MTELNO     AS mtelno
+             , A.GNDR_SE    AS gndrSe
+             , A.TELNO      AS telno
+             , A.ADDR       AS addr
+             , A.DADDR      AS daddr
+             , A.CI         AS ci
+             , A.DI         AS di
+             , 'E'          AS userSe
+          FROM CMS_USER_TASK A
+         WHERE A.USER_ID = #{userId}
+    </select>
+
+    <!-- 일반 사용자 조회 (CMS_USER) -->
+    <select id="selectUserByUserId" parameterType="string"
+            resultType="infomind.instack.api.auth.basic.entity.AuthUserVO">
+        SELECT A.USER_ID    AS id
+             , A.USER_NM    AS userNm
+             , A.EML        AS eml
+             , A.MTELNO     AS mtelno
+             , A.GNDR_SE    AS gndrSe
+             , A.TELNO      AS telno
+             , A.ADDR       AS addr
+             , A.DADDR      AS daddr
+             , A.CI         AS ci
+             , A.DI         AS di
+             , 'G'          AS userSe
+          FROM CMS_USER A
+         WHERE A.USER_ID = #{userId}
+    </select>
+
+    <!-- 비밀번호 조회 (CMS_PWD) -->
+    <select id="selectPasswordByUserId" resultType="string">
+        SELECT PWD
+          FROM CMS_PWD
+         WHERE USER_ID = #{userId}
+           AND USER_SE = #{userSe}
+           AND USE_YN  = 'Y'
+    </select>
+
+    <!-- Refresh Token 조회 (CMS_RF_TK) -->
+    <select id="selectRefreshTokenByUserId" parameterType="string"
+            resultType="infomind.instack.api.auth.admin.entity.CmsRefreshTokenVO">
+        SELECT TK_ID      AS tkId
+             , USER_ID    AS userId
+             , TK         AS tk
+             , TK_EXP_DT  AS tkExpDt
+             , RVK_YN     AS rkvYn
+             , IP_ADDR    AS ipAddr
+             , USER_AGT   AS userAgt
+          FROM CMS_RF_TK
+         WHERE USER_ID = #{userId}
+           AND RVK_YN = 'N'
+    </select>
+
+    <!-- Refresh Token 저장 (CMS_RF_TK) -->
+    <insert id="insertRefreshToken"
+            parameterType="infomind.instack.api.auth.admin.entity.CmsRefreshTokenVO">
+        INSERT INTO CMS_RF_TK (
+            TK_ID
+          , USER_ID
+          , TK
+          , TK_EXP_DT
+          , RVK_YN
+          , <include refid="auditFragment.insertColumns"/>
+        ) VALUES (
+            (SELECT NVL(MAX(TK_ID), 0) + 1 FROM CMS_RF_TK)
+          , #{userId}
+          , #{tk}
+          , #{tkExpDt}
+          , #{rkvYn}
+          , <include refid="auditFragment.insertValues"/>
+        )
+    </insert>
+
+    <!-- Refresh Token 삭제 (CMS_RF_TK) -->
+    <delete id="deleteRefreshTokenByUserId" parameterType="string">
+        DELETE FROM CMS_RF_TK
+         WHERE USER_ID = #{userId}
+    </delete>
+
+</mapper>
