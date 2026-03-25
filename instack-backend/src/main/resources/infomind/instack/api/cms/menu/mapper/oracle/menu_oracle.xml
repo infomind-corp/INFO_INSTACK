@@ -28,7 +28,16 @@
                TO_CHAR(CRT_AT, 'YYYY-MM-DD HH24:MI:SS') AS crtAt,
                TO_CHAR(UPD_AT, 'YYYY-MM-DD HH24:MI:SS') AS updAt
         FROM CMS_COM_MENU
-        WHERE UP_MENU_CD = #{upMenuCd}
+        <where>
+            <choose>
+                <when test="upMenuCd == null or upMenuCd == ''">
+                    UP_MENU_CD IS NULL
+                </when>
+                <otherwise>
+                    UP_MENU_CD = #{upMenuCd}
+                </otherwise>
+            </choose>
+        </where>
         ORDER BY MENU_ORD ASC
     </select>
 

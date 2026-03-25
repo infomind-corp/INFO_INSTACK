@@ -13,8 +13,7 @@ public class MenuRequest {
     @NotBlank(message = "메뉴 코드는 필수입니다")
     private String menuCd;
 
-    @NotBlank(message = "상위 메뉴 코드는 필수입니다")
-    private String upMenuCd;
+    private String upMenuCd;  // 선택사항 (최상위 메뉴일 경우 null/empty)
 
     @NotBlank(message = "메뉴 명은 필수입니다")
     private String menuNm;

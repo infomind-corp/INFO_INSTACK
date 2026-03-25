@@ -31,14 +31,14 @@ public class CmsMenuController {
 
     @AuditLog(action = "메뉴 목록 조회")
     @GetMapping
-    @Operation(summary = "메뉴 목록 조회", description = "상위 메뉴 코드로 하위 메뉴 목록을 조회합니다")
+    @Operation(summary = "메뉴 목록 조회", description = "상위 메뉴 코드로 하위 메뉴 목록을 조회합니다. upMenuCd가 없으면 최상위 메뉴 목록을 조회합니다")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = MenuResponse.class))))
     })
     public ApiResponse<List<MenuResponse>> list(
-            @Parameter(description = "상위 메뉴 코드", example = "MENU001", required = true)
-            @RequestParam String upMenuCd) {
+            @Parameter(description = "상위 메뉴 코드 (선택사항)", example = "MENU001")
+            @RequestParam(required = false) String upMenuCd) {
         return ApiResponse.ok(cmsMenuService.listByUpMenuCd(upMenuCd));
     }
 

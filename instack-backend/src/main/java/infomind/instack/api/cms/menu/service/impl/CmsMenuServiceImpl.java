@@ -38,9 +38,11 @@ public class CmsMenuServiceImpl extends EgovAbstractServiceImpl implements CmsMe
     @Override
     @Transactional
     public void insert(MenuRequest request) {
-        // 상위 메뉴 존재 여부 확인
-        cmsMenuDao.selectMenuById(request.getUpMenuCd())
-                .orElseThrow(() -> new BizException("상위 메뉴를 찾을 수 없습니다", HttpStatus.NOT_FOUND));
+        // 상위 메뉴가 있으면 존재 여부 확인
+        if (request.getUpMenuCd() != null && !request.getUpMenuCd().isBlank()) {
+            cmsMenuDao.selectMenuById(request.getUpMenuCd())
+                    .orElseThrow(() -> new BizException("상위 메뉴를 찾을 수 없습니다", HttpStatus.NOT_FOUND));
+        }
 
         CmsMenuVO vo = new CmsMenuVO();
         BeanUtils.copyProperties(request, vo);

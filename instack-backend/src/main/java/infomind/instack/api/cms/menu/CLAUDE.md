@@ -16,7 +16,7 @@
 - DELETE : /{menuCd} : 대상 메뉴 삭제 -> 하위 메뉴도 함께 삭제
 
 ## Request field
-- upMenuCd : 상위 메뉴 (필수)
+- upMenuCd : 상위 메뉴 (필수 아님. 빈 값으로 들어 갈 수 있음)
 - menuCd : 대상 메뉴 (필수)
 - menuNm : 메뉴 명 (필수)
 
