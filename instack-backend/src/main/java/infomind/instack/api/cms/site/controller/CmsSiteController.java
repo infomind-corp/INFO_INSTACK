@@ -2,6 +2,7 @@ package infomind.instack.api.cms.site.controller;
 
 import infomind.instack.api.cms.site.model.*;
 import infomind.instack.api.cms.site.service.CmsSiteService;
+import infomind.instack.api.common.aop.AuditLog;
 import infomind.instack.api.common.model.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,12 +22,14 @@ public class CmsSiteController {
 
     private final CmsSiteService cmsSiteService;
 
+    @AuditLog(action = "사이트 목록 조회")
     @Operation(summary = "사이트 목록 조회")
     @GetMapping
     public ApiResponse<List<SiteListResponse>> list() {
         return ApiResponse.ok(cmsSiteService.list());
     }
 
+    @AuditLog(action = "사이트 단건 조회")
     @Operation(summary = "사이트 단건 조회")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공"),
@@ -38,6 +41,7 @@ public class CmsSiteController {
         return ApiResponse.ok(cmsSiteService.detail(siteCd));
     }
 
+    @AuditLog(action = "사이트 IP 목록 조회")
     @Operation(summary = "사이트 IP 목록 조회")
     @GetMapping("/{siteCd}/ip")
     public ApiResponse<List<SiteIpListResponse>> ipList(
@@ -45,6 +49,7 @@ public class CmsSiteController {
         return ApiResponse.ok(cmsSiteService.ipList(siteCd));
     }
 
+    @AuditLog(action = "사이트 IP 단건 조회")
     @Operation(summary = "사이트 IP 단건 조회")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공"),
@@ -57,6 +62,7 @@ public class CmsSiteController {
         return ApiResponse.ok(cmsSiteService.ipDetail(siteCd, sn));
     }
 
+    @AuditLog(action = "사이트 생성")
     @Operation(summary = "사이트 생성")
     @PostMapping
     public ApiResponse<Void> create(@Valid @RequestBody CreateSiteRequest request) {
@@ -64,6 +70,7 @@ public class CmsSiteController {
         return ApiResponse.ok();
     }
 
+    @AuditLog(action = "사이트 정보 수정")
     @Operation(summary = "사이트 정보 수정")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "수정 성공"),
@@ -77,6 +84,7 @@ public class CmsSiteController {
         return ApiResponse.ok();
     }
 
+    @AuditLog(action = "사이트 IP 수정")
     @Operation(summary = "사이트 IP 수정")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "수정 성공"),
@@ -91,6 +99,7 @@ public class CmsSiteController {
         return ApiResponse.ok();
     }
 
+    @AuditLog(action = "사이트 삭제 (연관 IP 포함)")
     @Operation(summary = "사이트 삭제 (연관 IP 포함)")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "삭제 성공"),

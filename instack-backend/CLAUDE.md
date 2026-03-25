@@ -58,12 +58,14 @@ public class {Domain}Controller {
 
     private final {Domain}Service {domain}Service;
 
+    @AuditLog(action = "목록 조회")
     @GetMapping
     @Operation(summary = "목록 조회")
     public ApiResponse<List<{Domain}Response>> list({Domain}Request request) {
         return ApiResponse.ok({domain}Service.list(request));
     }
 
+    @AuditLog(action = "등록")
     @PostMapping
     @Operation(summary = "등록")
     public ApiResponse<Void> insert(@Valid @RequestBody {Domain}Request request) {
