@@ -27,11 +27,6 @@ public class CmsCodeServiceImpl extends EgovAbstractServiceImpl implements CmsCo
     private final CmsCodeDao cmsCodeDao;
 
     @Override
-    public List<CodeResponse> listTop() {
-        return cmsCodeDao.selectCodeListByUpCd(TOP_CD);
-    }
-
-    @Override
     public List<CodeResponse> listByUpCd(String upCd) {
         return cmsCodeDao.selectCodeListByUpCd(upCd);
     }

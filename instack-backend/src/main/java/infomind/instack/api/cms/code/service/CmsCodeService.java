@@ -9,8 +9,6 @@ import java.util.List;
  * CMS 공통 코드 서비스 인터페이스.
  */
 public interface CmsCodeService {
-    List<CodeResponse> listTop();
-
     List<CodeResponse> listByUpCd(String upCd);
 
     CodeResponse select(String cd, String upCd);

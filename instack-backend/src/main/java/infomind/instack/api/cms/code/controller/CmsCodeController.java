@@ -29,17 +29,6 @@ public class CmsCodeController {
 
     private final CmsCodeService cmsCodeService;
 
-    @AuditLog(action = "최상위 코드 조회")
-    @GetMapping("/top")
-    @Operation(summary = "최상위 코드 목록 조회", description = "최상위 코드(UP_CD = '0') 목록을 조회합니다")
-    @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = CodeResponse.class))))
-    })
-    public ApiResponse<List<CodeResponse>> listTop() {
-        return ApiResponse.ok(cmsCodeService.listTop());
-    }
-
     @AuditLog(action = "하위 코드 목록 조회")
     @GetMapping("/top/{upCd}")
     @Operation(summary = "하위 코드 목록 조회", description = "특정 코드의 하위 코드(UP_CD = {upCd}) 목록을 조회합니다")

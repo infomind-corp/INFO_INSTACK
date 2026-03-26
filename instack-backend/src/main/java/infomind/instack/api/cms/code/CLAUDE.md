@@ -10,32 +10,7 @@
 
 # API 명세
 
-## 1. 최상위 코드 목록 조회
-**GET** `/api/cms/code/top`
-
-### Response (200 OK)
-```json
-{
-  "success": true,
-  "code": "SUCCESS",
-  "message": null,
-  "data": [
-    {
-      "cd": "CODE001",
-      "cdNm": "코드명",
-      "useYn": "Y",
-      "cdOrd": 1,
-      "cdRmk": "비고",
-      "crtAt": "2026-03-26 10:56:42",
-      "updAt": "2026-03-26 10:56:59"
-    }
-  ]
-}
-```
-
----
-
-## 2. 하위 코드 목록 조회
+## 1. 하위 코드 목록 조회
 **GET** `/api/cms/code/top/{upCd}`
 
 ### Path Parameters
@@ -62,7 +37,7 @@
 
 ---
 
-## 3. 코드 단건 조회
+## 2. 코드 단건 조회
 **GET** `/api/cms/code/{upCd}/{cd}`
 
 ### Path Parameters
@@ -91,7 +66,7 @@
 
 ---
 
-## 4. 최상위 코드 생성
+## 3. 최상위 코드 생성
 **POST** `/api/cms/code/top`
 
 ### Request Body
@@ -130,7 +105,7 @@ curl -X POST http://localhost:8080/api/cms/code/top \
 
 ---
 
-## 5. 하위 코드 생성
+## 4. 하위 코드 생성
 **POST** `/api/cms/code/{upCd}`
 
 ### Path Parameters
@@ -146,7 +121,7 @@ curl -X POST http://localhost:8080/api/cms/code/top \
 
 ---
 
-## 6. 코드 수정
+## 5. 코드 수정
 **PUT** `/api/cms/code/{upCd}/{cd}`
 
 ### Path Parameters
@@ -170,7 +145,7 @@ curl -X POST http://localhost:8080/api/cms/code/top \
 
 ---
 
-## 7. 코드 삭제
+## 6. 코드 삭제
 **DELETE** `/api/cms/code/{upCd}/{cd}`
 
 ### Path Parameters
