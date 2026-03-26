@@ -24,6 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * SNS OAuth 인증 서비스 구현.
+ * <p>SNS 제공자(Google, Naver, Kakao, Apple)의 OAuth 콜백을 처리하고
+ * 기존 사용자와 연동된 SNS 정보를 검증하여 JWT 토큰을 발급한다.</p>
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -39,6 +44,19 @@ public class SnsAuthServiceImpl extends EgovAbstractServiceImpl implements SnsAu
     @Value("${Globals.jwt.expiration:3600000}")
     private Long accessTokenExpiration;
 
+    /**
+     * SNS OAuth 콜백을 처리하여 JWT 토큰을 발급한다.
+     * 1. Authorization Code를 Access Token으로 교환
+     * 2. SNS 사용자 정보 조회
+     * 3. CMS_SNS_IF에서 연동 정보 검증
+     * 4. 로그인 가능 여부 확인
+     * 5. 기존 사용자로 JWT 토큰 발급
+     *
+     * @param provider SNS 제공자명 (google, naver, kakao, apple)
+     * @param request  OAuth 콜백 요청 (authorization code)
+     * @return 로그인 응답 (accessToken, refreshToken, 사용자 정보)
+     * @throws BizException 제공자가 지원되지 않거나 연동 정보/사용자가 없는 경우
+     */
     @Override
     @Transactional
     public LoginResponse handleCallback(String provider, SnsCallbackRequest request) {
@@ -98,7 +116,11 @@ public class SnsAuthServiceImpl extends EgovAbstractServiceImpl implements SnsAu
     }
 
     /**
-     * Provider 인스턴스 조회
+     * 제공자명으로 해당 SnsOAuthProvider 인스턴스를 조회한다.
+     *
+     * @param provider 제공자명 (google, naver, kakao, apple)
+     * @return 해당 제공자의 OAuth Provider 인스턴스
+     * @throws BizException 지원되지 않는 제공자인 경우
      */
     private SnsOAuthProvider getProvider(String provider) {
         return providers.stream()
@@ -111,7 +133,12 @@ public class SnsAuthServiceImpl extends EgovAbstractServiceImpl implements SnsAu
     }
 
     /**
-     * USER_SE에 따라 사용자 조회
+     * 사용자 구분에 따라 해당 테이블에서 사용자를 조회한다.
+     *
+     * @param userId 사용자 ID
+     * @param userSe 사용자 구분 (A=관리자, E=업무사용자, G=일반사용자)
+     * @return 사용자 정보를 담은 Optional
+     * @throws BizException 사용자 구분이 유효하지 않은 경우
      */
     private java.util.Optional<AuthUserVO> getAuthUserByUserSe(String userId, String userSe) {
         return switch (userSe) {
@@ -123,8 +150,11 @@ public class SnsAuthServiceImpl extends EgovAbstractServiceImpl implements SnsAu
     }
 
     /**
-     * JWT 토큰 생성 및 Refresh Token 저장
-     * (JwtAuthServiceImpl.makeLoginResponse와 동일)
+     * JWT 액세스/리프레시 토큰을 생성하고 리프레시 토큰을 DB에 저장한다.
+     * 기존 리프레시 토큰을 삭제하고 새로운 토큰을 저장한다.
+     *
+     * @param authUserVO 사용자 정보
+     * @return 로그인 응답 (accessToken, refreshToken, 만료 시간)
      */
     @Transactional
     private LoginResponse makeLoginResponse(AuthUserVO authUserVO) {

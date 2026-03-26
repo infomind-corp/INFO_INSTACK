@@ -32,7 +32,17 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private final JwtUtil jwtUtil;
 
-    @Override //로그인 이후 HttpServletRequest 요청할 때마다 실행(스프링의 AOP기능)
+    /**
+     * 요청 헤더의 Bearer 토큰을 파싱하여 SecurityContextHolder에 인증 정보를 설정한다.
+     * 토큰이 유효하면 AuthUserVO를 생성하고 권한 정보를 매핑한다.
+     *
+     * @param req   HTTP 요청
+     * @param res   HTTP 응답
+     * @param chain FilterChain
+     * @throws IOException      I/O 오류 발생 시
+     * @throws ServletException 서블릿 처리 중 오류 발생 시
+     */
+    @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws IOException, ServletException {
 
@@ -80,6 +90,14 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         chain.doFilter(req, res);
     }
 
+    /**
+     * Authorization 헤더에서 Bearer 토큰을 추출한다.
+     * "Bearer " 프리픽스를 제거하고 실제 토큰 값을 반환한다.
+     *
+     * @param bearerToken Authorization 헤더 값
+     * @return 추출된 JWT 토큰
+     * @throws IllegalArgumentException Bearer 형식이 올바르지 않거나 토큰이 없는 경우
+     */
     private String extractToken(String bearerToken) {
         // 공백 제거
         bearerToken = bearerToken.trim();

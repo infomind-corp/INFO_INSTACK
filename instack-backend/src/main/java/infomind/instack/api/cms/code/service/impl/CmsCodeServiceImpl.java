@@ -26,17 +26,39 @@ public class CmsCodeServiceImpl extends EgovAbstractServiceImpl implements CmsCo
 
     private final CmsCodeDao cmsCodeDao;
 
+    /**
+     * 상위 코드로 하위 코드 목록을 조회한다.
+     *
+     * @param upCd 상위 코드
+     * @return 하위 코드 응답 목록
+     */
     @Override
     public List<CodeResponse> listByUpCd(String upCd) {
         return cmsCodeDao.selectCodeListByUpCd(upCd);
     }
 
+    /**
+     * 코드를 단건 조회한다.
+     *
+     * @param cd   조회할 코드
+     * @param upCd 상위 코드
+     * @return 코드 응답 정보
+     * @throws BizException 코드를 찾을 수 없는 경우
+     */
     @Override
     public CodeResponse select(String cd, String upCd) {
         return cmsCodeDao.selectCodeById(cd, upCd)
                 .orElseThrow(() -> new BizException("코드를 찾을 수 없습니다", HttpStatus.NOT_FOUND));
     }
 
+    /**
+     * 하위 코드를 등록한다.
+     * 상위 코드 존재 여부를 확인 후 코드 레벨 2로 설정하여 저장한다.
+     *
+     * @param upCd    상위 코드
+     * @param request 코드 생성 요청
+     * @throws BizException 상위 코드를 찾을 수 없는 경우
+     */
     @Override
     @Transactional
     public void insertSub(String upCd, CodeRequest request) {
@@ -51,6 +73,15 @@ public class CmsCodeServiceImpl extends EgovAbstractServiceImpl implements CmsCo
         cmsCodeDao.insertCode(vo);
     }
 
+    /**
+     * 코드 정보를 수정한다.
+     * 수정 전 코드 존재 여부를 확인한다.
+     *
+     * @param cd      수정할 코드
+     * @param upCd    상위 코드
+     * @param request 코드 수정 요청
+     * @throws BizException 코드를 찾을 수 없는 경우
+     */
     @Override
     @Transactional
     public void update(String cd, String upCd, CodeRequest request) {
@@ -63,6 +94,15 @@ public class CmsCodeServiceImpl extends EgovAbstractServiceImpl implements CmsCo
         cmsCodeDao.updateCode(cd, upCd, vo);
     }
 
+    /**
+     * 코드를 삭제한다.
+     * 해당 코드의 모든 하위 코드도 함께 삭제된다(Cascade).
+     * 삭제 전 코드 존재 여부를 확인한다.
+     *
+     * @param cd      삭제할 코드
+     * @param upCd    상위 코드
+     * @throws BizException 코드를 찾을 수 없는 경우
+     */
     @Override
     @Transactional
     public void delete(String cd, String upCd) {

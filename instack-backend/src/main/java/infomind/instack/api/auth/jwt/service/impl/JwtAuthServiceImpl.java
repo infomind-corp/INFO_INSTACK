@@ -38,6 +38,15 @@ public class JwtAuthServiceImpl extends EgovAbstractServiceImpl implements JwtAu
     @Value("${Globals.jwt.refreshExpiration}")
     private long refreshTokenExpireTime;
 
+    /**
+     * 사용자를 인증하고 JWT 액세스/리프레시 토큰을 발급한다.
+     * 사용자 구분(A/E/G)에 따라 해당 테이블에서 사용자를 조회하고 비밀번호를 검증한다.
+     *
+     * @param userSe  사용자 구분 (A=관리자, E=업무사용자, G=일반사용자)
+     * @param request 로그인 요청 (loginId, password)
+     * @return 로그인 응답 (accessToken, refreshToken, 사용자 정보)
+     * @throws BizException 사용자 구분이 유효하지 않거나 사용자/비밀번호가 맞지 않는 경우
+     */
     @Override
     public LoginResponse login(String userSe, LoginRequest request) {
         // userSe 검증 및 사용자 조회
@@ -66,6 +75,14 @@ public class JwtAuthServiceImpl extends EgovAbstractServiceImpl implements JwtAu
         return makeLoginResponse(authUserVO);
     }
 
+    /**
+     * 리프레시 토큰을 검증하고 새로운 액세스/리프레시 토큰을 발급한다.
+     * DB에 저장된 리프레시 토큰과 비교하여 검증하고, 만료 여부를 확인한다.
+     *
+     * @param request 리프레시 요청 (refreshToken)
+     * @return 로그인 응답 (새로운 accessToken, refreshToken)
+     * @throws BizException 리프레시 토큰이 유효하지 않거나 만료된 경우
+     */
     @Override
     public LoginResponse refresh(RefreshRequest request) {
         // Refresh Token 유효성 검증
@@ -95,6 +112,12 @@ public class JwtAuthServiceImpl extends EgovAbstractServiceImpl implements JwtAu
         return makeLoginResponse(authUserVO);
     }
 
+    /**
+     * 사용자를 로그아웃 처리한다.
+     * DB에 저장된 리프레시 토큰을 삭제하여 토큰 갱신을 불가능하게 한다.
+     *
+     * @param userId 로그아웃할 사용자 ID
+     */
     @Override
     public void logout(String userId) {
         jwtAuthDao.deleteRefreshTokenByUserId(userId);
