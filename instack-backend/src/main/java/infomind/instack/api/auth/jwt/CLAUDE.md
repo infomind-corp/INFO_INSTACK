@@ -12,39 +12,107 @@
 
 ---
 
-# Spec
-## API : /api/auth/jwt
+# API 명세
 
-| HTTP | 경로 | 설명 |
-|------|------|------|
-| POST | `/{userSe}/login` | 사용자 구분별 로그인 (userSe: A/E/G) |
-| POST | `/refresh` | Refresh Token으로 새 Access Token 발급 |
-| GET | `/logout` | Refresh Token 삭제 |
+## 1. 로그인
+**POST** `/api/auth/jwt/{userSe}/login`
+
+### Path Parameters
+| 파라미터 | 타입 | 필수 | 설명 | 값 |
+|---------|------|------|------|-----|
+| userSe | String | O | 사용자 구분 | A=관리자, E=업무사용자, G=일반사용자 |
+
+### Request Body
+| 필드 | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| loginId | String | O | 로그인 ID |
+| password | String | O | 비밀번호 |
+
+### Response (200 OK)
+```json
+{
+  "success": true,
+  "code": "SUCCESS",
+  "message": null,
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzM4NCJ9...",
+    "refreshToken": "eyJhbGciOiJIUzM4NCJ9...",
+    "userInfo": {
+      "id": "admin",
+      "userNm": "홍길동",
+      "eml": "admin@example.com",
+      "gndrSe": "M",
+      "telno": "0212345678",
+      "userSe": "A",
+      "mtelno": "01012345678",
+      "addr": "서울시",
+      "daddr": "강남구"
+    }
+  }
+}
+```
+
+### Error Responses
+- **400 Bad Request** - 유효하지 않은 userSe
+- **401 Unauthorized** - 아이디 또는 비밀번호 불일치
+
+### 테스트
+```bash
+curl -X POST http://localhost:8080/api/auth/jwt/A/login \
+  -H "Content-Type: application/json" \
+  -d '{"loginId":"admin","password":"info4787@@"}'
+```
 
 ---
 
-# 구현 구조
+## 2. 토큰 갱신
+**POST** `/api/auth/jwt/refresh`
 
-## 사용자 조회 로직
-- userSe='A': `CMS_USER_ADMIN` 테이블에서 조회
-- userSe='E': `CMS_USER_TASK` 테이블에서 조회
-- userSe='G': `CMS_USER` 테이블에서 조회
+### Request Body
+| 필드 | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| refreshToken | String | O | Refresh Token |
 
-## 파일 구성
+### Response (200 OK)
+```json
+{
+  "success": true,
+  "code": "SUCCESS",
+  "message": null,
+  "data": {
+    "accessToken": "새로운_access_token",
+    "refreshToken": "새로운_refresh_token"
+  }
+}
 ```
-controller/
-  └── JwtAuthController      ← API 엔드포인트
-service/
-  ├── JwtAuthService         ← 인터페이스
-  └── impl/
-      └── JwtAuthServiceImpl  ← 비즈니스 로직 (userSe 분기 처리)
-dao/
-  └── JwtAuthDao             ← MyBatis 인터페이스
-mapper/oracle/
-  └── jwtAuth_oracle.xml     ← 쿼리 정의
+
+### Error Responses
+- **401 Unauthorized** - 유효하지 않거나 만료된 Refresh Token
+
+---
+
+## 3. 로그아웃
+**GET** `/api/auth/jwt/logout`
+
+### Headers
+| 헤더 | 값 |
+|------|-----|
+| Authorization | Bearer {accessToken} |
+
+### Response (200 OK)
+```json
+{
+  "success": true,
+  "code": "SUCCESS",
+  "message": null,
+  "data": null
+}
 ```
 
-## 인증 흐름
+---
+
+# 인증 흐름
+
 1. POST `/{userSe}/login` → loginId/password 전달
 2. `JwtAuthServiceImpl.login(userSe, request)`
    - userSe 검증 (A/E/G 외 값 → 400 Bad Request)
@@ -62,8 +130,3 @@ mapper/oracle/
 - `siteCd` : 사이트 코드 (CMS_USER에서 조회하여 저장)
 - `authExpYmd` : 권한 만료 일자 (CMS_USER_AUTH에서 조회하여 저장)
 - `authSe` : 권한 구분 (CMS_USER_AUTH에서 조회하여 저장)
-
-## Refresh 클레임 구성
-- `id`: 사용자 ID
-- `userSe`: A/E/G
-- `siteCd` : 사이트 코드 (CMS_USER에서 조회하여 저장)
