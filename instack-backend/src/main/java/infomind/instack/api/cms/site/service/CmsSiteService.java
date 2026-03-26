@@ -6,19 +6,21 @@ import java.util.List;
 
 public interface CmsSiteService {
 
-    List<SiteListResponse> list();
+    List<SiteResponse> list();
 
-    SiteDetailResponse detail(String siteCd);
+    SiteResponse detail(String siteCd);
 
-    List<SiteIpListResponse> ipList(String siteCd);
+    void create(SiteRequest request);
 
-    SiteIpDetailResponse ipDetail(String siteCd, String sn);
-
-    void create(CreateSiteRequest request);
-
-    void update(String siteCd, UpdateSiteRequest request);
-
-    void updateIp(String siteCd, String sn, UpdateSiteIpRequest request);
+    void update(String siteCd, SiteUpdateRequest request);
 
     void delete(String siteCd);
+
+    List<SitePermitResponse> permitList(String siteCd);
+
+    SitePermitResponse permitDetail(String siteCd, Long sn);
+
+    void createPermit(String siteCd, SitePermitRequest request);
+
+    void updatePermit(String siteCd, Long sn, SitePermitRequest request);
 }

@@ -6,12 +6,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CmsSiteIpVO extends BaseAuditVO {
+public class CmsSitePermVO extends BaseAuditVO {
     private String siteCd;
-    private String sn;
+    private Long sn;
     private String useYn;
-    private String ipDesc;
-    private String permIp;
+    private String sitePermKndSe;
+    private String sitePermNm;
+    private String sitePermDesc;
     private String useStYmd;
     private String useEndYmd;
 }

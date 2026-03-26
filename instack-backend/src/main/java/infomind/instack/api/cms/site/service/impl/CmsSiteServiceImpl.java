@@ -1,12 +1,11 @@
 package infomind.instack.api.cms.site.service.impl;
 
 import infomind.instack.api.cms.site.dao.CmsSiteDao;
-import infomind.instack.api.cms.site.entity.CmsSiteIpVO;
+import infomind.instack.api.cms.site.entity.CmsSitePermVO;
 import infomind.instack.api.cms.site.entity.CmsSiteVO;
 import infomind.instack.api.cms.site.model.*;
 import infomind.instack.api.cms.site.service.CmsSiteService;
 import infomind.instack.api.common.exception.BizException;
-import infomind.instack.api.common.util.UuidUtil;
 import lombok.RequiredArgsConstructor;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.springframework.beans.BeanUtils;
@@ -23,64 +22,72 @@ public class CmsSiteServiceImpl extends EgovAbstractServiceImpl implements CmsSi
     private final CmsSiteDao cmsSiteDao;
 
     @Override
-    public List<SiteListResponse> list() {
+    public List<SiteResponse> list() {
         return cmsSiteDao.selectSiteList();
     }
 
     @Override
-    public SiteDetailResponse detail(String siteCd) {
+    public SiteResponse detail(String siteCd) {
         return cmsSiteDao.selectSiteBySiteCd(siteCd)
                 .orElseThrow(() -> new BizException("사이트를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
     }
 
     @Override
-    public List<SiteIpListResponse> ipList(String siteCd) {
-        return cmsSiteDao.selectSiteIpListBySiteCd(siteCd);
-    }
-
-    @Override
-    public SiteIpDetailResponse ipDetail(String siteCd, String sn) {
-        return cmsSiteDao.selectSiteIpBySiteCdAndSn(siteCd, sn)
-                .orElseThrow(() -> new BizException("사이트 IP를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
+    @Transactional
+    public void create(SiteRequest request) {
+        CmsSiteVO vo = new CmsSiteVO();
+        BeanUtils.copyProperties(request, vo);
+        cmsSiteDao.insertSite(vo);
     }
 
     @Override
     @Transactional
-    public void create(CreateSiteRequest request) {
-        CmsSiteVO siteVO = new CmsSiteVO();
-        BeanUtils.copyProperties(request, siteVO);
-
-        cmsSiteDao.insertSite(siteVO);
-
-        if (request.getPermIp() != null && !request.getPermIp().isBlank()) {
-            CmsSiteIpVO ipVO = new CmsSiteIpVO();
-            ipVO.setSiteCd(request.getSiteCd());
-            ipVO.setSn(UuidUtil.generateCompact());
-            ipVO.setPermIp(request.getPermIp());
-            ipVO.setUseYn("Y");
-
-            cmsSiteDao.insertSiteIp(ipVO);
-        }
-    }
-
-    @Override
-    public void update(String siteCd, UpdateSiteRequest request) {
+    public void update(String siteCd, SiteUpdateRequest request) {
+        cmsSiteDao.selectSiteBySiteCd(siteCd)
+                .orElseThrow(() -> new BizException("사이트를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
         CmsSiteVO vo = new CmsSiteVO();
         BeanUtils.copyProperties(request, vo);
         cmsSiteDao.updateSite(siteCd, vo);
     }
 
     @Override
-    public void updateIp(String siteCd, String sn, UpdateSiteIpRequest request) {
-        CmsSiteIpVO vo = new CmsSiteIpVO();
-        BeanUtils.copyProperties(request, vo);
-        cmsSiteDao.updateSiteIp(siteCd, sn, vo);
+    @Transactional
+    public void delete(String siteCd) {
+        cmsSiteDao.selectSiteBySiteCd(siteCd)
+                .orElseThrow(() -> new BizException("사이트를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
+        cmsSiteDao.deleteSitePermBySiteCd(siteCd);
+        cmsSiteDao.deleteSite(siteCd);
+    }
+
+    @Override
+    public List<SitePermitResponse> permitList(String siteCd) {
+        return cmsSiteDao.selectSitePermListBySiteCd(siteCd);
+    }
+
+    @Override
+    public SitePermitResponse permitDetail(String siteCd, Long sn) {
+        return cmsSiteDao.selectSitePermBySiteCdAndSn(siteCd, sn)
+                .orElseThrow(() -> new BizException("허용 정보를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
     }
 
     @Override
     @Transactional
-    public void delete(String siteCd) {
-        cmsSiteDao.deleteSiteIpBySiteCd(siteCd);
-        cmsSiteDao.deleteSite(siteCd);
+    public void createPermit(String siteCd, SitePermitRequest request) {
+        cmsSiteDao.selectSiteBySiteCd(siteCd)
+                .orElseThrow(() -> new BizException("사이트를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
+        CmsSitePermVO vo = new CmsSitePermVO();
+        vo.setSiteCd(siteCd);
+        BeanUtils.copyProperties(request, vo);
+        cmsSiteDao.insertSitePerm(vo);
+    }
+
+    @Override
+    @Transactional
+    public void updatePermit(String siteCd, Long sn, SitePermitRequest request) {
+        cmsSiteDao.selectSitePermBySiteCdAndSn(siteCd, sn)
+                .orElseThrow(() -> new BizException("허용 정보를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
+        CmsSitePermVO vo = new CmsSitePermVO();
+        BeanUtils.copyProperties(request, vo);
+        cmsSiteDao.updateSitePerm(siteCd, sn, vo);
     }
 }

@@ -9,6 +9,7 @@ import lombok.Setter;
 public class CmsSiteVO extends BaseAuditVO {
     private String siteCd;
     private String siteNm;
+    private String siteUrl;
     private String siteDesc;
     private String useYn;
 }

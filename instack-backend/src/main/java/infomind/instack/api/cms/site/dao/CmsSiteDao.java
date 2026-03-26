@@ -1,11 +1,9 @@
 package infomind.instack.api.cms.site.dao;
 
-import infomind.instack.api.cms.site.entity.CmsSiteIpVO;
+import infomind.instack.api.cms.site.entity.CmsSitePermVO;
 import infomind.instack.api.cms.site.entity.CmsSiteVO;
-import infomind.instack.api.cms.site.model.SiteDetailResponse;
-import infomind.instack.api.cms.site.model.SiteIpDetailResponse;
-import infomind.instack.api.cms.site.model.SiteIpListResponse;
-import infomind.instack.api.cms.site.model.SiteListResponse;
+import infomind.instack.api.cms.site.model.SitePermitResponse;
+import infomind.instack.api.cms.site.model.SiteResponse;
 import org.apache.ibatis.annotations.Param;
 import org.egovframe.rte.psl.dataaccess.mapper.EgovMapper;
 
@@ -15,23 +13,27 @@ import java.util.Optional;
 @EgovMapper("CmsSiteDao")
 public interface CmsSiteDao {
 
-    List<SiteListResponse> selectSiteList();
+    // ----- CMS_SITE -----
 
-    Optional<SiteDetailResponse> selectSiteBySiteCd(String siteCd);
+    List<SiteResponse> selectSiteList();
 
-    List<SiteIpListResponse> selectSiteIpListBySiteCd(String siteCd);
-
-    Optional<SiteIpDetailResponse> selectSiteIpBySiteCdAndSn(@Param("siteCd") String siteCd, @Param("sn") String sn);
+    Optional<SiteResponse> selectSiteBySiteCd(String siteCd);
 
     void insertSite(CmsSiteVO vo);
 
-    void insertSiteIp(CmsSiteIpVO vo);
-
     void updateSite(@Param("siteCd") String siteCd, @Param("vo") CmsSiteVO vo);
-
-    void updateSiteIp(@Param("siteCd") String siteCd, @Param("sn") String sn, @Param("vo") CmsSiteIpVO vo);
 
     void deleteSite(String siteCd);
 
-    void deleteSiteIpBySiteCd(String siteCd);
+    // ----- CMS_SITE_ACC_PERM -----
+
+    List<SitePermitResponse> selectSitePermListBySiteCd(String siteCd);
+
+    Optional<SitePermitResponse> selectSitePermBySiteCdAndSn(@Param("siteCd") String siteCd, @Param("sn") Long sn);
+
+    void insertSitePerm(CmsSitePermVO vo);
+
+    void updateSitePerm(@Param("siteCd") String siteCd, @Param("sn") Long sn, @Param("vo") CmsSitePermVO vo);
+
+    void deleteSitePermBySiteCd(String siteCd);
 }
