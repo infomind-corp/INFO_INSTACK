@@ -45,7 +45,10 @@
 
 ### 공통
 - Swagger 어노테이션으로 API 문서화: `@Tag`, `@Operation`, `@Parameter`, `@ApiResponse`, `@Schema`
-- `common/` 하위 파일은 Class 파일 상단에 설명 및 목적 주석 추가
+- Javadoc 형식의 주석 사용
+  - Service - 클래스 및 메서드 단위로 설명 주석 작성
+  - Request/Response - 필드 단위로 설명 주석 작성
+  - Configuration, Aspect, Filter 등 - 클래스 및 주요 메서드에 설명 주석 작성
 
 ### Controller
 
