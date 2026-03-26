@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="infomind.instack.api.cms.content.dao.CmsContentDao">
+
+    <!-- ================================================================
+         CMS_CTT
+    ================================================================ -->
+
+    <select id="selectContentList"
+            parameterType="infomind.instack.api.cms.content.model.ContentRequest"
+            resultType="infomind.instack.api.cms.content.model.ContentResponse">
+        SELECT C.SITE_CD                                   AS siteCd
+             , C.CTT_ID                                    AS cttId
+             , C.LANG_SE                                   AS langSe
+             , C.CTT_NM                                    AS cttNm
+             , C.CTT_DESC                                  AS cttDesc
+             , C.USE_YN                                    AS useYn
+             , C.PUB_YN                                    AS pubYn
+             , C.PUB_ST_YMD                                AS pubStYmd
+             , C.PUB_ST_HHMM                               AS pubStHhmm
+             , C.PUB_END_YMD                               AS pubEndYmd
+             , C.PUB_END_HHMM                              AS pubEndHhmm
+             , C.CTT_RMK                                   AS cttRmk
+             , S.SN                                        AS seoSn
+             , S.META_TTL                                  AS metaTtl
+             , S.META_DESC                                 AS metaDesc
+             , TO_CHAR(C.CRT_AT, 'YYYY-MM-DD HH24:MI:SS') AS crtAt
+             , TO_CHAR(C.UPD_AT, 'YYYY-MM-DD HH24:MI:SS') AS updAt
+          FROM CMS_CTT C
+          LEFT JOIN CMS_CTT_SEO S
+            ON S.SITE_CD = C.SITE_CD
+           AND S.CTT_ID  = C.CTT_ID
+           AND S.LANG_SE = C.LANG_SE
+        <where>
+            C.SITE_CD = #{siteCd}
+            <if test="langSe != null and langSe != ''">
+                AND C.LANG_SE = #{langSe}
+            </if>
+            <if test="useYn != null and useYn != ''">
+                AND C.USE_YN = #{useYn}
+            </if>
+            <if test="pubYn != null and pubYn != ''">
+                AND C.PUB_YN = #{pubYn}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND C.CTT_NM LIKE <![CDATA[ '%' || #{keyword} || '%' ]]>
+            </if>
+        </where>
+        ORDER BY C.CRT_AT DESC
+    </select>
+
+    <select id="selectContentById"
+            resultType="infomind.instack.api.cms.content.model.ContentResponse">
+        SELECT C.SITE_CD                                   AS siteCd
+             , C.CTT_ID                                    AS cttId
+             , C.LANG_SE                                   AS langSe
+             , C.CTT_NM                                    AS cttNm
+             , C.CTT_DESC                                  AS cttDesc
+             , C.USE_YN                                    AS useYn
+             , C.PUB_YN                                    AS pubYn
+             , C.PUB_ST_YMD                                AS pubStYmd
+             , C.PUB_ST_HHMM                               AS pubStHhmm
+             , C.PUB_END_YMD                               AS pubEndYmd
+             , C.PUB_END_HHMM                              AS pubEndHhmm
+             , C.CTT_RMK                                   AS cttRmk
+             , S.SN                                        AS seoSn
+             , S.META_TTL                                  AS metaTtl
+             , S.META_DESC                                 AS metaDesc
+             , TO_CHAR(C.CRT_AT, 'YYYY-MM-DD HH24:MI:SS') AS crtAt
+             , TO_CHAR(C.UPD_AT, 'YYYY-MM-DD HH24:MI:SS') AS updAt
+          FROM CMS_CTT C
+          LEFT JOIN CMS_CTT_SEO S
+            ON S.SITE_CD = C.SITE_CD
+           AND S.CTT_ID  = C.CTT_ID
+           AND S.LANG_SE = C.LANG_SE
+         WHERE C.SITE_CD = #{siteCd}
+           AND C.CTT_ID  = #{cttId}
+           <if test="langSe != null and langSe != ''">
+           AND C.LANG_SE = #{langSe}
+           </if>
+    </select>
+
+    <insert id="insertContent" parameterType="infomind.instack.api.cms.content.entity.CmsCttVO">
+        INSERT INTO CMS_CTT (
+            SITE_CD
+          , CTT_ID
+          , LANG_SE
+          , CTT_NM
+          , CTT_DESC
+          , USE_YN
+          , PUB_YN
+          , PUB_ST_YMD
+          , PUB_ST_HHMM
+          , PUB_END_YMD
+          , PUB_END_HHMM
+          , CTT_RMK
+          , <include refid="auditFragment.insertColumns"/>
+        ) VALUES (
+            #{siteCd}
+          , #{cttId}
+          , #{langSe}
+          , #{cttNm}
+          , #{cttDesc}
+          , #{useYn}
+          , #{pubYn}
+          , #{pubStYmd}
+          , #{pubStHhmm}
+          , #{pubEndYmd}
+          , #{pubEndHhmm}
+          , #{cttRmk}
+          , <include refid="auditFragment.insertValues"/>
+        )
+    </insert>
+
+    <update id="updateContent">
+        UPDATE CMS_CTT
+           SET CTT_NM       = #{vo.cttNm}
+             , CTT_DESC     = #{vo.cttDesc}
+             , USE_YN       = #{vo.useYn}
+             , PUB_YN       = #{vo.pubYn}
+             , PUB_ST_YMD   = #{vo.pubStYmd}
+             , PUB_ST_HHMM  = #{vo.pubStHhmm}
+             , PUB_END_YMD  = #{vo.pubEndYmd}
+             , PUB_END_HHMM = #{vo.pubEndHhmm}
+             , CTT_RMK      = #{vo.cttRmk}
+             , <include refid="auditFragment.updateSet"/>
+         WHERE SITE_CD = #{siteCd}
+           AND CTT_ID  = #{cttId}
+           AND LANG_SE = #{langSe}
+    </update>
+
+    <delete id="deleteContent">
+        DELETE FROM CMS_CTT
+         WHERE SITE_CD = #{siteCd}
+           AND CTT_ID  = #{cttId}
+           AND LANG_SE = #{langSe}
+    </delete>
+
+    <!-- ================================================================
+         CMS_CTT_SEO
+    ================================================================ -->
+
+    <select id="selectContentSeo"
+            resultType="infomind.instack.api.cms.content.entity.CmsCttSeoVO">
+        SELECT SN        AS sn
+             , SITE_CD   AS siteCd
+             , CTT_ID    AS cttId
+             , LANG_SE   AS langSe
+             , META_TTL  AS metaTtl
+             , META_DESC AS metaDesc
+          FROM CMS_CTT_SEO
+         WHERE SITE_CD = #{siteCd}
+           AND CTT_ID  = #{cttId}
+           AND LANG_SE = #{langSe}
+    </select>
+
+    <insert id="insertContentSeo" parameterType="infomind.instack.api.cms.content.entity.CmsCttSeoVO">
+        INSERT INTO CMS_CTT_SEO (
+            SN
+          , SITE_CD
+          , CTT_ID
+          , LANG_SE
+          , META_TTL
+          , META_DESC
+          , <include refid="auditFragment.insertColumns"/>
+        ) VALUES (
+            (SELECT NVL(MAX(SN), 0) + 1 FROM CMS_CTT_SEO
+              WHERE SITE_CD = #{siteCd}
+                AND CTT_ID  = #{cttId}
+                AND LANG_SE = #{langSe})
+          , #{siteCd}
+          , #{cttId}
+          , #{langSe}
+          , #{metaTtl}
+          , #{metaDesc}
+          , <include refid="auditFragment.insertValues"/>
+        )
+    </insert>
+
+    <update id="updateContentSeo">
+        UPDATE CMS_CTT_SEO
+           SET META_TTL  = #{vo.metaTtl}
+             , META_DESC = #{vo.metaDesc}
+             , <include refid="auditFragment.updateSet"/>
+         WHERE SITE_CD = #{siteCd}
+           AND CTT_ID  = #{cttId}
+           AND LANG_SE = #{langSe}
+    </update>
+
+    <delete id="deleteContentSeo">
+        DELETE FROM CMS_CTT_SEO
+         WHERE SITE_CD = #{siteCd}
+           AND CTT_ID  = #{cttId}
+           AND LANG_SE = #{langSe}
+    </delete>
+
+</mapper>
