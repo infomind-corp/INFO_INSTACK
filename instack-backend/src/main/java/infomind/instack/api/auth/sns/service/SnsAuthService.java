@@ -1,7 +1,7 @@
 package infomind.instack.api.auth.sns.service;
 
 import infomind.instack.api.auth.sns.model.SnsCallbackRequest;
-import infomind.instack.api.auth.basic.model.LoginResponse;
+import infomind.instack.api.auth.jwt.model.LoginResponse;
 
 /**
  * SNS 인증 서비스 인터페이스

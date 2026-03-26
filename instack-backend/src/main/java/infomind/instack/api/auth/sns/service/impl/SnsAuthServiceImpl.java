@@ -1,7 +1,7 @@
 package infomind.instack.api.auth.sns.service.impl;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
-import infomind.instack.api.auth.basic.model.LoginResponse;
+import infomind.instack.api.auth.jwt.model.LoginResponse;
 import infomind.instack.api.auth.jwt.dao.JwtAuthDao;
 import infomind.instack.api.auth.jwt.entity.AuthUserVO;
 import infomind.instack.api.auth.jwt.entity.RefreshTokenVO;

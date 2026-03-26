@@ -1,6 +1,6 @@
 package infomind.instack.api.auth.sns.controller;
 
-import infomind.instack.api.auth.basic.model.LoginResponse;
+import infomind.instack.api.auth.jwt.model.LoginResponse;
 import infomind.instack.api.auth.sns.model.SnsCallbackRequest;
 import infomind.instack.api.auth.sns.service.SnsAuthService;
 import infomind.instack.api.common.model.ApiResponse;
