@@ -50,7 +50,7 @@ public class CmsMenuServiceImpl extends EgovAbstractServiceImpl implements CmsMe
 
     /**
      * 메뉴를 등록한다.
-     * 상위 메뉴가 있으면 존재 여부를 확인한다.
+     * 상위 메뉴가 있으면 존재 여부를 확인하고, menuLvl을 자동 계산한다.
      *
      * @param request 메뉴 등록 요청
      * @throws BizException 상위 메뉴를 찾을 수 없는 경우
@@ -58,20 +58,24 @@ public class CmsMenuServiceImpl extends EgovAbstractServiceImpl implements CmsMe
     @Override
     @Transactional
     public void insert(MenuRequest request) {
-        // 상위 메뉴가 있으면 존재 여부 확인
-        if (request.getUpMenuCd() != null && !request.getUpMenuCd().isBlank()) {
-            cmsMenuDao.selectMenuById(request.getUpMenuCd())
-                    .orElseThrow(() -> new BizException("상위 메뉴를 찾을 수 없습니다", HttpStatus.NOT_FOUND));
-        }
-
         CmsMenuVO vo = new CmsMenuVO();
         BeanUtils.copyProperties(request, vo);
+
+        // menuLvl 자동 계산
+        if (request.getUpMenuCd() != null && !request.getUpMenuCd().isBlank()) {
+            MenuResponse upMenu = cmsMenuDao.selectMenuById(request.getUpMenuCd())
+                    .orElseThrow(() -> new BizException("상위 메뉴를 찾을 수 없습니다", HttpStatus.NOT_FOUND));
+            vo.setMenuLvl(upMenu.getMenuLvl() + 1);
+        } else {
+            vo.setMenuLvl(1);
+        }
+
         cmsMenuDao.insertMenu(vo);
     }
 
     /**
      * 메뉴 정보를 수정한다.
-     * 수정 전 메뉴 존재 여부를 확인한다.
+     * 수정 전 메뉴 존재 여부를 확인하고, 상위 메뉴 변경 시 menuLvl을 자동 계산한다.
      *
      * @param menuCd  수정할 메뉴 코드
      * @param request 메뉴 수정 요청
@@ -86,6 +90,16 @@ public class CmsMenuServiceImpl extends EgovAbstractServiceImpl implements CmsMe
 
         CmsMenuVO vo = new CmsMenuVO();
         BeanUtils.copyProperties(request, vo);
+
+        // menuLvl 자동 계산
+        if (request.getUpMenuCd() != null && !request.getUpMenuCd().isBlank()) {
+            MenuResponse upMenu = cmsMenuDao.selectMenuById(request.getUpMenuCd())
+                    .orElseThrow(() -> new BizException("상위 메뉴를 찾을 수 없습니다", HttpStatus.NOT_FOUND));
+            vo.setMenuLvl(upMenu.getMenuLvl() + 1);
+        } else {
+            vo.setMenuLvl(1);
+        }
+
         cmsMenuDao.updateMenu(menuCd, vo);
     }
 
