@@ -66,8 +66,13 @@
 
 ---
 
-## 3. 최상위 코드 생성
-**POST** `/api/cms/code/top`
+## 3. 하위 코드 생성
+**POST** `/api/cms/code/{upCd}`
+
+### Path Parameters
+| 파라미터 | 타입 | 필수 | 설명 |
+|---------|------|------|------|
+| upCd | String | O | 상위 코드 |
 
 ### Request Body
 | 필드 | 타입 | 필수 | 설명 |
@@ -92,12 +97,12 @@
 
 ### 테스트
 ```bash
-curl -X POST http://localhost:8080/api/cms/code/top \
+curl -X POST http://localhost:8080/api/cms/code/STATUS \
   -H "Authorization: Bearer {token}" \
   -H "Content-Type: application/json" \
   -d '{
-    "cd": "TEST_CODE",
-    "cdNm": "테스트 코드",
+    "cd": "ACTIVE",
+    "cdNm": "활성",
     "useYn": "Y",
     "cdOrd": 1
   }'
@@ -105,23 +110,7 @@ curl -X POST http://localhost:8080/api/cms/code/top \
 
 ---
 
-## 4. 하위 코드 생성
-**POST** `/api/cms/code/{upCd}`
-
-### Path Parameters
-| 파라미터 | 타입 | 필수 | 설명 |
-|---------|------|------|------|
-| upCd | String | O | 상위 코드 |
-
-### Request Body
-상위 코드 생성과 동일
-
-### Response (200 OK)
-상위 코드 생성과 동일
-
----
-
-## 5. 코드 수정
+## 4. 코드 수정
 **PUT** `/api/cms/code/{upCd}/{cd}`
 
 ### Path Parameters
@@ -131,7 +120,7 @@ curl -X POST http://localhost:8080/api/cms/code/top \
 | cd | String | O | 코드 |
 
 ### Request Body
-상위 코드 생성과 동일 (모든 필드)
+하위 코드 생성과 동일 (모든 필드)
 
 ### Response (200 OK)
 ```json
@@ -145,7 +134,7 @@ curl -X POST http://localhost:8080/api/cms/code/top \
 
 ---
 
-## 6. 코드 삭제
+## 5. 코드 삭제
 **DELETE** `/api/cms/code/{upCd}/{cd}`
 
 ### Path Parameters

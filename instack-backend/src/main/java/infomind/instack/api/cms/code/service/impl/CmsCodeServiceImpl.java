@@ -39,16 +39,6 @@ public class CmsCodeServiceImpl extends EgovAbstractServiceImpl implements CmsCo
 
     @Override
     @Transactional
-    public void insertTop(CodeRequest request) {
-        CmsCodeVO vo = new CmsCodeVO();
-        BeanUtils.copyProperties(request, vo);
-        vo.setCdLvl(1);
-        vo.setUpCd(TOP_CD);
-        cmsCodeDao.insertCode(vo);
-    }
-
-    @Override
-    @Transactional
     public void insertSub(String upCd, CodeRequest request) {
         // 상위 코드 존재 여부 확인
         cmsCodeDao.selectCodeById(upCd, TOP_CD)
