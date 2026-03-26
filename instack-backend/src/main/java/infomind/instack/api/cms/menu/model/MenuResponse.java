@@ -48,7 +48,7 @@ public class MenuResponse {
     private String outpUseYn;
 
     @Schema(description = "URL 메서드 구분", example = "INTERNAL")
-    private String urlMthdSe;
+    private String urlTgtSe;
 
     @Schema(description = "외부 URL", example = "https://example.com")
     private String urlAddr;

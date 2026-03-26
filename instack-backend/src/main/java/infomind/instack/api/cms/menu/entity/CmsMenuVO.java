@@ -23,7 +23,7 @@ public class CmsMenuVO extends BaseAuditVO {
     private String saveUseYn;     // 저장 사용 여부
     private String delUseYn;      // 삭제 사용 여부
     private String outpUseYn;     // 출력 사용 여부
-    private String urlMthdSe;     // URL 메서드 구분 (내부/새창)
+    private String urlTgtSe;     // URL 메서드 구분 (내부/새창)
     private String urlAddr;       // 외부 URL
     private String param1;        // 파라미터 1
     private String param2;        // 파라미터 2

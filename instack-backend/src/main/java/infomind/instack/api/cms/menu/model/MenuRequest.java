@@ -26,7 +26,7 @@ public class MenuRequest {
     private String saveUseYn;
     private String delUseYn;
     private String outpUseYn;
-    private String urlMthdSe;
+    private String urlTgtSe;
     private String urlAddr;
     private String param1;
     private String param2;
