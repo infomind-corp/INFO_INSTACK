@@ -1,11 +1,11 @@
-package infomind.instack.api.cms.dept.service.impl;
+package infomind.instack.api.cms.org.service.impl;
 
-import infomind.instack.api.cms.dept.dao.DeptDao;
-import infomind.instack.api.cms.dept.dao.OrgDao;
-import infomind.instack.api.cms.dept.entity.OrgVO;
-import infomind.instack.api.cms.dept.model.OrgRequest;
-import infomind.instack.api.cms.dept.model.OrgResponse;
-import infomind.instack.api.cms.dept.service.OrgService;
+import infomind.instack.api.cms.org.dao.DeptDao;
+import infomind.instack.api.cms.org.dao.OrgDao;
+import infomind.instack.api.cms.org.entity.OrgVO;
+import infomind.instack.api.cms.org.model.OrgRequest;
+import infomind.instack.api.cms.org.model.OrgResponse;
+import infomind.instack.api.cms.org.service.OrgService;
 import infomind.instack.api.common.exception.BizException;
 import lombok.RequiredArgsConstructor;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;

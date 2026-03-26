@@ -14,7 +14,7 @@
 ## 조직(Organization) API
 
 ### 1. 조직 목록 조회
-**GET** `/api/cms/dept/org`
+**GET** `/api/cms/org`
 
 #### Query Parameters
 | 파라미터 | 타입 | 필수 | 설명 |
@@ -50,7 +50,7 @@
 ---
 
 ### 2. 조직 단건 조회
-**GET** `/api/cms/dept/org/{orgCd}`
+**GET** `/api/cms/org/{orgCd}`
 
 #### Path Parameters
 | 파라미터 | 타입 | 필수 | 설명 |
@@ -83,7 +83,7 @@
 ---
 
 ### 3. 조직 등록
-**POST** `/api/cms/dept/org`
+**POST** `/api/cms/org`
 
 #### Request Body
 | 필드 | 타입 | 필수 | 설명 |
@@ -106,7 +106,7 @@
 
 #### 테스트
 ```bash
-curl -X POST http://localhost:8080/api/cms/dept/org \
+curl -X POST http://localhost:8080/api/cms/org \
   -H "Authorization: Bearer {token}" \
   -H "Content-Type: application/json" \
   -d '{
@@ -121,7 +121,7 @@ curl -X POST http://localhost:8080/api/cms/dept/org \
 ---
 
 ### 4. 조직 수정
-**PUT** `/api/cms/dept/org/{orgCd}`
+**PUT** `/api/cms/org/{orgCd}`
 
 #### Path Parameters
 | 파라미터 | 타입 | 필수 | 설명 |
@@ -144,7 +144,7 @@ curl -X POST http://localhost:8080/api/cms/dept/org \
 ---
 
 ### 5. 조직 삭제
-**DELETE** `/api/cms/dept/org/{orgCd}`
+**DELETE** `/api/cms/org/{orgCd}`
 
 #### Path Parameters
 | 파라미터 | 타입 | 필수 | 설명 |
@@ -168,15 +168,13 @@ curl -X POST http://localhost:8080/api/cms/dept/org \
 
 ## 부서(Department) API
 
-### 1. 부서 목록 조회
-**GET** `/api/cms/dept`
+### 1. 부서 목록 조회 (조직별)
+**GET** `/api/cms/org/{orgCd}/dept`
 
-#### Query Parameters
+#### Path Parameters
 | 파라미터 | 타입 | 필수 | 설명 |
 |---------|------|------|------|
-| orgCd | String | | 조직 코드 (필터) |
-| searchKeyword | String | | 검색 키워드 (부서명, 부서코드) |
-| useYn | String | | 사용 여부 (Y/N) |
+| orgCd | String | O | 조직 코드 |
 
 #### Response (200 OK)
 ```json
@@ -206,11 +204,12 @@ curl -X POST http://localhost:8080/api/cms/dept/org \
 ---
 
 ### 2. 부서 단건 조회
-**GET** `/api/cms/dept/{deptCd}`
+**GET** `/api/cms/org/{orgCd}/dept/{deptCd}`
 
 #### Path Parameters
 | 파라미터 | 타입 | 필수 | 설명 |
 |---------|------|------|------|
+| orgCd | String | O | 조직 코드 |
 | deptCd | String | O | 부서 코드 |
 
 #### Response (200 OK)
@@ -238,43 +237,13 @@ curl -X POST http://localhost:8080/api/cms/dept/org \
 
 ---
 
-### 3. 조직별 부서 목록 조회
-**GET** `/api/cms/dept/org/{orgCd}`
+### 3. 부서 등록
+**POST** `/api/cms/org/{orgCd}/dept`
 
 #### Path Parameters
 | 파라미터 | 타입 | 필수 | 설명 |
 |---------|------|------|------|
 | orgCd | String | O | 조직 코드 |
-
-#### Response (200 OK)
-```json
-{
-  "success": true,
-  "code": "SUCCESS",
-  "data": [
-    {
-      "deptCd": "DEPT001",
-      "orgCd": "ORG001",
-      "deptNm": "정책과",
-      "ord": 1,
-      "useYn": "Y",
-      "crtBy": "admin",
-      "crtIp": "192.168.1.1",
-      "crtPgm": "DeptServiceImpl.insert",
-      "crtAt": "2026-03-26 10:00:00",
-      "updBy": "admin",
-      "updIp": "192.168.1.1",
-      "updPgm": "DeptServiceImpl.update",
-      "updAt": "2026-03-26 10:00:00"
-    }
-  ]
-}
-```
-
----
-
-### 4. 부서 등록
-**POST** `/api/cms/dept`
 
 #### Request Body
 | 필드 | 타입 | 필수 | 설명 |
@@ -297,7 +266,7 @@ curl -X POST http://localhost:8080/api/cms/dept/org \
 
 #### 테스트
 ```bash
-curl -X POST http://localhost:8080/api/cms/dept \
+curl -X POST http://localhost:8080/api/cms/org/ORG001/dept \
   -H "Authorization: Bearer {token}" \
   -H "Content-Type: application/json" \
   -d '{
@@ -311,12 +280,13 @@ curl -X POST http://localhost:8080/api/cms/dept \
 
 ---
 
-### 5. 부서 수정
-**PUT** `/api/cms/dept/{deptCd}`
+### 4. 부서 수정
+**PUT** `/api/cms/org/{orgCd}/dept/{deptCd}`
 
 #### Path Parameters
 | 파라미터 | 타입 | 필수 | 설명 |
 |---------|------|------|------|
+| orgCd | String | O | 조직 코드 |
 | deptCd | String | O | 부서 코드 |
 
 #### Request Body
@@ -334,12 +304,13 @@ curl -X POST http://localhost:8080/api/cms/dept \
 
 ---
 
-### 6. 부서 삭제
-**DELETE** `/api/cms/dept/{deptCd}`
+### 5. 부서 삭제
+**DELETE** `/api/cms/org/{orgCd}/dept/{deptCd}`
 
 #### Path Parameters
 | 파라미터 | 타입 | 필수 | 설명 |
 |---------|------|------|------|
+| orgCd | String | O | 조직 코드 |
 | deptCd | String | O | 부서 코드 |
 
 #### Response (200 OK)

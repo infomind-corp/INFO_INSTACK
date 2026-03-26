@@ -1,7 +1,7 @@
-package infomind.instack.api.cms.dept.service;
+package infomind.instack.api.cms.org.service;
 
-import infomind.instack.api.cms.dept.model.OrgRequest;
-import infomind.instack.api.cms.dept.model.OrgResponse;
+import infomind.instack.api.cms.org.model.OrgRequest;
+import infomind.instack.api.cms.org.model.OrgResponse;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package infomind.instack.api.cms.dept.model;
+package infomind.instack.api.cms.org.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -6,19 +6,19 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 부서 응답 VO.
+ * 조직 응답 VO.
  */
 @Getter
 @Setter
-public class DeptResponse {
-    @Schema(description = "부서 코드")
-    private String deptCd;
-
+public class OrgResponse {
     @Schema(description = "조직 코드")
     private String orgCd;
 
-    @Schema(description = "부서 명")
-    private String deptNm;
+    @Schema(description = "조직 명")
+    private String orgNm;
+
+    @Schema(description = "조직 상태 구분")
+    private String orgStsSe;
 
     @Schema(description = "순서")
     private Integer ord;

@@ -1,7 +1,7 @@
-package infomind.instack.api.cms.dept.dao;
+package infomind.instack.api.cms.org.dao;
 
-import infomind.instack.api.cms.dept.entity.OrgVO;
-import infomind.instack.api.cms.dept.model.OrgResponse;
+import infomind.instack.api.cms.org.entity.OrgVO;
+import infomind.instack.api.cms.org.model.OrgResponse;
 import org.apache.ibatis.annotations.Param;
 import org.egovframe.rte.psl.dataaccess.mapper.EgovMapper;
 

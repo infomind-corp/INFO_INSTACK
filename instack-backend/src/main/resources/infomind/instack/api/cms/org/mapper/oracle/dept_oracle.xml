@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="infomind.instack.api.cms.dept.dao.DeptDao">
+<mapper namespace="infomind.instack.api.cms.org.dao.DeptDao">
 
     <!-- 부서 목록 조회 -->
-    <select id="selectDeptList" parameterType="infomind.instack.api.cms.dept.entity.DeptVO"
-            resultType="infomind.instack.api.cms.dept.model.DeptResponse">
+    <select id="selectDeptList" parameterType="infomind.instack.api.cms.org.entity.DeptVO"
+            resultType="infomind.instack.api.cms.org.model.DeptResponse">
         SELECT DEPT_CD,
                ORG_CD,
                DEPT_NM,
@@ -35,7 +35,7 @@
 
     <!-- 부서 단건 조회 -->
     <select id="selectDeptById" parameterType="String"
-            resultType="infomind.instack.api.cms.dept.model.DeptResponse">
+            resultType="infomind.instack.api.cms.org.model.DeptResponse">
         SELECT DEPT_CD,
                ORG_CD,
                DEPT_NM,
@@ -55,7 +55,7 @@
 
     <!-- 조직별 부서 목록 조회 -->
     <select id="selectDeptByOrgCd" parameterType="String"
-            resultType="infomind.instack.api.cms.dept.model.DeptResponse">
+            resultType="infomind.instack.api.cms.org.model.DeptResponse">
         SELECT DEPT_CD,
                ORG_CD,
                DEPT_NM,
@@ -75,7 +75,7 @@
     </select>
 
     <!-- 부서 등록 -->
-    <insert id="insertDept" parameterType="infomind.instack.api.cms.dept.entity.DeptVO">
+    <insert id="insertDept" parameterType="infomind.instack.api.cms.org.entity.DeptVO">
         INSERT INTO CMS_COM_DEPT (
             DEPT_CD,
             ORG_CD,

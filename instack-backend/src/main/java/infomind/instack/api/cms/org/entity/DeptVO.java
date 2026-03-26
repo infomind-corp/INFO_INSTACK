@@ -1,4 +1,4 @@
-package infomind.instack.api.cms.dept.entity;
+package infomind.instack.api.cms.org.entity;
 
 import infomind.instack.api.common.entity.BaseAuditVO;
 import lombok.Getter;

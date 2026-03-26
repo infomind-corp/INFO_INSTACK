@@ -1,4 +1,4 @@
-package infomind.instack.api.cms.dept.model;
+package infomind.instack.api.cms.org.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -6,21 +6,22 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 조직 요청 VO.
+ * 부서 요청 VO.
  */
 @Getter
 @Setter
-public class OrgRequest {
+public class DeptRequest {
+    @Schema(description = "부서 코드")
+    @NotBlank(message = "부서 코드는 필수입니다")
+    private String deptCd;
+
     @Schema(description = "조직 코드")
     @NotBlank(message = "조직 코드는 필수입니다")
     private String orgCd;
 
-    @Schema(description = "조직 명")
-    @NotBlank(message = "조직 명은 필수입니다")
-    private String orgNm;
-
-    @Schema(description = "조직 상태 구분")
-    private String orgStsSe;
+    @Schema(description = "부서 명")
+    @NotBlank(message = "부서 명은 필수입니다")
+    private String deptNm;
 
     @Schema(description = "순서")
     private Integer ord;

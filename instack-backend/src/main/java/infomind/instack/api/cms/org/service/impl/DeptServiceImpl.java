@@ -1,11 +1,11 @@
-package infomind.instack.api.cms.dept.service.impl;
+package infomind.instack.api.cms.org.service.impl;
 
-import infomind.instack.api.cms.dept.dao.DeptDao;
-import infomind.instack.api.cms.dept.dao.OrgDao;
-import infomind.instack.api.cms.dept.entity.DeptVO;
-import infomind.instack.api.cms.dept.model.DeptRequest;
-import infomind.instack.api.cms.dept.model.DeptResponse;
-import infomind.instack.api.cms.dept.service.DeptService;
+import infomind.instack.api.cms.org.dao.DeptDao;
+import infomind.instack.api.cms.org.dao.OrgDao;
+import infomind.instack.api.cms.org.entity.DeptVO;
+import infomind.instack.api.cms.org.model.DeptRequest;
+import infomind.instack.api.cms.org.model.DeptResponse;
+import infomind.instack.api.cms.org.service.DeptService;
 import infomind.instack.api.common.exception.BizException;
 import lombok.RequiredArgsConstructor;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -26,10 +26,11 @@ public class DeptServiceImpl extends EgovAbstractServiceImpl implements DeptServ
     private final OrgDao orgDao;
 
     @Override
-    public List<DeptResponse> list(DeptRequest request) {
-        DeptVO vo = new DeptVO();
-        BeanUtils.copyProperties(request, vo);
-        return deptDao.selectDeptList(vo);
+    public List<DeptResponse> listByOrgCd(String orgCd) {
+        // 조직이 존재하는지 확인
+        orgDao.selectOrgById(orgCd)
+                .orElseThrow(() -> new BizException("조직을 찾을 수 없습니다", HttpStatus.NOT_FOUND));
+        return deptDao.selectDeptByOrgCd(orgCd);
     }
 
     @Override
@@ -39,32 +40,33 @@ public class DeptServiceImpl extends EgovAbstractServiceImpl implements DeptServ
     }
 
     @Override
-    public List<DeptResponse> listByOrgCd(String orgCd) {
+    public void insert(String orgCd, DeptRequest request) {
         // 조직이 존재하는지 확인
         orgDao.selectOrgById(orgCd)
                 .orElseThrow(() -> new BizException("조직을 찾을 수 없습니다", HttpStatus.NOT_FOUND));
-        return deptDao.selectDeptByOrgCd(orgCd);
-    }
-
-    @Override
-    public void insert(DeptRequest request) {
-        // 조직이 존재하는지 확인
-        orgDao.selectOrgById(request.getOrgCd())
-                .orElseThrow(() -> new BizException("조직을 찾을 수 없습니다", HttpStatus.NOT_FOUND));
         DeptVO vo = new DeptVO();
         BeanUtils.copyProperties(request, vo);
+        vo.setOrgCd(orgCd);
         deptDao.insertDept(vo);
     }
 
     @Override
-    public void update(String deptCd, DeptRequest request) {
-        deptDao.selectDeptById(deptCd)
-                .orElseThrow(() -> new BizException("부서를 찾을 수 없습니다", HttpStatus.NOT_FOUND));
+    public void update(String orgCd, String deptCd, DeptRequest request) {
         // 조직이 존재하는지 확인
-        orgDao.selectOrgById(request.getOrgCd())
+        orgDao.selectOrgById(orgCd)
                 .orElseThrow(() -> new BizException("조직을 찾을 수 없습니다", HttpStatus.NOT_FOUND));
+
+        DeptResponse dept = deptDao.selectDeptById(deptCd)
+                .orElseThrow(() -> new BizException("부서를 찾을 수 없습니다", HttpStatus.NOT_FOUND));
+
+        // 부서가 해당 조직에 속하는지 확인
+        if (!dept.getOrgCd().equals(orgCd)) {
+            throw new BizException("해당 조직의 부서가 아닙니다", HttpStatus.BAD_REQUEST);
+        }
+
         DeptVO vo = new DeptVO();
         BeanUtils.copyProperties(request, vo);
+        vo.setOrgCd(orgCd);
         deptDao.updateDept(deptCd, vo);
     }
 
