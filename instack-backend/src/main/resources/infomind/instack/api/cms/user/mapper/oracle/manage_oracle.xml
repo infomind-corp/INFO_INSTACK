@@ -236,7 +236,7 @@
           , PWD_CHG_YMD
           , CHG_USER_ID
           , CHG_USER_SE
-          , <include refid="auditFragment.insertColumns"/>
+          , <include refid="auditFragment.insertColumnsForHistory"/>
         ) VALUES (
             (SELECT NVL(MAX(SN), 0) + 1 FROM CMS_PWD_HIST)
           , #{pwd}
@@ -244,7 +244,7 @@
           , #{pwdChgYmd}
           , #{chgUserId}
           , #{chgUserSe}
-          , <include refid="auditFragment.insertValues"/>
+          , <include refid="auditFragment.insertValuesForHistory"/>
         )
     </insert>
 

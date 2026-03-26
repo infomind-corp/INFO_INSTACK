@@ -4,7 +4,7 @@
 
 <mapper namespace="auditFragment">
 
-    <!-- INSERT 컬럼 목록 -->
+    <!-- INSERT 컬럼 목록 (일반 엔티티) -->
     <sql id="insertColumns">
         CRT_AT
       , CRT_BY
@@ -26,6 +26,22 @@
       , #{updBy}
       , #{updIp}
       , #{updPgm}
+    </sql>
+
+    <!-- INSERT 컬럼 목록 (히스토리/로그 테이블용 - UPD 없음) -->
+    <sql id="insertColumnsForHistory">
+        CRT_AT
+      , CRT_BY
+      , CRT_IP
+      , CRT_PGM
+    </sql>
+
+    <!-- INSERT VALUES (히스토리/로그 테이블용 - UPD 없음) -->
+    <sql id="insertValuesForHistory">
+        SYSDATE
+      , #{crtBy}
+      , #{crtIp}
+      , #{crtPgm}
     </sql>
 
     <!-- UPDATE SET (@Param("vo") 패턴) -->

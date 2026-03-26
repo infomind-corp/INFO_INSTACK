@@ -139,9 +139,11 @@ public interface {Domain}Dao {
 - DB 타입별로 파일 분리 (oracle, mysql 등)
 - XML 엔티티(`&lt;`, `&gt;`) 대신 `<![CDATA[ ]]>` 사용
 - 감사 컬럼 INSERT/UPDATE 시 `auditFragment` 사용 (위치: `common/mapper/oracle/audit_oracle.xml`)
+  - **일반 엔티티**: `auditFragment.insertColumns`, `auditFragment.insertValues` 사용
+  - **히스토리/로그 테이블**: `auditFragment.insertColumnsForHistory`, `auditFragment.insertValuesForHistory` 사용 (UPD 컬럼 제외)
 
 ```xml
-<!-- INSERT 예시 -->
+<!-- INSERT 예시 (일반 엔티티) -->
 <insert id="insert{Domain}" parameterType="...">
     INSERT INTO {TABLE} (
         ID,
@@ -151,6 +153,19 @@ public interface {Domain}Dao {
         #{id},
         #{name},
         <include refid="auditFragment.insertValues"/>
+    )
+</insert>
+
+<!-- INSERT 예시 (히스토리/로그 테이블 - UPD 컬럼 없음) -->
+<insert id="insert{Domain}History" parameterType="...">
+    INSERT INTO {HISTORY_TABLE} (
+        ID,
+        VALUE,
+        <include refid="auditFragment.insertColumnsForHistory"/>
+    ) VALUES (
+        #{id},
+        #{value},
+        <include refid="auditFragment.insertValuesForHistory"/>
     )
 </insert>
 
