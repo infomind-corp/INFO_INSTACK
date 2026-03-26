@@ -19,7 +19,7 @@
         <result column="di" property="di"/>
         <result column="userSe" property="userSe"/>
         <collection property="authorities" ofType="infomind.instack.api.auth.jwt.entity.UserAuthority">
-            <result column="authSiteCd" property="siteCd"/>
+            <result column="siteCd" property="siteCd"/>
             <result column="authCd" property="authCd"/>
             <result column="authExpYmd" property="authExpYmd"/>
             <result column="authSe" property="authSe"/>
@@ -30,7 +30,6 @@
     <select id="selectAdminUserByUserId" parameterType="string"
             resultMap="authUserMap">
         SELECT A.USER_ID    AS id
-             , A.SITE_CD    AS siteCd
              , A.USER_NM    AS userNm
              , A.EML        AS eml
              , A.MTELNO     AS mtelno
@@ -41,7 +40,7 @@
              , A.CI         AS ci
              , A.DI         AS di
              , 'A'          AS userSe
-             , B.SITE_CD    AS authSiteCd
+             , B.SITE_CD    AS siteCd
              , B.AUTH_CD    AS authCd
              , B.AUTH_EXP_YMD AS authExpYmd
              , B.AUTH_SE    AS authSe
@@ -55,7 +54,6 @@
     <select id="selectTaskUserByUserId" parameterType="string"
             resultMap="authUserMap">
         SELECT A.USER_ID    AS id
-             , A.SITE_CD    AS siteCd
              , A.USER_NM    AS userNm
              , A.EML        AS eml
              , A.MTELNO     AS mtelno
@@ -66,7 +64,7 @@
              , A.CI         AS ci
              , A.DI         AS di
              , 'E'          AS userSe
-             , B.SITE_CD    AS authSiteCd
+             , B.SITE_CD    AS siteCd
              , B.AUTH_CD    AS authCd
              , B.AUTH_EXP_YMD AS authExpYmd
              , B.AUTH_SE    AS authSe
@@ -80,7 +78,6 @@
     <select id="selectUserByUserId" parameterType="string"
             resultMap="authUserMap">
         SELECT A.USER_ID    AS id
-             , A.SITE_CD    AS siteCd
              , A.USER_NM    AS userNm
              , A.EML        AS eml
              , A.MTELNO     AS mtelno
@@ -91,7 +88,7 @@
              , A.CI         AS ci
              , A.DI         AS di
              , 'G'          AS userSe
-             , B.SITE_CD    AS authSiteCd
+             , B.SITE_CD    AS siteCd
              , B.AUTH_CD    AS authCd
              , B.AUTH_EXP_YMD AS authExpYmd
              , B.AUTH_SE    AS authSe

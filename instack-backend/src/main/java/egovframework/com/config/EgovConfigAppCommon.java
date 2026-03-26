@@ -1,10 +1,8 @@
 package egovframework.com.config;
 
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartResolver;
 
 import egovframework.com.cmm.EgovComTraceHandler;
@@ -159,18 +156,5 @@ public class EgovConfigAppCommon {
 		egovARIACryptoServiceImpl.setPasswordEncoder(egovPasswordEncoder());
 		egovARIACryptoServiceImpl.setBlockSize(1024);
 		return egovARIACryptoServiceImpl;
-	}
-
-	/**
-	 * RestTemplate 설정
-	 * @param restTemplateBuilder RestTemplateBuilder
-	 * @return [RestTemplate 설정] RestTemplate 등록
-	 */
-	@Bean
-	public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
-		return restTemplateBuilder
-			.setConnectTimeout(Duration.ofMillis(3000))
-			.setReadTimeout(Duration.ofMillis(3000))
-			.build();
 	}
 }
