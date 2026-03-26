@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="infomind.instack.api.auth.sns.dao.SnsAuthDao">
+
+    <resultMap id="snsIfMap" type="infomind.instack.api.auth.sns.entity.SnsIfVO">
+        <id column="SN" property="sn"/>
+        <result column="USER_ID" property="userId"/>
+        <result column="USER_SE" property="userSe"/>
+        <result column="PRVD_NM" property="prvdNm"/>
+        <result column="PRVD_UID" property="prvdUid"/>
+        <result column="PRVD_EML" property="prvdEml"/>
+        <result column="IF_DESC" property="ifDesc"/>
+        <result column="ACC_TK" property="accTk"/>
+        <result column="RF_TK" property="rfTk"/>
+        <result column="TK_EXP_DT" property="tkExpDt"/>
+        <result column="MAIN_LGN_YN" property="mainLgnYn"/>
+        <result column="LGN_AVL_YN" property="lgnAvlYn"/>
+        <result column="LST_LGN_DT" property="lstLgnDt"/>
+        <result column="USE_YN" property="useYn"/>
+        <result column="IF_FST_DT" property="ifFstDt"/>
+        <result column="IF_END_DT" property="ifEndDt"/>
+        <result column="IF_IP" property="ifIp"/>
+        <result column="CRT_BY" property="crtBy"/>
+        <result column="CRT_IP" property="crtIp"/>
+        <result column="CRT_PGM" property="crtPgm"/>
+        <result column="CRT_AT" property="crtAt"/>
+        <result column="UPD_BY" property="updBy"/>
+        <result column="UPD_IP" property="updIp"/>
+        <result column="UPD_PGM" property="updPgm"/>
+        <result column="UPD_AT" property="updAt"/>
+    </resultMap>
+
+    <!-- 공급자 키로 SNS 연동 정보 조회 -->
+    <select id="selectSnsIfByProviderKey" resultMap="snsIfMap">
+        SELECT *
+        FROM INS_APP.CMS_SNS_IF
+        WHERE PRVD_NM = #{prvdNm}
+          AND PRVD_UID = #{prvdUid}
+    </select>
+
+    <!-- SNS 연동 정보 업데이트 (로그인 시) -->
+    <update id="updateSnsIfOnLogin">
+        UPDATE INS_APP.CMS_SNS_IF
+        SET ACC_TK = #{accTk},
+            RF_TK = #{rfTk},
+            TK_EXP_DT = #{tkExpDt},
+            LST_LGN_DT = #{lstLgnDt},
+            <include refid="auditFragment.updateSet"/>
+        WHERE SN = #{sn}
+    </update>
+
+    <!-- SNS 연동 정보 신규 등록 -->
+    <insert id="insertSnsIf">
+        INSERT INTO INS_APP.CMS_SNS_IF (
+            SN,
+            USER_ID,
+            USER_SE,
+            PRVD_NM,
+            PRVD_UID,
+            PRVD_EML,
+            IF_DESC,
+            ACC_TK,
+            RF_TK,
+            TK_EXP_DT,
+            MAIN_LGN_YN,
+            LGN_AVL_YN,
+            LST_LGN_DT,
+            USE_YN,
+            IF_FST_DT,
+            IF_END_DT,
+            IF_IP,
+            <include refid="auditFragment.insertColumns"/>
+        ) VALUES (
+            (SELECT NVL(MAX(SN), 0) + 1 FROM INS_APP.CMS_SNS_IF),
+            #{userId},
+            #{userSe},
+            #{prvdNm},
+            #{prvdUid},
+            #{prvdEml},
+            #{ifDesc},
+            #{accTk},
+            #{rfTk},
+            #{tkExpDt},
+            #{mainLgnYn},
+            #{lgnAvlYn},
+            #{lstLgnDt},
+            #{useYn},
+            #{ifFstDt},
+            #{ifEndDt},
+            #{ifIp},
+            <include refid="auditFragment.insertValues"/>
+        )
+    </insert>
+
+</mapper>
