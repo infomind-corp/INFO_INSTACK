@@ -1,8 +1,9 @@
 package infomind.instack.api.auth.sns.dao;
 
 import infomind.instack.api.auth.sns.entity.SnsIfVO;
-import egovframework.rte.psl.dataaccess.mapper.EgovMapper;
 import org.apache.ibatis.annotations.Param;
+import org.egovframe.rte.psl.dataaccess.mapper.EgovMapper;
+
 import java.util.Optional;
 
 /**

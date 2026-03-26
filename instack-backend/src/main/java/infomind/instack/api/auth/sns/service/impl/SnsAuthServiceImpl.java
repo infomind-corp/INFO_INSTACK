@@ -1,10 +1,9 @@
 package infomind.instack.api.auth.sns.service.impl;
 
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
-import infomind.instack.api.auth.jwt.model.LoginResponse;
 import infomind.instack.api.auth.jwt.dao.JwtAuthDao;
 import infomind.instack.api.auth.jwt.entity.AuthUserVO;
 import infomind.instack.api.auth.jwt.entity.RefreshTokenVO;
+import infomind.instack.api.auth.jwt.model.LoginResponse;
 import infomind.instack.api.auth.sns.dao.SnsAuthDao;
 import infomind.instack.api.auth.sns.entity.SnsIfVO;
 import infomind.instack.api.auth.sns.model.SnsCallbackRequest;
@@ -14,16 +13,16 @@ import infomind.instack.api.auth.sns.provider.SnsOAuthProvider;
 import infomind.instack.api.auth.sns.service.SnsAuthService;
 import infomind.instack.api.common.exception.BizException;
 import infomind.instack.api.common.util.JwtUtil;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service
