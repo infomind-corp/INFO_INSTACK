@@ -85,6 +85,7 @@ public class SecurityConfig {
             /* INSTACK */
             "/api/auth/admin/**",
             "/api/auth/jwt/**",
+            "/api/auth/sns/**",  // SNS OAuth 인증
             // "/api/cms/user/**"      // 생성 TEST
 
     };
