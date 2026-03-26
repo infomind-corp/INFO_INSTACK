@@ -2,6 +2,7 @@ package infomind.instack.api.cms.user.dao;
 
 import infomind.instack.api.cms.user.entity.CmsAdminUserVO;
 import infomind.instack.api.cms.user.entity.CmsPasswordVO;
+import infomind.instack.api.cms.user.entity.CmsPwdHistVO;
 import infomind.instack.api.cms.user.entity.CmsTaskUserVO;
 import infomind.instack.api.cms.user.entity.CmsUserVO;
 import infomind.instack.api.cms.user.model.UserDetailResponse;
@@ -33,6 +34,8 @@ public interface CmsUserDao {
     void insertGeneralUser(CmsUserVO vo);
 
     void insertPassword(CmsPasswordVO vo);
+
+    void insertPasswordHistory(CmsPwdHistVO vo);
 
     void updateAdminUser(@Param("userId") String userId, @Param("vo") CmsAdminUserVO vo);
 

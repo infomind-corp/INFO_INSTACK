@@ -228,6 +228,26 @@
         )
     </insert>
 
+    <insert id="insertPasswordHistory" parameterType="infomind.instack.api.cms.user.entity.CmsPwdHistVO">
+        INSERT INTO CMS_PWD_HIST (
+            SN
+          , PWD
+          , USER_SE
+          , PWD_CHG_YMD
+          , CHG_USER_ID
+          , CHG_USER_SE
+          , <include refid="auditFragment.insertColumns"/>
+        ) VALUES (
+            (SELECT NVL(MAX(SN), 0) + 1 FROM CMS_PWD_HIST)
+          , #{pwd}
+          , #{userSe}
+          , #{pwdChgYmd}
+          , #{chgUserId}
+          , #{chgUserSe}
+          , <include refid="auditFragment.insertValues"/>
+        )
+    </insert>
+
     <update id="updateAdminUser">
         UPDATE CMS_USER_ADMIN
            SET USER_NM  = #{vo.userNm}

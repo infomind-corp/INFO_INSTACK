@@ -3,6 +3,7 @@ package infomind.instack.api.cms.user.service.impl;
 import infomind.instack.api.cms.user.dao.CmsUserDao;
 import infomind.instack.api.cms.user.entity.CmsAdminUserVO;
 import infomind.instack.api.cms.user.entity.CmsPasswordVO;
+import infomind.instack.api.cms.user.entity.CmsPwdHistVO;
 import infomind.instack.api.cms.user.entity.CmsTaskUserVO;
 import infomind.instack.api.cms.user.entity.CmsUserVO;
 import infomind.instack.api.cms.user.model.*;
@@ -15,6 +16,10 @@ import org.egovframe.rte.fdl.crypto.EgovPasswordEncoder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -101,11 +106,13 @@ public class CmsUserServiceImpl extends EgovAbstractServiceImpl implements CmsUs
         }
 
         if (request.getPwd() != null && !request.getPwd().isBlank()) {
+            String encryptedPwd = egovPasswordEncoder.encryptPassword(request.getPwd());
             CmsPasswordVO pwdVO = new CmsPasswordVO();
             pwdVO.setUserId(userId);
             pwdVO.setUserSe(userSe);
-            pwdVO.setPwd(egovPasswordEncoder.encryptPassword(request.getPwd()));
+            pwdVO.setPwd(encryptedPwd);
             cmsUserDao.updatePassword(pwdVO);
+            insertPasswordHistory(userId, userSe, encryptedPwd);
         }
     }
 
@@ -122,11 +129,24 @@ public class CmsUserServiceImpl extends EgovAbstractServiceImpl implements CmsUs
     }
 
     private void insertPassword(String userId, String userSe, String rawPwd) {
+        String encryptedPwd = egovPasswordEncoder.encryptPassword(rawPwd);
         CmsPasswordVO pwdVO = new CmsPasswordVO();
         pwdVO.setUserId(userId);
         pwdVO.setUserSe(userSe);
-        pwdVO.setPwd(egovPasswordEncoder.encryptPassword(rawPwd));
+        pwdVO.setPwd(encryptedPwd);
         pwdVO.setUseYn("Y");
         cmsUserDao.insertPassword(pwdVO);
+        insertPasswordHistory(userId, userSe, encryptedPwd);
+    }
+
+    @Transactional
+    private void insertPasswordHistory(String userId, String userSe, String encryptedPwd) {
+        CmsPwdHistVO histVO = new CmsPwdHistVO();
+        histVO.setPwd(encryptedPwd);
+        histVO.setUserSe(userSe);
+        histVO.setPwdChgYmd(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+        histVO.setChgUserId(userId);
+        histVO.setChgUserSe(userSe);
+        cmsUserDao.insertPasswordHistory(histVO);
     }
 }
