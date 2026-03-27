@@ -15,7 +15,7 @@ public class CmsCodeVO extends BaseAuditVO {
     private String cd;            // 코드 (PK)
     private String upCd;          // 상위 코드 (PK, self-referencing, 최상위='0')
     private String cdNm;          // 코드 명
-    private Integer cdLvl;        // 코드 레벨 (1=최상위, 2=하위)
+    private Integer cdLvl;        // 코드 레벨 (1=최상위, 상위 레벨+1로 자동 계산)
     private String useYn;         // 사용 여부
     private Integer cdOrd;        // 코드 순서
     private String refCd1;        // 참조 코드1

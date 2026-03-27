@@ -17,6 +17,8 @@ public interface CmsCodeDao {
 
     Optional<CodeResponse> selectCodeById(@Param("cd") String cd, @Param("upCd") String upCd);
 
+    Optional<CodeResponse> selectCodeByCd(String cd);
+
     void insertCode(CmsCodeVO vo);
 
     void updateCode(@Param("cd") String cd, @Param("upCd") String upCd, @Param("vo") CmsCodeVO vo);

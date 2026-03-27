@@ -53,6 +53,31 @@
           AND UP_CD = #{upCd}
     </select>
 
+    <select id="selectCodeByCd" parameterType="java.lang.String" resultType="infomind.instack.api.cms.code.model.CodeResponse">
+        SELECT CD        as cd,
+               UP_CD     as upCd,
+               CD_NM     as cdNm,
+               CD_LVL    as cdLvl,
+               USE_YN    as useYn,
+               CD_ORD    as cdOrd,
+               REF_CD1   as refCd1,
+               REF_CD2   as refCd2,
+               REF_CD3   as refCd3,
+               REF_CD4   as refCd4,
+               REF_CD5   as refCd5,
+               REF_NUM1  as refNum1,
+               REF_NUM2  as refNum2,
+               REF_NUM3  as refNum3,
+               REF_NUM4  as refNum4,
+               REF_NUM5  as refNum5,
+               CD_RMK    as cdRmk,
+               TO_CHAR(CRT_AT, 'YYYY-MM-DD HH24:MI:SS') AS crtAt,
+               TO_CHAR(UPD_AT, 'YYYY-MM-DD HH24:MI:SS') AS updAt
+        FROM CMS_COM_CODE
+        WHERE CD = #{cd}
+          AND ROWNUM = 1
+    </select>
+
     <insert id="insertCode" parameterType="infomind.instack.api.cms.code.entity.CmsCodeVO">
         INSERT INTO CMS_COM_CODE (
             CD,

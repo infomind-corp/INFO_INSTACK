@@ -59,6 +59,17 @@ public class CmsCodeController {
         return ApiResponse.ok(cmsCodeService.select(cd, upCd));
     }
 
+    @AuditLog(action = "최상위 코드 등록")
+    @PostMapping
+    @Operation(summary = "최상위 코드 생성", description = "최상위 코드(CD_LVL=1, UP_CD='0')를 생성합니다")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "등록 성공")
+    })
+    public ApiResponse<Void> insert(@Valid @RequestBody CodeRequest request) {
+        cmsCodeService.insert(request);
+        return ApiResponse.ok();
+    }
+
     @AuditLog(action = "하위 코드 등록")
     @PostMapping("/{upCd}")
     @Operation(summary = "하위 코드 생성", description = "특정 코드의 하위 코드를 생성합니다")
