@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="infomind.instack.api.cms.popup.dao.CmsPopDao">
+
+    <!-- ================================================================
+         CMS_POP (목록/상세 조회)
+    ================================================================ -->
+
+    <select id="selectPopList"
+            resultType="infomind.instack.api.cms.popup.model.PopResponse">
+        SELECT SITE_CD                                    AS siteCd
+             , POP_GRP_ID                                AS popGrpId
+             , POP_ID                                    AS popId
+             , LANG_SE                                   AS langSe
+             , POP_NM                                    AS popNm
+             , POP_TTL                                   AS popTtl
+             , POP_DESC                                  AS popDesc
+             , PUB_ST_YMD                                AS pubStYmd
+             , PUB_END_YMD                               AS pubEndYmd
+             , PUB_ST_HR                                 AS pubStHr
+             , PUB_END_HR                                AS pubEndHr
+             , POP_PUB_SE                                AS popPubSe
+             , PUB_YN                                    AS pubYn
+             , RMK                                       AS rmk
+             , ADD_URL                                   AS addUrl
+             , URL_TGT_SE                                AS urlTgtSe
+             , POP_W                                     AS popW
+             , W_PSTN                                    AS wPstn
+             , POP_H                                     AS popH
+             , H_PSTN                                    AS hPstn
+             , AFILE_ID                                  AS afileId
+             , TO_CHAR(CRT_AT, 'YYYY-MM-DD HH24:MI:SS') AS crtAt
+             , TO_CHAR(UPD_AT, 'YYYY-MM-DD HH24:MI:SS') AS updAt
+          FROM CMS_POP
+         WHERE SITE_CD = #{siteCd}
+        <if test="popGrpId != null and popGrpId != ''">
+           AND POP_GRP_ID = #{popGrpId}
+        </if>
+        <if test="langSe != null and langSe != ''">
+           AND LANG_SE    = #{langSe}
+        </if>
+         ORDER BY POP_GRP_ID ASC, POP_ID ASC
+    </select>
+
+    <select id="selectPopById"
+            resultType="infomind.instack.api.cms.popup.model.PopResponse">
+        SELECT SITE_CD                                    AS siteCd
+             , POP_GRP_ID                                AS popGrpId
+             , POP_ID                                    AS popId
+             , LANG_SE                                   AS langSe
+             , POP_NM                                    AS popNm
+             , POP_TTL                                   AS popTtl
+             , POP_DESC                                  AS popDesc
+             , PUB_ST_YMD                                AS pubStYmd
+             , PUB_END_YMD                               AS pubEndYmd
+             , PUB_ST_HR                                 AS pubStHr
+             , PUB_END_HR                                AS pubEndHr
+             , POP_PUB_SE                                AS popPubSe
+             , PUB_YN                                    AS pubYn
+             , RMK                                       AS rmk
+             , ADD_URL                                   AS addUrl
+             , URL_TGT_SE                                AS urlTgtSe
+             , POP_W                                     AS popW
+             , W_PSTN                                    AS wPstn
+             , POP_H                                     AS popH
+             , H_PSTN                                    AS hPstn
+             , AFILE_ID                                  AS afileId
+             , TO_CHAR(CRT_AT, 'YYYY-MM-DD HH24:MI:SS') AS crtAt
+             , TO_CHAR(UPD_AT, 'YYYY-MM-DD HH24:MI:SS') AS updAt
+          FROM CMS_POP
+         WHERE SITE_CD = #{siteCd}
+           AND POP_ID  = #{popId}
+        <if test="langSe != null and langSe != ''">
+           AND LANG_SE = #{langSe}
+        </if>
+         FETCH FIRST 1 ROWS ONLY
+    </select>
+
+    <insert id="insertPop" parameterType="infomind.instack.api.cms.popup.entity.CmsPopVO">
+        INSERT INTO CMS_POP (
+            SITE_CD
+          , POP_GRP_ID
+          , POP_ID
+          , LANG_SE
+          , POP_NM
+          , POP_TTL
+          , POP_DESC
+          , PUB_ST_YMD
+          , PUB_END_YMD
+          , PUB_ST_HR
+          , PUB_END_HR
+          , POP_PUB_SE
+          , PUB_YN
+          , RMK
+          , ADD_URL
+          , URL_TGT_SE
+          , POP_W
+          , W_PSTN
+          , POP_H
+          , H_PSTN
+          , AFILE_ID
+          , <include refid="auditFragment.insertColumns"/>
+        ) VALUES (
+            #{siteCd}
+          , #{popGrpId}
+          , #{popId}
+          , #{langSe}
+          , #{popNm}
+          , #{popTtl}
+          , #{popDesc}
+          , #{pubStYmd}
+          , #{pubEndYmd}
+          , #{pubStHr}
+          , #{pubEndHr}
+          , #{popPubSe}
+          , NVL(#{pubYn}, 'N')
+          , #{rmk}
+          , #{addUrl}
+          , #{urlTgtSe}
+          , #{popW}
+          , #{wPstn}
+          , #{popH}
+          , #{hPstn}
+          , #{afileId}
+          , <include refid="auditFragment.insertValues"/>
+        )
+    </insert>
+
+    <update id="updatePop">
+        UPDATE CMS_POP
+           SET POP_NM      = #{vo.popNm}
+             , POP_TTL     = #{vo.popTtl}
+             , POP_DESC    = #{vo.popDesc}
+             , PUB_ST_YMD  = #{vo.pubStYmd}
+             , PUB_END_YMD = #{vo.pubEndYmd}
+             , PUB_ST_HR   = #{vo.pubStHr}
+             , PUB_END_HR  = #{vo.pubEndHr}
+             , POP_PUB_SE  = #{vo.popPubSe}
+             , PUB_YN      = NVL(#{vo.pubYn}, PUB_YN)
+             , RMK         = #{vo.rmk}
+             , ADD_URL     = #{vo.addUrl}
+             , URL_TGT_SE  = #{vo.urlTgtSe}
+             , POP_W       = #{vo.popW}
+             , W_PSTN      = #{vo.wPstn}
+             , POP_H       = #{vo.popH}
+             , H_PSTN      = #{vo.hPstn}
+             , AFILE_ID    = #{vo.afileId}
+             , <include refid="auditFragment.updateSet"/>
+         WHERE SITE_CD     = #{siteCd}
+           AND POP_ID      = #{popId}
+           AND LANG_SE     = #{vo.langSe}
+    </update>
+
+    <delete id="deletePop">
+        DELETE FROM CMS_POP
+         WHERE SITE_CD = #{siteCd}
+           AND POP_ID  = #{popId}
+        <if test="popGrpId != null and popGrpId != ''">
+           AND POP_GRP_ID = #{popGrpId}
+        </if>
+        <if test="langSe != null and langSe != ''">
+           AND LANG_SE = #{langSe}
+        </if>
+    </delete>
+
+    <delete id="deletePopByGrpId">
+        DELETE FROM CMS_POP
+         WHERE SITE_CD    = #{siteCd}
+           AND POP_GRP_ID = #{popGrpId}
+        <if test="langSe != null and langSe != ''">
+           AND LANG_SE    = #{langSe}
+        </if>
+    </delete>
+
+</mapper>
