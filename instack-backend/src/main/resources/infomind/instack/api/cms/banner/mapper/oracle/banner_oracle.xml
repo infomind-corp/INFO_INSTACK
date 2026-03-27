@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="infomind.instack.api.cms.banner.dao.CmsBannerDao">
+
+    <!-- ================================================================
+         CMS_BNR_GRP
+    ================================================================ -->
+
+    <select id="selectBannerGrpList"
+            parameterType="infomind.instack.api.cms.banner.model.BannerGrpRequest"
+            resultType="infomind.instack.api.cms.banner.model.BannerGrpResponse">
+        SELECT BNR_GRP_ID                             AS bnrGrpId
+             , SITE_CD                                AS siteCd
+             , LANG_SE                                AS langSe
+             , BNR_GRP_NM                             AS bnrGrpNm
+             , BNR_GRP_DESC                           AS bnrGrpDesc
+             , USE_YN                                 AS useYn
+             , SORT                                   AS sort
+             , TO_CHAR(CRT_AT, 'YYYY-MM-DD HH24:MI:SS') AS crtAt
+             , TO_CHAR(UPD_AT, 'YYYY-MM-DD HH24:MI:SS') AS updAt
+          FROM CMS_BNR_GRP
+        <where>
+            SITE_CD = #{siteCd}
+            <if test="langSe != null and langSe != ''">
+                AND LANG_SE = #{langSe}
+            </if>
+            <if test="useYn != null and useYn != ''">
+                AND USE_YN = #{useYn}
+            </if>
+        </where>
+         ORDER BY SORT ASC, BNR_GRP_ID ASC
+    </select>
+
+    <select id="selectBannerGrpById"
+            resultType="infomind.instack.api.cms.banner.model.BannerGrpResponse">
+        SELECT BNR_GRP_ID                             AS bnrGrpId
+             , SITE_CD                                AS siteCd
+             , LANG_SE                                AS langSe
+             , BNR_GRP_NM                             AS bnrGrpNm
+             , BNR_GRP_DESC                           AS bnrGrpDesc
+             , USE_YN                                 AS useYn
+             , SORT                                   AS sort
+             , TO_CHAR(CRT_AT, 'YYYY-MM-DD HH24:MI:SS') AS crtAt
+             , TO_CHAR(UPD_AT, 'YYYY-MM-DD HH24:MI:SS') AS updAt
+          FROM CMS_BNR_GRP
+         WHERE SITE_CD    = #{siteCd}
+           AND BNR_GRP_ID = #{bnrGrpId}
+           AND LANG_SE    = #{langSe}
+    </select>
+
+    <insert id="insertBannerGrp" parameterType="infomind.instack.api.cms.banner.entity.CmsBannerGrpVO">
+        INSERT INTO CMS_BNR_GRP (
+            BNR_GRP_ID
+          , SITE_CD
+          , LANG_SE
+          , BNR_GRP_NM
+          , BNR_GRP_DESC
+          , USE_YN
+          , SORT
+          , <include refid="auditFragment.insertColumns"/>
+        ) VALUES (
+            #{bnrGrpId}
+          , #{siteCd}
+          , #{langSe}
+          , #{bnrGrpNm}
+          , #{bnrGrpDesc}
+          , NVL(#{useYn}, 'Y')
+          , #{sort}
+          , <include refid="auditFragment.insertValues"/>
+        )
+    </insert>
+
+    <update id="updateBannerGrp">
+        UPDATE CMS_BNR_GRP
+           SET BNR_GRP_NM   = #{vo.bnrGrpNm}
+             , BNR_GRP_DESC = #{vo.bnrGrpDesc}
+             , USE_YN        = NVL(#{vo.useYn}, USE_YN)
+             , SORT          = #{vo.sort}
+             , <include refid="auditFragment.updateSet"/>
+         WHERE SITE_CD       = #{siteCd}
+           AND BNR_GRP_ID    = #{bnrGrpId}
+           AND LANG_SE       = #{langSe}
+    </update>
+
+    <delete id="deleteBannerGrp">
+        DELETE FROM CMS_BNR_GRP
+         WHERE SITE_CD    = #{siteCd}
+           AND BNR_GRP_ID = #{bnrGrpId}
+           AND LANG_SE    = #{langSe}
+    </delete>
+
+    <!-- ================================================================
+         CMS_BNR
+    ================================================================ -->
+
+    <select id="selectBannerList"
+            parameterType="infomind.instack.api.cms.banner.model.BannerRequest"
+            resultType="infomind.instack.api.cms.banner.model.BannerResponse">
+        SELECT BNR_ID                                 AS bnrId
+             , BNR_GRP_ID                             AS bnrGrpId
+             , SITE_CD                                AS siteCd
+             , LANG_SE                                AS langSe
+             , BNR_NM                                 AS bnrNm
+             , BNR_DESC                               AS bnrDesc
+             , AFILE_ID                               AS afileId
+             , ORD                                    AS ord
+             , PUB_ST_YMD                             AS pubStYmd
+             , PUB_ST_HR                              AS pubStHr
+             , PUB_END_YMD                            AS pubEndYmd
+             , PUB_END_HR                             AS pubEndHr
+             , USE_YN                                 AS useYn
+             , BNR_SE                                 AS bnrSe
+             , BNR_SZ_SE                              AS bnrSzSe
+             , BNR_URL                                AS bnrUrl
+             , DEL_YN                                 AS delYn
+             , BNR_RMK                                AS bnrRmk
+             , TO_CHAR(CRT_AT, 'YYYY-MM-DD HH24:MI:SS') AS crtAt
+             , TO_CHAR(UPD_AT, 'YYYY-MM-DD HH24:MI:SS') AS updAt
+          FROM CMS_BNR
+        <where>
+            SITE_CD = #{siteCd}
+            <if test="bnrGrpId != null and bnrGrpId != ''">
+                AND BNR_GRP_ID = #{bnrGrpId}
+            </if>
+            <if test="langSe != null and langSe != ''">
+                AND LANG_SE = #{langSe}
+            </if>
+            <if test="useYn != null and useYn != ''">
+                AND USE_YN = #{useYn}
+            </if>
+        </where>
+         ORDER BY ORD ASC, BNR_ID ASC
+    </select>
+
+    <select id="selectBannerById"
+            resultType="infomind.instack.api.cms.banner.model.BannerResponse">
+        SELECT BNR_ID                                 AS bnrId
+             , BNR_GRP_ID                             AS bnrGrpId
+             , SITE_CD                                AS siteCd
+             , LANG_SE                                AS langSe
+             , BNR_NM                                 AS bnrNm
+             , BNR_DESC                               AS bnrDesc
+             , AFILE_ID                               AS afileId
+             , ORD                                    AS ord
+             , PUB_ST_YMD                             AS pubStYmd
+             , PUB_ST_HR                              AS pubStHr
+             , PUB_END_YMD                            AS pubEndYmd
+             , PUB_END_HR                             AS pubEndHr
+             , USE_YN                                 AS useYn
+             , BNR_SE                                 AS bnrSe
+             , BNR_SZ_SE                              AS bnrSzSe
+             , BNR_URL                                AS bnrUrl
+             , DEL_YN                                 AS delYn
+             , BNR_RMK                                AS bnrRmk
+             , TO_CHAR(CRT_AT, 'YYYY-MM-DD HH24:MI:SS') AS crtAt
+             , TO_CHAR(UPD_AT, 'YYYY-MM-DD HH24:MI:SS') AS updAt
+          FROM CMS_BNR
+         WHERE SITE_CD    = #{siteCd}
+           AND BNR_GRP_ID = #{bnrGrpId}
+           AND BNR_ID     = #{bnrId}
+           AND LANG_SE    = #{langSe}
+    </select>
+
+    <insert id="insertBanner" parameterType="infomind.instack.api.cms.banner.entity.CmsBannerVO">
+        INSERT INTO CMS_BNR (
+            BNR_ID
+          , BNR_GRP_ID
+          , SITE_CD
+          , LANG_SE
+          , BNR_NM
+          , BNR_DESC
+          , AFILE_ID
+          , ORD
+          , PUB_ST_YMD
+          , PUB_ST_HR
+          , PUB_END_YMD
+          , PUB_END_HR
+          , USE_YN
+          , BNR_SE
+          , BNR_SZ_SE
+          , BNR_URL
+          , DEL_YN
+          , BNR_RMK
+          , <include refid="auditFragment.insertColumns"/>
+        ) VALUES (
+            #{bnrId}
+          , #{bnrGrpId}
+          , #{siteCd}
+          , #{langSe}
+          , #{bnrNm}
+          , #{bnrDesc}
+          , #{afileId}
+          , #{ord}
+          , #{pubStYmd}
+          , #{pubStHr}
+          , #{pubEndYmd}
+          , #{pubEndHr}
+          , NVL(#{useYn}, 'Y')
+          , #{bnrSe}
+          , #{bnrSzSe}
+          , #{bnrUrl}
+          , NVL(#{delYn}, 'N')
+          , #{bnrRmk}
+          , <include refid="auditFragment.insertValues"/>
+        )
+    </insert>
+
+    <update id="updateBanner">
+        UPDATE CMS_BNR
+           SET BNR_NM      = #{vo.bnrNm}
+             , BNR_DESC    = #{vo.bnrDesc}
+             , AFILE_ID    = #{vo.afileId}
+             , ORD         = #{vo.ord}
+             , PUB_ST_YMD  = #{vo.pubStYmd}
+             , PUB_ST_HR   = #{vo.pubStHr}
+             , PUB_END_YMD = #{vo.pubEndYmd}
+             , PUB_END_HR  = #{vo.pubEndHr}
+             , USE_YN      = NVL(#{vo.useYn}, USE_YN)
+             , BNR_SE      = #{vo.bnrSe}
+             , BNR_SZ_SE   = #{vo.bnrSzSe}
+             , BNR_URL     = #{vo.bnrUrl}
+             , DEL_YN      = NVL(#{vo.delYn}, DEL_YN)
+             , BNR_RMK     = #{vo.bnrRmk}
+             , <include refid="auditFragment.updateSet"/>
+         WHERE SITE_CD     = #{siteCd}
+           AND BNR_GRP_ID  = #{bnrGrpId}
+           AND BNR_ID      = #{bnrId}
+           AND LANG_SE     = #{langSe}
+    </update>
+
+    <delete id="deleteBanner">
+        DELETE FROM CMS_BNR
+         WHERE SITE_CD    = #{siteCd}
+           AND BNR_GRP_ID = #{bnrGrpId}
+           AND BNR_ID     = #{bnrId}
+           AND LANG_SE    = #{langSe}
+    </delete>
+
+    <delete id="deleteBannerByGrp">
+        DELETE FROM CMS_BNR
+         WHERE SITE_CD    = #{siteCd}
+           AND BNR_GRP_ID = #{bnrGrpId}
+           AND LANG_SE    = #{langSe}
+    </delete>
+
+</mapper>
