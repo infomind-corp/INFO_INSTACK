@@ -30,7 +30,7 @@ public class CmsCodeController {
     private final CmsCodeService cmsCodeService;
 
     @AuditLog(action = "하위 코드 목록 조회")
-    @GetMapping("/top/{upCd}")
+    @GetMapping("/{upCd}")
     @Operation(summary = "하위 코드 목록 조회", description = "특정 코드의 하위 코드(UP_CD = {upCd}) 목록을 조회합니다")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "조회 성공",

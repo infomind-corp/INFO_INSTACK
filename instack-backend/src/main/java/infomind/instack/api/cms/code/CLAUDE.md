@@ -11,7 +11,7 @@
 # API 명세
 
 ## 1. 하위 코드 목록 조회
-**GET** `/api/cms/code/top/{upCd}`
+**GET** `/api/cms/code/{upCd}`
 
 ### Path Parameters
 | 파라미터 | 타입 | 필수 | 설명 |
