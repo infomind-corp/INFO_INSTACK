@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="infomind.instack.api.cms.board.dao.CmsBoardDao">
+
+    <!-- ================================================================
+         CMS_BRD (목록/상세 조회 - CMS_BRD_AUTH LEFT JOIN)
+    ================================================================ -->
+
+    <select id="selectBoardList"
+            resultType="infomind.instack.api.cms.board.model.BoardResponse">
+        SELECT B.SITE_CD                                   AS siteCd
+             , B.BRD_ID                                    AS brdId
+             , B.BRD_SE                                    AS brdSe
+             , B.BRD_NM                                    AS brdNm
+             , B.BRD_DESC                                  AS brdDesc
+             , B.ORD                                       AS ord
+             , B.USE_YN                                    AS useYn
+             , B.LGN_USER_USE_YN                           AS lgnUserUseYn
+             , B.WRTR_PSN_QRY_YN                           AS wrtrPsnQryYn
+             , B.PWD_USE_YN                                AS pwdUseYn
+             , B.FILE_USE_YN                               AS fileUseYn
+             , B.CMT_USE_YN                                AS cmtUseYn
+             , A.WRT_AUTH_CD                               AS wrtAuthCd
+             , A.QRY_AUTH_CD                               AS qryAuthCd
+             , A.CMT_AUTH_CD                               AS cmtAuthCd
+             , TO_CHAR(B.CRT_AT, 'YYYY-MM-DD HH24:MI:SS') AS crtAt
+             , TO_CHAR(B.UPD_AT, 'YYYY-MM-DD HH24:MI:SS') AS updAt
+          FROM CMS_BRD B
+          LEFT JOIN CMS_BRD_AUTH A
+            ON A.BRD_ID  = B.BRD_ID
+           AND A.SITE_CD = B.SITE_CD
+         WHERE B.SITE_CD = #{siteCd}
+        <if test="brdSe != null and brdSe != ''">
+           AND B.BRD_SE = #{brdSe}
+        </if>
+         ORDER BY B.ORD ASC, B.BRD_ID ASC
+    </select>
+
+    <select id="selectBoardById"
+            resultType="infomind.instack.api.cms.board.model.BoardResponse">
+        SELECT B.SITE_CD                                   AS siteCd
+             , B.BRD_ID                                    AS brdId
+             , B.BRD_SE                                    AS brdSe
+             , B.BRD_NM                                    AS brdNm
+             , B.BRD_DESC                                  AS brdDesc
+             , B.ORD                                       AS ord
+             , B.USE_YN                                    AS useYn
+             , B.LGN_USER_USE_YN                           AS lgnUserUseYn
+             , B.WRTR_PSN_QRY_YN                           AS wrtrPsnQryYn
+             , B.PWD_USE_YN                                AS pwdUseYn
+             , B.FILE_USE_YN                               AS fileUseYn
+             , B.CMT_USE_YN                                AS cmtUseYn
+             , A.WRT_AUTH_CD                               AS wrtAuthCd
+             , A.QRY_AUTH_CD                               AS qryAuthCd
+             , A.CMT_AUTH_CD                               AS cmtAuthCd
+             , TO_CHAR(B.CRT_AT, 'YYYY-MM-DD HH24:MI:SS') AS crtAt
+             , TO_CHAR(B.UPD_AT, 'YYYY-MM-DD HH24:MI:SS') AS updAt
+          FROM CMS_BRD B
+          LEFT JOIN CMS_BRD_AUTH A
+            ON A.BRD_ID  = B.BRD_ID
+           AND A.SITE_CD = B.SITE_CD
+         WHERE B.SITE_CD = #{siteCd}
+           AND B.BRD_ID  = #{brdId}
+    </select>
+
+    <insert id="insertBoard" parameterType="infomind.instack.api.cms.board.entity.CmsBoardVO">
+        INSERT INTO CMS_BRD (
+            SITE_CD
+          , BRD_ID
+          , BRD_SE
+          , BRD_NM
+          , BRD_DESC
+          , ORD
+          , USE_YN
+          , LGN_USER_USE_YN
+          , WRTR_PSN_QRY_YN
+          , PWD_USE_YN
+          , FILE_USE_YN
+          , CMT_USE_YN
+          , <include refid="auditFragment.insertColumns"/>
+        ) VALUES (
+            #{siteCd}
+          , #{brdId}
+          , #{brdSe}
+          , #{brdNm}
+          , #{brdDesc}
+          , #{ord}
+          , NVL(#{useYn}, 'Y')
+          , NVL(#{lgnUserUseYn}, 'N')
+          , NVL(#{wrtrPsnQryYn}, 'N')
+          , NVL(#{pwdUseYn}, 'N')
+          , NVL(#{fileUseYn}, 'N')
+          , NVL(#{cmtUseYn}, 'N')
+          , <include refid="auditFragment.insertValues"/>
+        )
+    </insert>
+
+    <update id="updateBoard">
+        UPDATE CMS_BRD
+           SET BRD_NM          = #{vo.brdNm}
+             , BRD_DESC        = #{vo.brdDesc}
+             , ORD             = #{vo.ord}
+             , USE_YN          = NVL(#{vo.useYn}, USE_YN)
+             , LGN_USER_USE_YN = NVL(#{vo.lgnUserUseYn}, LGN_USER_USE_YN)
+             , WRTR_PSN_QRY_YN = NVL(#{vo.wrtrPsnQryYn}, WRTR_PSN_QRY_YN)
+             , PWD_USE_YN      = NVL(#{vo.pwdUseYn}, PWD_USE_YN)
+             , FILE_USE_YN     = NVL(#{vo.fileUseYn}, FILE_USE_YN)
+             , CMT_USE_YN      = NVL(#{vo.cmtUseYn}, CMT_USE_YN)
+             , <include refid="auditFragment.updateSet"/>
+         WHERE SITE_CD         = #{siteCd}
+           AND BRD_ID          = #{brdId}
+    </update>
+
+    <delete id="deleteBoard">
+        DELETE FROM CMS_BRD
+         WHERE SITE_CD = #{siteCd}
+           AND BRD_ID  = #{brdId}
+    </delete>
+
+    <!-- ================================================================
+         CMS_BRD_AUTH
+    ================================================================ -->
+
+    <insert id="insertBoardAuth" parameterType="infomind.instack.api.cms.board.entity.CmsBoardAuthVO">
+        INSERT INTO CMS_BRD_AUTH (
+            BRD_ID
+          , BRD_SE
+          , SITE_CD
+          , WRT_AUTH_CD
+          , QRY_AUTH_CD
+          , CMT_AUTH_CD
+          , <include refid="auditFragment.insertColumns"/>
+        ) VALUES (
+            #{brdId}
+          , #{brdSe}
+          , #{siteCd}
+          , #{wrtAuthCd}
+          , #{qryAuthCd}
+          , #{cmtAuthCd}
+          , <include refid="auditFragment.insertValues"/>
+        )
+    </insert>
+
+    <update id="updateBoardAuth">
+        UPDATE CMS_BRD_AUTH
+           SET WRT_AUTH_CD = #{vo.wrtAuthCd}
+             , QRY_AUTH_CD = #{vo.qryAuthCd}
+             , CMT_AUTH_CD = #{vo.cmtAuthCd}
+             , <include refid="auditFragment.updateSet"/>
+         WHERE SITE_CD     = #{siteCd}
+           AND BRD_ID      = #{brdId}
+    </update>
+
+    <delete id="deleteBoardAuth">
+        DELETE FROM CMS_BRD_AUTH
+         WHERE SITE_CD = #{siteCd}
+           AND BRD_ID  = #{brdId}
+    </delete>
+
+</mapper>
