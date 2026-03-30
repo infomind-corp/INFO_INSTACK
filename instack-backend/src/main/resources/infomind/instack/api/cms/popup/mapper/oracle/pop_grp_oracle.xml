@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="infomind.instack.api.cms.popup.dao.CmsPopGrpDao">
+
+    <!-- ================================================================
+         CMS_POP_GRP (목록/상세 조회)
+    ================================================================ -->
+
+    <select id="selectPopGrpList"
+            resultType="infomind.instack.api.cms.popup.model.PopGrpResponse">
+        SELECT SITE_CD                                    AS siteCd
+             , POP_GRP_ID                                AS popGrpId
+             , LANG_SE                                   AS langSe
+             , POP_GRP_NM                                AS popGrpNm
+             , USE_YN                                    AS useYn
+             , POP_GRP_ORD                               AS popGrpOrd
+             , TO_CHAR(CRT_AT, 'YYYY-MM-DD HH24:MI:SS') AS crtAt
+             , TO_CHAR(UPD_AT, 'YYYY-MM-DD HH24:MI:SS') AS updAt
+          FROM CMS_POP_GRP
+         WHERE SITE_CD = #{siteCd}
+        <if test="langSe != null and langSe != ''">
+           AND LANG_SE = #{langSe}
+        </if>
+         ORDER BY POP_GRP_ORD ASC, POP_GRP_ID ASC
+    </select>
+
+    <select id="selectPopGrpById"
+            resultType="infomind.instack.api.cms.popup.model.PopGrpResponse">
+        SELECT SITE_CD                                    AS siteCd
+             , POP_GRP_ID                                AS popGrpId
+             , LANG_SE                                   AS langSe
+             , POP_GRP_NM                                AS popGrpNm
+             , USE_YN                                    AS useYn
+             , POP_GRP_ORD                               AS popGrpOrd
+             , TO_CHAR(CRT_AT, 'YYYY-MM-DD HH24:MI:SS') AS crtAt
+             , TO_CHAR(UPD_AT, 'YYYY-MM-DD HH24:MI:SS') AS updAt
+          FROM CMS_POP_GRP
+         WHERE SITE_CD    = #{siteCd}
+           AND POP_GRP_ID = #{popGrpId}
+        <if test="langSe != null and langSe != ''">
+           AND LANG_SE    = #{langSe}
+        </if>
+         FETCH FIRST 1 ROWS ONLY
+    </select>
+
+    <insert id="insertPopGrp" parameterType="infomind.instack.api.cms.popup.entity.CmsPopGrpVO">
+        INSERT INTO CMS_POP_GRP (
+            SITE_CD
+          , POP_GRP_ID
+          , LANG_SE
+          , POP_GRP_NM
+          , USE_YN
+          , POP_GRP_ORD
+          , <include refid="auditFragment.insertColumns"/>
+        ) VALUES (
+            #{siteCd}
+          , #{popGrpId}
+          , #{langSe}
+          , #{popGrpNm}
+          , NVL(#{useYn}, 'Y')
+          , #{popGrpOrd}
+          , <include refid="auditFragment.insertValues"/>
+        )
+    </insert>
+
+    <update id="updatePopGrp">
+        UPDATE CMS_POP_GRP
+           SET POP_GRP_NM  = #{vo.popGrpNm}
+             , USE_YN      = NVL(#{vo.useYn}, USE_YN)
+             , POP_GRP_ORD = #{vo.popGrpOrd}
+             , <include refid="auditFragment.updateSet"/>
+         WHERE SITE_CD     = #{siteCd}
+           AND POP_GRP_ID  = #{popGrpId}
+           AND LANG_SE     = #{vo.langSe}
+    </update>
+
+    <delete id="deletePopGrp">
+        DELETE FROM CMS_POP_GRP
+         WHERE SITE_CD    = #{siteCd}
+           AND POP_GRP_ID = #{popGrpId}
+        <if test="langSe != null and langSe != ''">
+           AND LANG_SE    = #{langSe}
+        </if>
+    </delete>
+
+</mapper>
