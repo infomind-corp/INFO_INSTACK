@@ -32,6 +32,18 @@
 		<commons.validator.version>1.9.0</commons.validator.version>
 	</properties>
 
+    <resources>
+        <resource>
+            <directory>src/main/resources</directory>
+        </resource>
+        <resource>
+            <directory>src/main/java</directory>
+            <includes>
+                <include>**/*.xml</include>
+            </includes>
+        </resource>
+    </resources>
+
 	<repositories>
 		<repository>
 			<id>mvn2s</id>
