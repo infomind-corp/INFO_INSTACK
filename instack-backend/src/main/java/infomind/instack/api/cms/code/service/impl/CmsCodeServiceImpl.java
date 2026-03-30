@@ -52,40 +52,29 @@ public class CmsCodeServiceImpl extends EgovAbstractServiceImpl implements CmsCo
     }
 
     /**
-     * 최상위 코드를 등록한다.
-     * 코드 레벨을 1로 설정하여 저장한다.
+     * 코드를 등록한다.
+     * upCd가 "0"인 경우 최상위 코드(CD_LVL=1)로 등록하고,
+     * 그 외에는 상위 코드의 레벨을 조회하여 코드 레벨을 자동 계산(상위 레벨 + 1)하여 저장한다.
      *
-     * @param request 코드 생성 요청
-     */
-    @Override
-    @Transactional
-    public void insert(CodeRequest request) {
-        CmsCodeVO vo = new CmsCodeVO();
-        BeanUtils.copyProperties(request, vo);
-        vo.setCdLvl(1);
-        vo.setUpCd(TOP_CD);
-        cmsCodeDao.insertCode(vo);
-    }
-
-    /**
-     * 하위 코드를 등록한다.
-     * 상위 코드의 레벨을 조회하여 코드 레벨을 자동 계산(상위 레벨 + 1)하여 저장한다.
-     *
-     * @param upCd    상위 코드
+     * @param upCd    상위 코드 ("0"이면 최상위 코드로 등록)
      * @param request 코드 생성 요청
      * @throws BizException 상위 코드를 찾을 수 없는 경우
      */
     @Override
     @Transactional
-    public void insertSub(String upCd, CodeRequest request) {
-        // 상위 코드 존재 여부 확인 및 레벨 조회
-        CodeResponse parent = cmsCodeDao.selectCodeByCd(upCd)
-                .orElseThrow(() -> new BizException("상위 코드를 찾을 수 없습니다", HttpStatus.NOT_FOUND));
-
+    public void insert(String upCd, CodeRequest request) {
         CmsCodeVO vo = new CmsCodeVO();
         BeanUtils.copyProperties(request, vo);
-        vo.setCdLvl(parent.getCdLvl() + 1);
-        vo.setUpCd(upCd);
+        if (TOP_CD.equals(upCd)) {
+            vo.setCdLvl(1);
+            vo.setUpCd(TOP_CD);
+        } else {
+            // 상위 코드 존재 여부 확인 및 레벨 조회
+            CodeResponse parent = cmsCodeDao.selectCodeByCd(upCd)
+                    .orElseThrow(() -> new BizException("상위 코드를 찾을 수 없습니다", HttpStatus.NOT_FOUND));
+            vo.setCdLvl(parent.getCdLvl() + 1);
+            vo.setUpCd(upCd);
+        }
         cmsCodeDao.insertCode(vo);
     }
 

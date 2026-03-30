@@ -66,13 +66,13 @@
 
 ---
 
-## 3. 하위 코드 생성
+## 3. 코드 생성
 **POST** `/api/cms/code/{upCd}`
 
 ### Path Parameters
 | 파라미터 | 타입 | 필수 | 설명 |
 |---------|------|------|------|
-| upCd | String | O | 상위 코드 |
+| upCd | String | O | 상위 코드 ("0"이면 최상위 코드로 등록) |
 
 ### Request Body
 | 필드 | 타입 | 필수 | 설명 |
@@ -97,6 +97,18 @@
 
 ### 테스트
 ```bash
+# 최상위 코드 등록
+curl -X POST http://localhost:8080/api/cms/code/0 \
+  -H "Authorization: Bearer {token}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "cd": "STATUS",
+    "cdNm": "상태",
+    "useYn": "Y",
+    "cdOrd": 1
+  }'
+
+# 하위 코드 등록
 curl -X POST http://localhost:8080/api/cms/code/STATUS \
   -H "Authorization: Bearer {token}" \
   -H "Content-Type: application/json" \

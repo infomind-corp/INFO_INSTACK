@@ -59,29 +59,18 @@ public class CmsCodeController {
         return ApiResponse.ok(cmsCodeService.select(cd, upCd));
     }
 
-    @AuditLog(action = "최상위 코드 등록")
-    @PostMapping
-    @Operation(summary = "최상위 코드 생성", description = "최상위 코드(CD_LVL=1, UP_CD='0')를 생성합니다")
-    @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "등록 성공")
-    })
-    public ApiResponse<Void> insert(@Valid @RequestBody CodeRequest request) {
-        cmsCodeService.insert(request);
-        return ApiResponse.ok();
-    }
-
-    @AuditLog(action = "하위 코드 등록")
+    @AuditLog(action = "코드 등록")
     @PostMapping("/{upCd}")
-    @Operation(summary = "하위 코드 생성", description = "특정 코드의 하위 코드를 생성합니다")
+    @Operation(summary = "코드 생성", description = "코드를 생성합니다. upCd='0'이면 최상위 코드(CD_LVL=1)로 등록되며, 그 외의 경우 지정된 상위 코드의 하위 코드로 등록됩니다")
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "등록 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "상위 코드를 찾을 수 없음")
     })
-    public ApiResponse<Void> insertSub(
-            @Parameter(description = "상위 코드", example = "STATUS")
+    public ApiResponse<Void> insert(
+            @Parameter(description = "상위 코드 ('0'이면 최상위 코드)", example = "STATUS")
             @PathVariable String upCd,
             @Valid @RequestBody CodeRequest request) {
-        cmsCodeService.insertSub(upCd, request);
+        cmsCodeService.insert(upCd, request);
         return ApiResponse.ok();
     }
 

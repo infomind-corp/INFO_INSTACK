@@ -13,9 +13,7 @@ public interface CmsCodeService {
 
     CodeResponse select(String cd, String upCd);
 
-    void insert(CodeRequest request);
-
-    void insertSub(String upCd, CodeRequest request);
+    void insert(String upCd, CodeRequest request);
 
     void update(String cd, String upCd, CodeRequest request);
 
